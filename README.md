@@ -1,2 +1,1 @@
-# up-client-vsomeip-cpp
-C++ uPClient for vsomeip (SOME/IP)
+# gmultifi_uplat_client-vsomeip-cpp

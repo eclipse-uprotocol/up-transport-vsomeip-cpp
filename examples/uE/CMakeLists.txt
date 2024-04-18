@@ -34,16 +34,16 @@ add_definitions(-DSPDLOG_FMT_EXTERNAL)
 
 configure_file(${CMAKE_CURRENT_SOURCE_DIR}/config/${UStreamerConfigFile} ${CMAKE_BINARY_DIR}/bin/src/${UStreamerConfigFile} COPYONLY)
 
-#uE_subscribes
-add_executable(uE_subscribes src/uE_subscribes.cpp)
-target_link_libraries(uE_subscribes PRIVATE
+#uE_subscriber
+add_executable(uE_subscriber src/uE_subscriber.cpp)
+target_link_libraries(uE_subscriber PRIVATE
         up-cpp::up-cpp
         gmultifi_client-vsomeip::gmultifi_client-vsomeip
         fmt::fmt
         spdlog::spdlog
         protobuf::libprotobuf
     )
-target_compile_options(uE_subscribes PRIVATE
+target_compile_options(uE_subscriber PRIVATE
         -O2
         -g
         -fPIC
@@ -60,13 +60,13 @@ target_compile_options(uE_subscribes PRIVATE
         -Wshadow
         -Wfloat-equal
     )
-target_include_directories(uE_subscribes
+target_include_directories(uE_subscriber
     PUBLIC
         ${fmt_INCLUDE_DIR}
         ${spdlog_INCLUDE_DIR}
         ${up-cpp_INCLUDE_DIR})
 
-target_include_directories(uE_subscribes
+target_include_directories(uE_subscriber
     PRIVATE
         include)
 
@@ -104,5 +104,79 @@ target_include_directories(uE_rpcClient
         ${up-cpp_INCLUDE_DIR})
 
 target_include_directories(uE_rpcClient
+    PRIVATE
+        include)
+
+
+#uE_rpcServer
+add_executable(uE_rpcServer src/uE_rpcServer.cpp)
+target_link_libraries(uE_rpcServer PRIVATE
+        up-cpp::up-cpp
+        gmultifi_client-vsomeip::gmultifi_client-vsomeip
+        fmt::fmt
+        spdlog::spdlog
+        protobuf::libprotobuf
+    )
+target_compile_options(uE_rpcServer PRIVATE
+        -O2
+        -g
+        -fPIC
+        -Wall
+        -Wextra
+        -pedantic
+        -Werror
+        -Wcast-qual
+        -Wunused
+        -Wuninitialized
+        -Wmissing-declarations
+        -Wconversion
+        -Wpointer-arith
+        -Wshadow
+        -Wfloat-equal
+    )
+target_include_directories(uE_rpcServer
+    PUBLIC
+        ${fmt_INCLUDE_DIR}
+        ${spdlog_INCLUDE_DIR}
+        ${up-cpp_INCLUDE_DIR})
+
+target_include_directories(uE_rpcServer
+    PRIVATE
+        include)
+
+
+#uE_publisher
+add_executable(uE_publisher src/uE_publisher.cpp)
+target_link_libraries(uE_publisher PRIVATE
+        up-cpp::up-cpp
+        gmultifi_client-vsomeip::gmultifi_client-vsomeip
+        fmt::fmt
+        spdlog::spdlog
+        protobuf::libprotobuf
+    )
+target_compile_options(uE_publisher PRIVATE
+        -O2
+        -g
+        -fPIC
+        -Wall
+        -Wextra
+        -pedantic
+        -Werror
+        -Wcast-qual
+        -Wunused
+        -Wuninitialized
+        -Wmissing-declarations
+        -Wconversion
+        -Wpointer-arith
+        -Wshadow
+        -Wfloat-equal
+    )
+target_include_directories(uE_publisher
+    PUBLIC
+        ${fmt_INCLUDE_DIR}
+        ${spdlog_INCLUDE_DIR}
+        ${up-cpp_INCLUDE_DIR})
+
+target_include_directories(uE_publisher
     PRIVATE
         include)
