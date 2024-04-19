@@ -5,10 +5,18 @@ set(this_lib gmultifi_client-vsomeip)
 # project name
 project(${this_lib} LANGUAGES CXX)
 
-find_library(ZENOH_LIB zenohc)
-message("ZENOH_LIB: ${ZENOH_LIB}")
+if(DEFINED ENV{LOCAL_VSOMEIP_PATH})
+    message("LOCAL_VSOMEIP_PATH [${LOCAL_VSOMEIP_PATH}]")
+    include_directories($ENV{LOCAL_VSOMEIP_PATH}/include)
+    link_directories($ENV{LOCAL_VSOMEIP_PATH}/lib)
+    add_link_options(-Wl,--no-as-needed)
+    set(VSOMEIP_LIB vsomeip3)
+else()
+    find_package(vsomeip3 REQUIRED)
+    set(VSOMEIP_LIB vsomeip3::vsomeip3)
+endif()
+
 find_package(up-cpp REQUIRED)
-find_package(vsomeip3 REQUIRED)
 find_package(Boost REQUIRED)
 find_package(spdlog REQUIRED)
 find_package(fmt REQUIRED CONFIG)
@@ -56,7 +64,7 @@ target_link_libraries(${this_lib} PUBLIC
     protobuf::libprotobuf
     fmt::fmt
     spdlog::spdlog
-    vsomeip3::vsomeip3
+    ${VSOMEIP_LIB}
     Boost::boost
     Boost::system
     Boost::thread

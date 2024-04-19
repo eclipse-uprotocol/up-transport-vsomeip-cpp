@@ -7,7 +7,7 @@ class UpClientVSomeip(ConanFile):
     name = "gmultifi_client-vsomeip"
     package_type = "library"
     license = "Apache-2.0 license"
-    homepage = "https://github.com/GM-SDV-UP/gmultifi_client-vsomeip-cpp"
+    homepage = "https://github.com/eclipse-uprotocol"
     url = "https://github.com/conan-io/conan-center-index"
     description = "C++ vSomeip library for GM-SDV-UP"
     topics = ("ulink client", "transport")
@@ -16,6 +16,7 @@ class UpClientVSomeip(ConanFile):
     options = {"shared": [True, False], "fPIC": [True, False]}
     conan_version = None
     generators = "CMakeDeps"
+    version = "0.1.1"
     exports_sources = "CMakeLists.txt", "conaninfo/*" ,"src/*" , "include/*"
 
     options = {
@@ -38,14 +39,14 @@ class UpClientVSomeip(ConanFile):
         self.options["libuuid"].shared = True
 
     def requirements(self):
-        self.requires("up-cpp/x.y.z")
+        self.requires("up-cpp/0.1.1-dev")
         self.requires("spdlog/1.13.0")
         self.requires("fmt/10.2.1")
         self.requires("boost/1.84.0")
-        self.requires("vsomeip/3.4.10")
-        self.requires("rapidjson/cci.20230929")
         self.requires("protobuf/3.21.12")
         self.requires("gtest/1.14.0")
+        self.requires("rapidjson/cci.20230929")
+        # self.requires("vsomeip/3.4.10")
 
     def generate(self):
         tc = CMakeToolchain(self)

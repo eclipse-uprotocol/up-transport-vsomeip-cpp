@@ -24,6 +24,18 @@ cmake_minimum_required(VERSION 3.20)
 project(uE VERSION 0.1.0 LANGUAGES CXX)
 set(UStreamerConfigFile "ustreamer-config.json")
 
+if(DEFINED ENV{LOCAL_VSOMEIP_PATH})
+    message("LOCAL_VSOMEIP_PATH [${LOCAL_VSOMEIP_PATH}]")
+    include_directories($ENV{LOCAL_VSOMEIP_PATH}/include)
+    link_directories($ENV{LOCAL_VSOMEIP_PATH}/lib)
+    # add_link_options(-Wl,--no-as-needed)
+#     set(VSOMEIP_LIB vsomeip3)
+# else()
+#     find_package(vsomeip3 REQUIRED)
+#     set(VSOMEIP_LIB vsomeip3::vsomeip3)
+endif()
+
+
 find_package(spdlog REQUIRED)
 find_package(up-cpp QUIET)
 find_package(gmultifi_client-vsomeip REQUIRED)
