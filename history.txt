@@ -1,0 +1,1000 @@
+ 1198  rm -rf /var/lib/apport/coredump/*
+ 1199  sudo rm -rf /var/lib/apport/coredump/*
+ 1200  #gdb  /var/lib/apport/coredump/c
+ 1201  cd../
+ 1202  cd ..
+ 1203  ls
+ 1204  cd ustreamer-ccu/
+ 1205  cd ..
+ 1206  cp /var/lib/apport/coredump/core._home_ruchir_Work_gm_sdv2_0_ustreamer-ccu_ustreamer-test-folder_app-ustreamer.1001.007f138b-a22a-4104-ae16-08d5dcdff02d.9437.12068586 .
+ 1207  ls
+ 1208  ll
+ 1209  #gdb ustreamer-ccu/ustreamer-test-folder/app-ustreamer 
+ 1210  ls
+ 1211  mv core._home_ruchir_Work_gm_sdv2_0_ustreamer-ccu_ustreamer-test-folder_app-ustreamer.1001.007f138b-a22a-4104-ae16-08d5dcdff02d.9437.12068586 core1
+ 1212  gdb ustreamer-ccu/ustreamer-test-folder/app-ustreamer core1
+ 1213  sudo apt-get install autoconf automake libtool curl make g++ unzip
+ 1214  #git clone https://github.com/protocolbuffers/protobuf.git
+ 1215  cd
+ 1216  cd Git/
+ 1217  ls
+ 1218  git clone https://github.com/protocolbuffers/protobuf.git
+ 1219  cd protobuf/
+ 1220  df -h
+ 1221  git tag
+ 1222  git checkout v3.21.10
+ 1223  git submodule update --init --recursive 
+ 1224  ./autogen.sh 
+ 1225  ./configure CXXFLAGS="-fPIC -std=c++11"
+ 1226  make -j 4
+ 1227  make check
+ 1228  sudo make install
+ 1229  cd 
+ 1230  cd Work/gm/sdv2.0/ustreamer-ccu/
+ 1231  ls
+ 1232  cd src/
+ 1233  ls
+ 1234  cd proto/
+ 1235  ls
+ 1236  cd ../../
+ 1237  cd external/
+ 1238  ls
+ 1239  mkdir -p protobuf/{inc,lib}
+ 1240  cd protobuf/
+ 1241  cd inc/
+ 1242  cp -r /usr/local/include/google/protobuf/* .
+ 1243  cd ../lib/
+ 1244  mkdir x86_64 aarch64
+ 1245  cd x86_64/
+ 1246  cp /usr/local/lib/{libprotobuf-lite.la,libprotobuf-lite.a,libprotobuf-lite.so.22.0.2} .
+ 1247  cp /usr/local/lib/{libprotobuf-lite.la,libprotobuf-lite.a,libprotobuf-lite.so.32.0.10} .
+ 1248  ll
+ 1249  cat /proc/net/dev_mcast 
+ 1250  sudo ip route
+ 1251  sudo route
+ 1252  route add -nv 224.224.224.245
+ 1253  sudo route add -nv 224.224.224.245
+ 1254  sudo route add -nv 224.224.224.245 dev wlp59s0
+ 1255  ifconfig 
+ 1256  sudo route
+ 1257  ip route
+ 1258  nc --h
+ 1259  nc --help
+ 1260  netcat -h
+ 1261  netcat 192.168.1.12
+ 1262  nc 192.168.1.12
+ 1263  netcat localhost
+ 1264  nmapp 192.168.1.12
+ 1265  nmap 192.168.1.12
+ 1266  ip route
+ 1267  nc -zv 192.168.1.12
+ 1268  nc -zv 192.168.1.12 30490
+ 1269  nc -zv 224.224.224.245 30490
+ 1270  nc -vu 192.168.1.12 30490
+ 1271  cd
+ 1272  cd Git/
+ 1273  find . -name "wireshark"
+ 1274  ll
+ 1275  htop
+ 1276  df -h
+ 1277  sudo apt install darktable 
+ 1278  #find . -type f \( -iname "*.raw" -o -iname "*.nef" \) -exec sh -c 'darktable-cli {} ${0%.*}.jpg' {} \; -delete
+ 1279  ll
+ 1280  find . -type f \( -iname "*.ARW" -o -iname "*.nef" \) -exec sh -c 'darktable-cli {} ${0%.*}.jpg' {} \; -delete
+ 1281  ll
+ 1282  cp DSC_6675.JPG ../selected-from-pawan-06.02.2023/
+ 1283  cp DSC_6677.JPG ../selected-from-pawan-06.02.2023/
+ 1284  cp DSC_6684.JPG ../selected-from-pawan-06.02.2023/
+ 1285  cp DSC_6687.JPG ../selected-from-pawan-06.02.2023/
+ 1286  cp DSC_6721.JPG ../selected-from-pawan-06.02.2023/
+ 1287  cp DSC_6738.JPG ../selected-from-pawan-06.02.2023/
+ 1288  cp DSC_6741.JPG ../selected-from-pawan-06.02.2023/
+ 1289  cp DSC_6743.JPG ../selected-from-pawan-06.02.2023/
+ 1290  cp DSC_6748.JPG ../selected-from-pawan-06.02.2023/
+ 1291  cp DSC_6753.JPG ../selected-from-pawan-06.02.2023/
+ 1292  cp DSC_6759.JPG ../selected-from-pawan-06.02.2023/
+ 1293  cp DSC_6765.JPG ../selected-from-pawan-06.02.2023/
+ 1294  cp DSC_6775.JPG ../selected-from-pawan-06.02.2023/
+ 1295  cp DSC_6805.JPG ../selected-from-pawan-06.02.2023/
+ 1296  cp DSC_6807.JPG ../selected-from-pawan-06.02.2023/
+ 1297  cp DSC_6808.JPG ../selected-from-pawan-06.02.2023/
+ 1298  cp DSC_6819.JPG ../selected-from-pawan-06.02.2023/
+ 1299  cp DSC_6826.JPG ../selected-from-pawan-06.02.2023/
+ 1300  cp DSC_6829.JPG ../selected-from-pawan-06.02.2023/
+ 1301  cp DSC_6830.JPG ../selected-from-pawan-06.02.2023/
+ 1302  cp DSC_6835.JPG ../selected-from-pawan-06.02.2023/
+ 1303  cp DSC_6842.JPG ../selected-from-pawan-06.02.2023/
+ 1304  cp DSC_6847.JPG ../selected-from-pawan-06.02.2023/
+ 1305  cp DSC_6849.JPG ../selected-from-pawan-06.02.2023/
+ 1306  cp DSC_6855.JPG ../selected-from-pawan-06.02.2023/
+ 1307  cp DSC_6858.JPG ../selected-from-pawan-06.02.2023/
+ 1308  cp DSC_6866.JPG ../selected-from-pawan-06.02.2023/
+ 1309  cp DSC_6871.JPG ../selected-from-pawan-06.02.2023/
+ 1310  cp DSC_6891.JPG ../selected-from-pawan-06.02.2023/
+ 1311  cp DSC_6912.JPG ../selected-from-pawan-06.02.2023/
+ 1312  cp DSC_6921.JPG ../selected-from-pawan-06.02.2023/
+ 1313  cp DSC_6927.JPG ../selected-from-pawan-06.02.2023/
+ 1314  cp DSC_6930.JPG ../selected-from-pawan-06.02.2023/
+ 1315  cp DSC_6932.JPG ../selected-from-pawan-06.02.2023/
+ 1316  cp DSC_6937.JPG ../selected-from-pawan-06.02.2023/
+ 1317  cp DSC_6951.JPG ../selected-from-pawan-06.02.2023/
+ 1318  cp DSC_6954.JPG ../selected-from-pawan-06.02.2023/
+ 1319  cp DSC_6956.JPG ../selected-from-pawan-06.02.2023/
+ 1320  cp DSC_6961.JPG ../selected-from-pawan-06.02.2023/
+ 1321  cp DSC_6985.JPG ../selected-from-pawan-06.02.2023/
+ 1322  cp DSC_6981.JPG ../selected-from-pawan-06.02.2023/
+ 1323  cp DSC_6986.JPG ../selected-from-pawan-06.02.2023/
+ 1324  cp DSC_6996.JPG ../selected-from-pawan-06.02.2023/
+ 1325  cp DSC_7002.JPG ../selected-from-pawan-06.02.2023/
+ 1326  cp DSC_7003.JPG ../selected-from-pawan-06.02.2023/
+ 1327  cp DSC_7007.JPG ../selected-from-pawan-06.02.2023/
+ 1328  cp DSC_7009.JPG ../selected-from-pawan-06.02.2023/
+ 1329  cp DSC_7011.JPG ../selected-from-pawan-06.02.2023/
+ 1330  cp DSC_7016.JPG ../selected-from-pawan-06.02.2023/
+ 1331  cp DSC_7028.JPG ../selected-from-pawan-06.02.2023/
+ 1332  cp DSC_7030.JPG ../selected-from-pawan-06.02.2023/
+ 1333  cp DSC_7041.JPG ../selected-from-pawan-06.02.2023/
+ 1334  cp DSC_7042.JPG ../selected-from-pawan-06.02.2023/
+ 1335  cp DSC_7050.JPG ../selected-from-pawan-06.02.2023/
+ 1336  cp DSC_7092.JPG ../selected-from-pawan-06.02.2023/
+ 1337  cp DSC_7107.JPG ../selected-from-pawan-06.02.2023/
+ 1338  cp DSC_7178.JPG ../selected-from-pawan-06.02.2023/
+ 1339  cp DSC_7187.JPG ../selected-from-pawan-06.02.2023/
+ 1340  cp DSC_7288.JPG ../selected-from-pawan-06.02.2023/
+ 1341  cp DSC_7292.JPG ../selected-from-pawan-06.02.2023/
+ 1342  cp DSC_7294.JPG ../selected-from-pawan-06.02.2023/
+ 1343  cp DSC_7309.JPG ../selected-from-pawan-06.02.2023/
+ 1344  cp DSC_7311.JPG ../selected-from-pawan-06.02.2023/
+ 1345  cp DSC_7312.JPG ../selected-from-pawan-06.02.2023/
+ 1346  cp DSC_7320.JPG ../selected-from-pawan-06.02.2023/
+ 1347  cp DSC_7329.JPG ../selected-from-pawan-06.02.2023/
+ 1348  cp DSC_7330.JPG ../selected-from-pawan-06.02.2023/
+ 1349  cp DSC_7339.JPG ../selected-from-pawan-06.02.2023/
+ 1350  cp DSC_7341.JPG ../selected-from-pawan-06.02.2023/
+ 1351  cp DSC_7343.JPG ../selected-from-pawan-06.02.2023/
+ 1352  cp DSC_7346.JPG ../selected-from-pawan-06.02.2023/
+ 1353  cp DSC_7349.JPG ../selected-from-pawan-06.02.2023/
+ 1354  cp DSC_7352.JPG ../selected-from-pawan-06.02.2023/
+ 1355  cp DSC_7362.JPG ../selected-from-pawan-06.02.2023/
+ 1356  cp DSC_7365.JPG ../selected-from-pawan-06.02.2023/
+ 1357  cp DSC_7378.JPG ../selected-from-pawan-06.02.2023/
+ 1358  cp DSC_7393.JPG ../selected-from-pawan-06.02.2023/
+ 1359  cp DSC_7413.JPG ../selected-from-pawan-06.02.2023/
+ 1360  cp DSC_7421.JPG ../selected-from-pawan-06.02.2023/
+ 1361  cp DSC_7427.JPG ../selected-from-pawan-06.02.2023/
+ 1362  cp DSC_7431.JPG ../selected-from-pawan-06.02.2023/
+ 1363  cp DSC_7435.JPG ../selected-from-pawan-06.02.2023/
+ 1364  cp DSC_7437.JPG ../selected-from-pawan-06.02.2023/
+ 1365  cp DSC_7446.JPG ../selected-from-pawan-06.02.2023/
+ 1366  cp DSC_7448.JPG ../selected-from-pawan-06.02.2023/
+ 1367  cp DSC_7449.JPG ../selected-from-pawan-06.02.2023/
+ 1368  cp DSC_7442.JPG ../selected-from-pawan-06.02.2023/
+ 1369  cp DSC_7444.JPG ../selected-from-pawan-06.02.2023/
+ 1370  cp DSC_7477.JPG ../selected-from-pawan-06.02.2023/
+ 1371  cp DSC_7478.JPG ../selected-from-pawan-06.02.2023/
+ 1372  cp DSC_7495.JPG ../selected-from-pawan-06.02.2023/
+ 1373  cp DSC_7497.JPG ../selected-from-pawan-06.02.2023/
+ 1374  cp DSC_7501.JPG ../selected-from-pawan-06.02.2023/
+ 1375  cp DSC_7508.JPG ../selected-from-pawan-06.02.2023/
+ 1376  cp DSC_7509.JPG ../selected-from-pawan-06.02.2023/
+ 1377  cp DSC_7517.JPG ../selected-from-pawan-06.02.2023/
+ 1378  cp DSC_7526.JPG ../selected-from-pawan-06.02.2023/
+ 1379  cp DSC_7539.JPG ../selected-from-pawan-06.02.2023/
+ 1380  cp DSC_7557.JPG ../selected-from-pawan-06.02.2023/
+ 1381  cp DSC_7558.JPG ../selected-from-pawan-06.02.2023/
+ 1382  cp DSC_7564.JPG ../selected-from-pawan-06.02.2023/
+ 1383  cp DSC_7570.JPG ../selected-from-pawan-06.02.2023/
+ 1384  cp DSC_7572.JPG ../selected-from-pawan-06.02.2023/
+ 1385  cp DSC_7580.JPG ../selected-from-pawan-06.02.2023/
+ 1386  cp DSC_7584.JPG ../selected-from-pawan-06.02.2023/
+ 1387  cp DSC_7586.JPG ../selected-from-pawan-06.02.2023/
+ 1388  cp DSC_7597.JPG ../selected-from-pawan-06.02.2023/
+ 1389  cp DSC_7603.JPG ../selected-from-pawan-06.02.2023/
+ 1390  cp DSC_7607.JPG ../selected-from-pawan-06.02.2023/
+ 1391  cp DSC_7616.JPG ../selected-from-pawan-06.02.2023/
+ 1392  cp DSC_7620.JPG ../selected-from-pawan-06.02.2023/
+ 1393  cp DSC_7627.JPG ../selected-from-pawan-06.02.2023/
+ 1394  cp DSC_7629.JPG ../selected-from-pawan-06.02.2023/
+ 1395  cp DSC_7630.JPG ../selected-from-pawan-06.02.2023/
+ 1396  cp DSC_7634.JPG ../selected-from-pawan-06.02.2023/
+ 1397  cp DSC_7635.JPG ../selected-from-pawan-06.02.2023/
+ 1398  cp DSC_7636.JPG ../selected-from-pawan-06.02.2023/
+ 1399  cp DSC_7660.JPG ../selected-from-pawan-06.02.2023/
+ 1400  cp DSC_7671.JPG ../selected-from-pawan-06.02.2023/
+ 1401  cp DSC_7716.JPG ../selected-from-pawan-06.02.2023/
+ 1402  cp DSC_7721.JPG ../selected-from-pawan-06.02.2023/
+ 1403  cp DSC_7724.JPG ../selected-from-pawan-06.02.2023/
+ 1404  cp DSC_7728.JPG ../selected-from-pawan-06.02.2023/
+ 1405  cp DSC_7729.JPG ../selected-from-pawan-06.02.2023/
+ 1406  cp DSC_7732.JPG ../selected-from-pawan-06.02.2023/
+ 1407  cp DSC_7738.JPG ../selected-from-pawan-06.02.2023/
+ 1408  cp DSC_7742.JPG ../selected-from-pawan-06.02.2023/
+ 1409  cp DSC_7745.JPG ../selected-from-pawan-06.02.2023/
+ 1410  cp DSC_7741.JPG ../selected-from-pawan-06.02.2023/
+ 1411  cp DSC_7773.JPG ../selected-from-pawan-06.02.2023/
+ 1412  cp DSC_7778.JPG ../selected-from-pawan-06.02.2023/
+ 1413  cp DSC_7792.JPG ../selected-from-pawan-06.02.2023/
+ 1414  cp DSC_7808.JPG ../selected-from-pawan-06.02.2023/
+ 1415  cp DSC_7810.JPG ../selected-from-pawan-06.02.2023/
+ 1416  cp DSC_7816.JPG ../selected-from-pawan-06.02.2023/
+ 1417  cp DSC_7823.JPG ../selected-from-pawan-06.02.2023/
+ 1418  cp DSC_7826.JPG ../selected-from-pawan-06.02.2023/
+ 1419  cp DSC_7831.JPG ../selected-from-pawan-06.02.2023/
+ 1420  cp DSC_7835.JPG ../selected-from-pawan-06.02.2023/
+ 1421  cp DSC_7868.JPG ../selected-from-pawan-06.02.2023/
+ 1422  cp DSC_7871.JPG ../selected-from-pawan-06.02.2023/
+ 1423  cp DSC_7874.JPG ../selected-from-pawan-06.02.2023/
+ 1424  cp DSC_7877.JPG ../selected-from-pawan-06.02.2023/
+ 1425  cp DSC_7880.JPG ../selected-from-pawan-06.02.2023/
+ 1426  cp DSC_7884.JPG ../selected-from-pawan-06.02.2023/
+ 1427  cp DSC_7886.JPG ../selected-from-pawan-06.02.2023/
+ 1428  cp DSC_7888.JPG ../selected-from-pawan-06.02.2023/
+ 1429  cp DSC_7894.JPG ../selected-from-pawan-06.02.2023/
+ 1430  cp DSC_7897.JPG ../selected-from-pawan-06.02.2023/
+ 1431  cp DSC_7900.JPG ../selected-from-pawan-06.02.2023/
+ 1432  cp DSC_7902.JPG ../selected-from-pawan-06.02.2023/
+ 1433  cp DSC_7905.JPG ../selected-from-pawan-06.02.2023/
+ 1434  cp DSC_7930.JPG ../selected-from-pawan-06.02.2023/
+ 1435  cp DSC_7938.JPG ../selected-from-pawan-06.02.2023/
+ 1436  cp DSC_7946.JPG ../selected-from-pawan-06.02.2023/
+ 1437  cp DSC_7954.JPG ../selected-from-pawan-06.02.2023/
+ 1438  cp DSC_7969.JPG ../selected-from-pawan-06.02.2023/
+ 1439  cp DSC_7961.JPG ../selected-from-pawan-06.02.2023/
+ 1440  cp DSC_7955.JPG ../selected-from-pawan-06.02.2023/
+ 1441  cp DSC_7965.JPG ../selected-from-pawan-06.02.2023/
+ 1442  cp DSC_7972.JPG ../selected-from-pawan-06.02.2023/
+ 1443  cp DSC_7978.JPG ../selected-from-pawan-06.02.2023/
+ 1444  cp DSC_7985.JPG ../selected-from-pawan-06.02.2023/
+ 1445  cp DSC_7989.JPG ../selected-from-pawan-06.02.2023/
+ 1446  cp DSC_7990.JPG ../selected-from-pawan-06.02.2023/
+ 1447  cp DSC_7992.JPG ../selected-from-pawan-06.02.2023/
+ 1448  cp DSC_7997.JPG ../selected-from-pawan-06.02.2023/
+ 1449  cp DSC_7999.JPG ../selected-from-pawan-06.02.2023/
+ 1450  cp DSC_8004.JPG ../selected-from-pawan-06.02.2023/
+ 1451  cp DSC_8006.JPG ../selected-from-pawan-06.02.2023/
+ 1452  cp DSC_8009.JPG ../selected-from-pawan-06.02.2023/
+ 1453  cp DSC_8011.JPG ../selected-from-pawan-06.02.2023/
+ 1454  cp DSC_8016.JPG ../selected-from-pawan-06.02.2023/
+ 1455  cp DSC_8022.JPG ../selected-from-pawan-06.02.2023/
+ 1456  cp DSC_8027.JPG ../selected-from-pawan-06.02.2023/
+ 1457  cp DSC_8035.JPG ../selected-from-pawan-06.02.2023/
+ 1458  cp DSC_8037.JPG ../selected-from-pawan-06.02.2023/
+ 1459  cp DSC_8042.JPG ../selected-from-pawan-06.02.2023/
+ 1460  cp DSC_8049.JPG ../selected-from-pawan-06.02.2023/
+ 1461  cp DSC_8052.JPG ../selected-from-pawan-06.02.2023/
+ 1462  cp DSC_8055.JPG ../selected-from-pawan-06.02.2023/
+ 1463  cp DSC_8054.JPG ../selected-from-pawan-06.02.2023/
+ 1464  cp DSC_8058.JPG ../selected-from-pawan-06.02.2023/
+ 1465  cp DSC_8060.JPG ../selected-from-pawan-06.02.2023/
+ 1466  cp DSC_8062.JPG ../selected-from-pawan-06.02.2023/
+ 1467  cp DSC_8063.JPG ../selected-from-pawan-06.02.2023/
+ 1468  cp DSC_8069.JPG ../selected-from-pawan-06.02.2023/
+ 1469  cp DSC_8071.JPG ../selected-from-pawan-06.02.2023/
+ 1470  cp DSC_8073.JPG ../selected-from-pawan-06.02.2023/
+ 1471  cp DSC_8082.JPG ../selected-from-pawan-06.02.2023/
+ 1472  cp DSC_8084.JPG ../selected-from-pawan-06.02.2023/
+ 1473  cp DSC_8087.JPG ../selected-from-pawan-06.02.2023/
+ 1474  cp DSC_8090.JPG ../selected-from-pawan-06.02.2023/
+ 1475  cp DSC_8093.JPG ../selected-from-pawan-06.02.2023/
+ 1476  cp DSC_8092.JPG ../selected-from-pawan-06.02.2023/
+ 1477  cp DSC_8096.JPG ../selected-from-pawan-06.02.2023/
+ 1478  cp DSC_8097.JPG ../selected-from-pawan-06.02.2023/
+ 1479  cp DSC_8098.JPG ../selected-from-pawan-06.02.2023/
+ 1480  cp DSC_8099.JPG ../selected-from-pawan-06.02.2023/
+ 1481  cp DSC_8103.JPG ../selected-from-pawan-06.02.2023/
+ 1482  cp DSC_8102.JPG ../selected-from-pawan-06.02.2023/
+ 1483  cp DSC_8107.JPG ../selected-from-pawan-06.02.2023/
+ 1484  cp DSC_8114.JPG ../selected-from-pawan-06.02.2023/
+ 1485  cp DSC_8115.JPG ../selected-from-pawan-06.02.2023/
+ 1486  cp DSC_8118.JPG ../selected-from-pawan-06.02.2023/
+ 1487  cp DSC_8119.JPG ../selected-from-pawan-06.02.2023/
+ 1488  cp DSC_8121.JPG ../selected-from-pawan-06.02.2023/
+ 1489  cp DSC_8123.JPG ../selected-from-pawan-06.02.2023/
+ 1490  cp DSC_8124.JPG ../selected-from-pawan-06.02.2023/
+ 1491  cp DSC_8126.JPG ../selected-from-pawan-06.02.2023/
+ 1492  cp DSC_8133.JPG ../selected-from-pawan-06.02.2023/
+ 1493  cp DSC_8134.JPG ../selected-from-pawan-06.02.2023/
+ 1494  cp DSC_8142.JPG ../selected-from-pawan-06.02.2023/
+ 1495  cp DSC_8161.JPG ../selected-from-pawan-06.02.2023/
+ 1496  cp DSC_8165.JPG ../selected-from-pawan-06.02.2023/
+ 1497  cp DSC_8169.JPG ../selected-from-pawan-06.02.2023/
+ 1498  cp DSC_8183.JPG ../selected-from-pawan-06.02.2023/
+ 1499  cp DSC_8188.JPG ../selected-from-pawan-06.02.2023/
+ 1500  cp DSC_8194.JPG ../selected-from-pawan-06.02.2023/
+ 1501  cp DSC_8198.JPG ../selected-from-pawan-06.02.2023/
+ 1502  cp DSC_8202.JPG ../selected-from-pawan-06.02.2023/
+ 1503  cp DSC_8205.JPG ../selected-from-pawan-06.02.2023/
+ 1504  cp DSC_8208.JPG ../selected-from-pawan-06.02.2023/
+ 1505  cp DSC_8211.JPG ../selected-from-pawan-06.02.2023/
+ 1506  cp DSC_8214.JPG ../selected-from-pawan-06.02.2023/
+ 1507  cp DSC_8216.JPG ../selected-from-pawan-06.02.2023/
+ 1508  cp DSC_8217.JPG ../selected-from-pawan-06.02.2023/
+ 1509  cp DSC_8236.JPG ../selected-from-pawan-06.02.2023/
+ 1510  cp DSC_8235.JPG ../selected-from-pawan-06.02.2023/
+ 1511  cp DSC_8233.JPG ../selected-from-pawan-06.02.2023/
+ 1512  cp DSC_8238.JPG ../selected-from-pawan-06.02.2023/
+ 1513  cp DSC_8241.JPG ../selected-from-pawan-06.02.2023/
+ 1514  cp DSC_8246.JPG ../selected-from-pawan-06.02.2023/
+ 1515  cp DSC_8249.JPG ../selected-from-pawan-06.02.2023/
+ 1516  cp DSC_8250.JPG ../selected-from-pawan-06.02.2023/
+ 1517  cp DSC_8252.JPG ../selected-from-pawan-06.02.2023/
+ 1518  cp DSC_8258.JPG ../selected-from-pawan-06.02.2023/
+ 1519  cp DSC_8263.JPG ../selected-from-pawan-06.02.2023/
+ 1520  cp DSC_8272.JPG ../selected-from-pawan-06.02.2023/
+ 1521  cp DSC_8275.JPG ../selected-from-pawan-06.02.2023/
+ 1522  cp DSC_8283.JPG ../selected-from-pawan-06.02.2023/
+ 1523  cp DSC_8284.JPG ../selected-from-pawan-06.02.2023/
+ 1524  cp DSC_8294.JPG ../selected-from-pawan-06.02.2023/
+ 1525  cp DSC_8308.JPG ../selected-from-pawan-06.02.2023/
+ 1526  cp DSC_8313.JPG ../selected-from-pawan-06.02.2023/
+ 1527  cp DSC_8318.JPG ../selected-from-pawan-06.02.2023/
+ 1528  cp DSC_8322.JPG ../selected-from-pawan-06.02.2023/
+ 1529  cp DSC_8326.JPG ../selected-from-pawan-06.02.2023/
+ 1530  cp DSC_8330.JPG ../selected-from-pawan-06.02.2023/
+ 1531  cp DSC_8331.JPG ../selected-from-pawan-06.02.2023/
+ 1532  cp DSC_8332.JPG ../selected-from-pawan-06.02.2023/
+ 1533  cp DSC_8335.JPG ../selected-from-pawan-06.02.2023/
+ 1534  cp DSC_8337.JPG ../selected-from-pawan-06.02.2023/
+ 1535  cp DSC_8347.JPG ../selected-from-pawan-06.02.2023/
+ 1536  cp DSC_8348.JPG ../selected-from-pawan-06.02.2023/
+ 1537  cp DSC_8350.JPG ../selected-from-pawan-06.02.2023/
+ 1538  cp DSC_8351.JPG ../selected-from-pawan-06.02.2023/
+ 1539  cp DSC_8402.JPG ../selected-from-pawan-06.02.2023/
+ 1540  cp DSC_8410.JPG ../selected-from-pawan-06.02.2023/
+ 1541  cp DSC_8411.JPG ../selected-from-pawan-06.02.2023/
+ 1542  cp DSC_8416.JPG ../selected-from-pawan-06.02.2023/
+ 1543  cp DSC_8423.JPG ../selected-from-pawan-06.02.2023/
+ 1544  cp DSC_8428.JPG ../selected-from-pawan-06.02.2023/
+ 1545  cp DSC_8432.JPG ../selected-from-pawan-06.02.2023/
+ 1546  cp DSC_8438.JPG ../selected-from-pawan-06.02.2023/
+ 1547  cp DSC_8445.JPG ../selected-from-pawan-06.02.2023/
+ 1548  cp DSC_8448.JPG ../selected-from-pawan-06.02.2023/
+ 1549  cp DSC_8461.JPG ../selected-from-pawan-06.02.2023/
+ 1550  cp DSC_8465.JPG ../selected-from-pawan-06.02.2023/
+ 1551  cp DSC_8471.JPG ../selected-from-pawan-06.02.2023/
+ 1552  cp DSC_8472.JPG ../selected-from-pawan-06.02.2023/
+ 1553  cp DSC_8474.JPG ../selected-from-pawan-06.02.2023/
+ 1554  cp DSC_8482.JPG ../selected-from-pawan-06.02.2023/
+ 1555  cp DSC_8496.JPG ../selected-from-pawan-06.02.2023/
+ 1556  cp DSC_8500.JPG ../selected-from-pawan-06.02.2023/
+ 1557  cp DSC_8512.JPG ../selected-from-pawan-06.02.2023/
+ 1558  cp DSC_8514.JPG ../selected-from-pawan-06.02.2023/
+ 1559  cp DSC_8517.JPG ../selected-from-pawan-06.02.2023/
+ 1560  cp DSC_8519.JPG ../selected-from-pawan-06.02.2023/
+ 1561  cp DSC_8531.JPG ../selected-from-pawan-06.02.2023/
+ 1562  cp DSC_8533.JPG ../selected-from-pawan-06.02.2023/
+ 1563  cp DSC_8535.JPG ../selected-from-pawan-06.02.2023/
+ 1564  cp DSC_8538.JPG ../selected-from-pawan-06.02.2023/
+ 1565  cp DSC_8546.JPG ../selected-from-pawan-06.02.2023/
+ 1566  ls
+ 1567  ffmpeg -i C0191.MP4 -vcodec libx265 -crf 20 sheru-prachi-dance.mp4
+ 1568  touch my-mem-help.txt
+ 1569  cd
+ 1570  cd Git/
+ 1571  git clone
+ 1572  git clone https://github.com/eclipse/mosquitto.git
+ 1573  java -version
+ 1574  cd /home/ruchir/MyPrograms/Java ; /usr/bin/env /usr/lib/jvm/java-11-openjdk-amd64/bin/java -agentlib:jdwp=transport=dt_socket,server=n,suspend=y,address=localhost:39669 -cp /home/ruchir/.config/Code/User/workspaceStorage/59a33368ff651011eb7d1ff9bbd088ed/redhat.java/jdt_ws/Java_a7b91c19/bin TestClass 
+ 1575  cd /home/ruchir/MyPrograms/Java ; /usr/bin/env /usr/lib/jvm/java-11-openjdk-amd64/bin/java -agentlib:jdwp=transport=dt_socket,server=n,suspend=y,address=localhost:34617 -cp /home/ruchir/.config/Code/User/workspaceStorage/59a33368ff651011eb7d1ff9bbd088ed/redhat.java/jdt_ws/Java_a7b91c19/bin TestClass 
+ 1576  touch misc.txt
+ 1577  ifco
+ 1578  ifconfig 
+ 1579  cd Work/gm/
+ 1580  scp sdv2.0 kzpngr@192.168.0.103:~/Work/SDV2.0/
+ 1581  scp -r sdv2.0 kzpngr@192.168.0.103:~/Work/SDV2.0/
+ 1582  ping 192.168.1.103
+ 1583  ping 192.168.0.103
+ 1584  scp -r sdv2.0 kzpngr@192.168.0.103:~/Work/SDV2.0/
+ 1585  sudo adduser $USER vboxusers
+ 1586  cd Ruchir/
+ 1587  find . -name "*ssn*"
+ 1588  cd Our car/
+ 1589  cd Our\car/
+ 1590  cd Our\ car/
+ 1591  cd Odysey/
+ 1592  ls
+ 1593  convert PXL_20230424_160901496_2.jpg l1.pdf
+ 1594  ll
+ 1595  convert PXL_20230424_160901496_2.jpg +compress l1.pdf
+ 1596  sudo convert PXL_20230424_160901496_2.jpg +compress l1.pdf
+ 1597  sudo apt install gscan2pdf 
+ 1598  python3
+ 1599  df -h
+ 1600  ll
+ 1601  python3
+ 1602  sudo apt update
+ 1603  sudo apt dist-upgrade 
+ 1604  sudo apt autoclean 
+ 1605  sudo apt autoremove 
+ 1606  python3
+ 1607  sudo apt update
+ 1608  sudo apt dist-upgrade 
+ 1609  python3
+ 1610  ifconfig 
+ 1611  python3
+ 1612  sudo apt update 
+ 1613  sudo apt dist-upgrade 
+ 1614  python3
+ 1615  ifconfig 
+ 1616  ping 192.168.0.236
+ 1617  sudo apt update
+ 1618  sudo apt dist-upgrade 
+ 1619  sudo apt autoremove 
+ 1620  sudo apt autoclean 
+ 1621  sudo apt install cargo rust-src rustfmt
+ 1622  rustc --version
+ 1623  cd /tmp/
+ 1624  $ curl --proto '=https' --tlsv1.2 https://sh.rustup.rs -sSf | sh
+ 1625  curl --proto '=https' --tlsv1.2 https://sh.rustup.rs -sSf | sh
+ 1626  sudo apt purge cargo rust-src rustfmt
+ 1627  sudo apt purge rustc
+ 1628  curl --proto '=https' --tlsv1.2 https://sh.rustup.rs -sSf | sh
+ 1629  echo $PATH
+ 1630  rustc --version
+ 1631  cargo --version
+ 1632  python3
+ 1633  sudo apt update
+ 1634  cat .bash_aliases 
+ 1635  gedit .bash_aliases 
+ 1636  cura
+ 1637  cd Software/
+ 1638  ls
+ 1639  mv ~/Downloads/UltiMaker-Cura-5.4.0-beta.1-linux.AppImage .
+ 1640  cura 
+ 1641  cd Software/
+ 1642  ll
+ 1643  chmod +x UltiMaker-Cura-5.4.0-beta.1-linux.AppImage 
+ 1644  cura 
+ 1645  cd
+ 1646  gedit .bash_aliases 
+ 1647  find . -name "receiver.cpp"
+ 1648  find . -name "sender.cpp"
+ 1649  cd ../../
+ 1650  cd ..
+ 1651  ls
+ 1652  cd asio-1.28.0/src/examples/cpp11/multicast/
+ 1653  ls
+ 1654  cd -
+ 1655  cp asio-1.28.0/src/examples/cpp11/multicast/* .
+ 1656  ls
+ 1657  g++ receiver.cpp -pthread -I include/
+ 1658  ls
+ 1659  g++ -o receiver receiver.cpp -pthread -I include/
+ 1660  g++ -o sender sender.cpp -pthread -I include/
+ 1661  cd
+ 1662  find . -name "*sell*"
+ 1663  cargo new hello_world
+ 1664  cargo run
+ 1665  cd hello_world/
+ 1666  cargo run
+ 1667  cura
+ 1668  rustc --version
+ 1669  python3
+ 1670  ifconfig 
+ 1671  cd Work/gm/sdv2.0/asio-test/
+ 1672  ./sender 
+ 1673  ./sender 239.255.0.1
+ 1674  route
+ 1675  code .
+ 1676  rm a.out 
+ 1677  ./receiver 
+ 1678  ./receiver 0.0.0.0 239.255.0.1
+ 1679  ./receiver 239.255.0.1 239.255.0.1
+ 1680  ifconfig 
+ 1681  ping 192.168.0.103
+ 1682  ./receiver 239.255.0.1 239.255.0.1
+ 1683  python3
+ 1684  df -h
+ 1685  #sudo dd if=CentOS-Stream-9-latest-x86_64-dvd1.iso of=/dev/sda
+ 1686  df -h
+ 1687  sudo umount /dev/sda1
+ 1688  df -h
+ 1689  sudo dd if=CentOS-Stream-9-latest-x86_64-dvd1.iso of=/dev/sda bs=1M status=progress
+ 1690  sudo sync
+ 1691  scp Ruchir-Chauhan-premium-processing-docs.zip kzpngr@192.168.0.103:/tmp/
+ 1692  mv /tmp/backup-care .
+ 1693  touch about-puran.txt
+ 1694  ll /dev/
+ 1695  df -h
+ 1696  ifconfig 
+ 1697  nm-connection-editor 
+ 1698  ifconfig 
+ 1699  ping 192.168.0.103
+ 1700  ifconfig 
+ 1701  git clone https://github.com/ruchirchauhan/ghub-rebase-test.git
+ 1702  git branch
+ 1703  cd ghub-rebase-test/
+ 1704  git branch
+ 1705  git checkout dev
+ 1706  git checkout -b dev1
+ 1707  sudo nmap -sn 192.168.0.0/24
+ 1708  cd .ssh/
+ 1709  ll
+ 1710  cat known_hosts
+ 1711  ping 192.168.0.217
+ 1712  ssh root@192.168.0.217
+ 1713  python
+ 1714  cura 
+ 1715  python3
+ 1716  okular .
+ 1717  okular ChildInformationRecord.pdf 
+ 1718  find . -name "*Resume*"
+ 1719  cura
+ 1720  ifconfig 
+ 1721  sudo minicom -D /dev/ttyUSB1
+ 1722  ssh root@10.42.0.100
+ 1723  sudo apt update
+ 1724  sudo pip3 install conan
+ 1725  python3.7 -m pip install --upgrade pip
+ 1726  cd Git/
+ 1727  ls
+ 1728  mkdir uprotocol
+ 1729  cd uprotocol/
+ 1730  git clone https://github.com/eclipse-uprotocol/up-cpp.git
+ 1731  cd up-cpp/
+ 1732  mkdir build
+ 1733  gcc --version
+ 1734  sudo apt install gcc-11 g++-11
+ 1735  ifconfig 
+ 1736  nm-connection-editor 
+ 1737  ifconfig 
+ 1738  pwd
+ 1739  echo $HOME
+ 1740  #cp -r /home/ruchir/
+ 1741  ls
+ 1742  cd precision-bckup-2024/
+ 1743  cp -r /home/ruchir/* .
+ 1744  sync
+ 1745  ldd
+ 1746  lsblk
+ 1747  sudo mkdir /mnt/external
+ 1748  sudo mount /dev/sda /mnt/external
+ 1749  sudo mount /dev/sda1 /mnt/external
+ 1750  sudo apt install ntfs-3g
+ 1751  sudo ntfsfix -n /dev/sda1
+ 1752  sudo ntfsfix -b /dev/sda1
+ 1753  sudo ntfsfix /dev/sda1
+ 1754  sudo mount /dev/sda1 /mnt/external
+ 1755  cd /mnt/external/
+ 1756  ls
+ 1757  sudo umount /mnt/external 
+ 1758  cd
+ 1759  sudo umount /mnt/external 
+ 1760  sync
+ 1761  cd /mnt/external/
+ 1762  ls
+ 1763  pwd
+ 1764  cd
+ 1765  cd /etc/apt
+ 1766  ls
+ 1767  ll
+ 1768  rm sources.list~
+ 1769  rm -rf sources.list~
+ 1770  sudo rm -rf sources.list~
+ 1771  sudo rm -rf trusted.gpg~
+ 1772  gedit sources.list
+ 1773  cd sources.list.d/
+ 1774  ll
+ 1775  sudo rm bladerf-ubuntu-bladerf-bionic.list*
+ 1776  sudo rm gnuradio-ubuntu-gnuradio-releases-bionic.list*
+ 1777  sudo rm gqrx-ubuntu-gqrx-sdr-bionic.list*
+ 1778  sudo rm js-reynaud-ubuntu-kicad-5_1-bionic.list*
+ 1779  sudo rm google-chrome.list*
+ 1780  sudo rm kicad-ubuntu-kicad-6_0-releases-bionic.list*
+ 1781  sudo rm kitware.list*
+ 1782  sudo rm microsoft-edge.list*
+ 1783  sudo rm mosquitto-dev-ubuntu-mosquitto-ppa-bionic.list*
+ 1784  sudo rm myriadrf-ubuntu-*
+ 1785  sudo rm scootersoftware.list*
+ 1786  sudo rm teamviewer.list*
+ 1787  sudo rm vscode.list*
+ 1788  ll
+ 1789  cd ..
+ 1790  ll
+ 1791  gedit trusted.gpg
+ 1792  cd trusted.gpg.d/
+ 1793  ll
+ 1794  sudo rm bladerf_ubuntu_bladerf.gpg 
+ 1795  sudo rm gnuradio_ubuntu_gnuradio-releases.gpg 
+ 1796  sudo rm google-*
+ 1797  sudo rm gqrx_ubuntu_gqrx-sdr.gpg 
+ 1798  sudo rm js-reynaud_ubuntu_kicad-5_1.gpg 
+ 1799  sudo rm kicad_ubuntu_kicad-6_0-releases.gpg 
+ 1800  sudo rm microsoft*
+ 1801  sudo rm mosquitto-dev_ubuntu_mosquitto-ppa.gpg *
+ 1802  ll
+ 1803  sudo apt update
+ 1804  sudo apt install gpg
+ 1805  ll
+ 1806  sudo apt install ubuntu-keyring 
+ 1807  ls
+ 1808  sudo apt install --reinstall ubuntu-keyring 
+ 1809  ll
+ 1810  cd
+ 1811  sudo apt update
+ 1812  sudo apt upgrade 
+ 1813  sudo apt dist-upgrade 
+ 1814  sudo apt autoremove 
+ 1815  sudo apt update 
+ 1816  sudo apt upgrade 
+ 1817  sudo apt dist-upgrade 
+ 1818  sudo dpkg-divert --divert /etc/apt/apt.conf.d/20apt-esm-hook.conf.bak --rename --local /etc/apt/apt.conf.d/20apt-esm-hook.conf 
+ 1819  sudo apt dist-upgrade 
+ 1820  sudo apt update 
+ 1821  apt list --upgradable 
+ 1822  sudo apt upgrade 
+ 1823  sudo apt dist-upgrade 
+ 1824  sudo apt update 
+ 1825  cd /etc/apt/
+ 1826  ls
+ 1827  cd apt.conf.d/
+ 1828  ls
+ 1829  cd ..
+ 1830  cd sources.list.d/
+ 1831  ll
+ 1832  sudo apt update 
+ 1833  apt list --upgradable 
+ 1834  sudo apt upgrade 
+ 1835  sudo apt dist-upgrade 
+ 1836  sudo apt autoremove 
+ 1837  sudo dh -a
+ 1838  apt-cache policy debhelper 
+ 1839  apt list --upgradable -a
+ 1840  sudo apt upgrade debhelper
+ 1841  sudo aptitude update
+ 1842  sudo apt install aptitude
+ 1843  sudo aptitude install debhelper 
+ 1844  sudo apt update
+ 1845  sudo apt upgrade 
+ 1846  sudo apt dist-upgrade 
+ 1847  dpkg --get-selections | sudo tee installed-software.txt > /dev/null
+ 1848  cat /etc/ssh/ssh_config
+ 1849  cat /etc/sane.d/dll.conf
+ 1850  lsb_release -a
+ 1851  sudo apt update
+ 1852  sudo apt upgrade 
+ 1853  sudo apt dist-upgrade 
+ 1854  sudo apt autoremove 
+ 1855  sudo apt update
+ 1856  sudo apt upgrade
+ 1857  sudo apt dist-upgrade 
+ 1858  sudo apt autoremove 
+ 1859  sudo apt autoclean 
+ 1860  sudo do-release-upgrade 
+ 1861  lsb_release -a
+ 1862  sudo apt update
+ 1863  sudo apt upgrade 
+ 1864  sudo dpkg --purge --force-all libboost-mpi-python1.74.0
+ 1865  sudo dpkg --purge --force-all libboost-mpi-python1.74-dev
+ 1866  sudo dpkg --purge --force-all libboost-mpi-python-dev
+ 1867  sudo dpkg --purge --force-all libboost-mpi1.74-dev
+ 1868  sudo dpkg --purge --force-all libboost-mpi-dev
+ 1869  sudo apt update
+ 1870  sudo apt upgrade
+ 1871  sudo dpkg --purge --force-all libboost-all-dev
+ 1872  sudo apt update
+ 1873  sudo apt upgrade
+ 1874  sudo apt autoremove 
+ 1875  sudo apt autoclean 
+ 1876  sudo apt update
+ 1877  sudo apt dist-upgrade 
+ 1878  sudo rm /etc/apt/sources.list.d/installed-software.txt 
+ 1879  sudo apt dist-upgrade 
+ 1880  sudo rm -f /etc/alternatives/mpi* /var/lib/dpkg/alternatives/mpi*
+ 1881  sudo apt install openmpi-bin
+ 1882  sudo apt update 
+ 1883  sudo apt upgrade 
+ 1884  sudo apt dist-upgrade 
+ 1885  gcc
+ 1886  gcc --version
+ 1887  sudo apt --purge remove gcc-10-base 
+ 1888  sudo apt update
+ 1889  apt list --upgradable 
+ 1890  sudo aptitude install gcc-10-base 
+ 1891  sudo apt update
+ 1892  sudo apt upgrade 
+ 1893  sudo apt autoremove 
+ 1894  sudo apt update
+ 1895  sudo apt upgrade 
+ 1896  sudo apt dist-upgrade 
+ 1897  sudo apt autoremove 
+ 1898  sudo apt autoclean 
+ 1899  cd
+ 1900  gedit .bash_aliases 
+ 1901  gedit .bashrc 
+ 1902  sudo apt update
+ 1903  sudo apt upgrade 
+ 1904  sudo apt dist-upgrade 
+ 1905  sudo apt autoremove 
+ 1906  sudo apt autoclean 
+ 1907  cd Downloads/
+ 1908  sudo apt install ./google-chrome-stable_current_amd64.deb 
+ 1909  gcc --version
+ 1910  cura
+ 1911  cd
+ 1912  cd Software/
+ 1913  ll
+ 1914  cp ~/Downloads/UltiMaker-Cura-5.7.0-linux-X64.AppImage .
+ 1915  cd
+ 1916  cd Software/
+ 1917  curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh
+ 1918  cura
+ 1919  cd Software/
+ 1920  ll UltiMaker-Cura-5.*
+ 1921  chmod +x UltiMaker-Cura-5.7.0-linux-X64.AppImage 
+ 1922  cura
+ 1923  ll
+ 1924  rm Ultimaker_Cura-4.13.0.AppImage 
+ 1925  rm UltiMaker-Cura-5.4.0-beta.1-linux.AppImage 
+ 1926  blender 
+ 1927  blender --version
+ 1928  cd
+ 1929  cd Git/
+ 1930  ls
+ 1931  cd uprotocol/
+ 1932  ll
+ 1933  cd up-cpp/
+ 1934  ll
+ 1935  conan --version
+ 1936  git submodule update --init --recursive
+ 1937  cd build/
+ 1938  ls
+ 1939  conan install .. -o build_testing=True
+ 1940  conan profile detect
+ 1941  conan install .. -o build_testing=True
+ 1942  cmake -S .. -DCMAKE_TOOLCHAIN_FILE=conan_toolchain.cmake -DCMAKE_BUILD_TYPE=Release -DBUILD_SHARED_LIBS=ON  -DCMAKE_INSTALL_PREFIX=install
+ 1943  cmake --build . --target install -- -j
+ 1944  cd
+ 1945  cd .conan2/
+ 1946  ll
+ 1947  cd
+ 1948  cd Git/uprotocol/up-cpp/
+ 1949  conan create . --build=missing
+ 1950  cd ..
+ 1951  $ git clone https://github.com/eclipse-uprotocol/up-client-zenoh-cpp.git
+ 1952  git clone https://github.com/eclipse-uprotocol/up-client-zenoh-cpp.git
+ 1953  cd up-client-zenoh-cpp/
+ 1954  cd ..
+ 1955  git clone https://github.com/eclipse-zenoh/zenoh-c.git
+ 1956  cd zenoh-c/
+ 1957  ./target/release/examples/z_pub
+ 1958  ./target/release/examples/z_get
+ 1959  ./target/release/examples/z_pub_thr 
+ 1960  cd
+ 1961  cd .conan2/
+ 1962  ll
+ 1963  cd p
+ 1964  ll
+ 1965  cd ..
+ 1966  find . -name "*.a"
+ 1967  find . -name "UTransport.h"
+ 1968  cd ..
+ 1969  find . -name "up-cpp"
+ 1970  cd .conan2/
+ 1971  find . -name "up-cpp"
+ 1972  find . -name "*up-cpp*"
+ 1973  cd ..
+ 1974  sudo find / -name "timestamp.proto"
+ 1975  cd .ssh/
+ 1976  ls
+ 1977  cat id_rsa.pub 
+ 1978  ssh-keygen -t rsa -C "ruchir20072007@gmail.com"
+ 1979  ls
+ 1980  cat id_rsa_git.pub 
+ 1981  cd
+ 1982  cd Git/
+ 1983  ls
+ 1984  rm -rf vsomeip/
+ 1985  cd boost_1_84_0/
+ 1986  ./bootstrap.sh 
+ 1987  ./b2
+ 1988  echo $CFLAGS
+ 1989  echo $LDFLAGS
+ 1990  cd ..
+ 1991  git clone https://github.com/COVESA/vsomeip.git
+ 1992  cd vsomeip/
+ 1993  git branch
+ 1994  git checkout 3.4.10
+ 1995  git branch
+ 1996  mkdir build
+ 1997  cd build
+ 1998  cd ..
+ 1999  ls
+ 2000  cd up-client-vsomeip-cpp/
+ 2001  cd Git/
+ 2002  cd uprotocol/
+ 2003  ls
+ 2004  cd up-cpp/
+ 2005  conan create . --build=missing
+ 2006  conan profile detect
+ 2007  conan create . --build=missing
+ 2008  cd ../up-client-zenoh-cpp/
+ 2009  conan create . --build=missing
+ 2010  cd ..
+ 2011  ls
+ 2012  git clone git@github.com:eclipse-uprotocol/up-zenoh-example-cpp.git
+ 2013  cd up-zenoh-example-cpp/
+ 2014  mkdir build
+ 2015  cd build/
+ 2016  conan install ..
+ 2017  cmake -S .. -DCMAKE_TOOLCHAIN_FILE=conan_toolchain.cmake -DCMAKE_BUILD_TYPE=Release
+ 2018  cmake --build .
+ 2019  cd ../../
+ 2020  ls
+ 2021  cd up-client-zenoh-cpp/
+ 2022  git branch
+ 2023  conan create .
+ 2024  cd ..
+ 2025  ls
+ 2026  cd up-client-vsomeip-cpp/
+ 2027  ls
+ 2028  mkdir build
+ 2029  cd build/
+ 2030  conan install ..
+ 2031  cd ..
+ 2032  ls
+ 2033  rm -rf *.cmake
+ 2034  ls
+ 2035  rm -rf *.sh *.json
+ 2036  ls
+ 2037  cd build/
+ 2038  ls
+ 2039  conan install ../
+ 2040  ls
+ 2041  cd ..
+ 2042  ls
+ 2043  rm -rf *.sh *.json
+ 2044  rm -rf *.cmake
+ 2045  ls
+ 2046  conan create .
+ 2047  clear
+ 2048  conan create .
+ 2049  cd ..
+ 2050  ls
+ 2051  cd up-client-zenoh-cpp/
+ 2052  git branch
+ 2053  conan create .
+ 2054  cd ..
+ 2055  cd up-zenoh-example-cpp/
+ 2056  ls
+ 2057  cd build/
+ 2058  cd ..
+ 2059  git clean -fdx
+ 2060  ls
+ 2061  mkdir build
+ 2062  cd build/
+ 2063  conan install ..
+ 2064  cd ..
+ 2065  ls
+ 2066  cd build/
+ 2067  ls
+ 2068  cmake -S .. -DCMAKE_TOOLCHAIN_FILE=conan_toolchain.cmake -DCMAKE_BUILD_TYPE=Release
+ 2069  cmake --build .
+ 2070  ldconfig -p |grep zenoh
+ 2071  echo $LD_LIBRARY_PATH
+ 2072  cd ..
+ 2073  git log -n1
+ 2074  export GITHUB_CICD_ZENOH_PATH=/usr/local/lib
+ 2075  cmake --build .
+ 2076  cd build/
+ 2077  cmake --build .
+ 2078  cd ..
+ 2079  git clean -fdx
+ 2080  ls
+ 2081  mkdir build
+ 2082  cd build
+ 2083  conan install ..
+ 2084  cmake -S .. -DCMAKE_TOOLCHAIN_FILE=conan_toolchain.cmake -DCMAKE_BUILD_TYPE=Release
+ 2085  cmake --build .
+ 2086  ls
+ 2087  cd ..
+ 2088  git clean -fdx
+ 2089  ls
+ 2090  mkdir build
+ 2091  cd build/
+ 2092  conan install .
+ 2093  conan install . ../
+ 2094  conan install ../ -of .
+ 2095  ls
+ 2096  cd ..
+ 2097  ls
+ 2098  cd build/
+ 2099  cmake -S .. -DCMAKE_TOOLCHAIN_FILE=conan_toolchain.cmake -DCMAKE_BUILD_TYPE=Release
+ 2100  cmake --build .
+ 2101  cd ..
+ 2102  ls
+ 2103  cd up-client-vsomeip-cpp/
+ 2104  ls
+ 2105  cd build/
+ 2106  ls
+ 2107  cd ..
+ 2108  ls
+ 2109  cd build/
+ 2110  cd ..
+ 2111  mkdir vsomeip-lib
+ 2112  cd vsomeip-lib/
+ 2113  cp ../../vsomeip/conanfile.py .
+ 2114  conan install .
+ 2115  ls
+ 2116  conan install .
+ 2117  cp ../../vsomeip/conanfile.py .
+ 2118  conan install .
+ 2119  cp ../../vsomeip/conanfile.py . && conan install .
+ 2120  ls
+ 2121  conan create .
+ 2122  cp ../../vsomeip/conanfile.py . && conan install .
+ 2123  conan create .
+ 2124  cp ../../vsomeip/conanfile.py . && conan install .
+ 2125  conan create .
+ 2126  cp ../../vsomeip/conanfile.py . && conan install .
+ 2127  conan create .
+ 2128  ls
+ 2129  rm -rf *
+ 2130  cp ../../vsomeip/conanfile.py . && conan install .
+ 2131  rm -rf * && cp ../../vsomeip/conanfile.py . && conan install .
+ 2132  conan create .
+ 2133  rm -rf *
+ 2134  cp -r ../../vsomeip .
+ 2135  ls
+ 2136  cd vsomeip/
+ 2137  ls
+ 2138  cd build
+ 2139  rm -rf *
+ 2140  conan install .. -of .
+ 2141  cd ..
+ 2142  conan create .
+ 2143  ls
+ 2144  conan create .
+ 2145  cd /usr/local/lib
+ 2146  ls
+ 2147  pwd
+ 2148  cd cmake/
+ 2149  ls -l |wc
+ 2150  ls
+ 2151  cd boost_atomic-1.84.0/
+ 2152  ls
+ 2153  cd ..
+ 2154  ll
+ 2155  cd ..
+ 2156  ls
+ 2157  ls libboost_*
+ 2158  cd ..
+ 2159  cd include/
+ 2160  cd boost/
+ 2161  ls
+ 2162  cd ..
+ 2163  cd boost/
+ 2164  pwd
+ 2165  cd ..
+ 2166  cd ../lib
+ 2167  ls libboost_*
+ 2168  cd cmake
+ 2169  ls
+ 2170  cd
+ 2171  cd .conan2/p/
+ 2172  ls
+ 2173  cd ..
+ 2174  cd 
+ 2175  rm -rf .conan2/
+ 2176  cd Git/uprotocol/
+ 2177  cd up-cpp/
+ 2178  conan create .
+ 2179  cona profile detect
+ 2180  conan profile detect
+ 2181  conan create .
+ 2182  cd ../up-client-vsomeip-cpp/
+ 2183  cd examples/uE/build/
+ 2184  ls
+ 2185  ./uE_publisher 
+ 2186  #export LD_LIBRARY_PATH=
+ 2187  export LD_LIBRARY_PATH=/home/ruchir/Git/uprotocol/vsomeip/build/local-install
+ 2188  echo $LD_LIBRARY_PATH
+ 2189  ./uE_publisher 
+ 2190  export LD_LIBRARY_PATH=/home/ruchir/Git/uprotocol/vsomeip/build/local-install/lib
+ 2191  echo $LD_LIBRARY_PATH
+ 2192  ./uE_publisher 
+ 2193  ldconfig -p |grep boost
+ 2194  ldconfig -p |grep zenoh
+ 2195  export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:/usr/local/lib
+ 2196  ./uE_publisher 
+ 2197  history > history.txt

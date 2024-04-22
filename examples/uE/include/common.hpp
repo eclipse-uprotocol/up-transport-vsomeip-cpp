@@ -23,11 +23,21 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-#ifndef MISCCONFIG_HPP
-#define MISCCONFIG_HPP
-#include <cstdint>
+#ifndef COMMON_HPP
+#define COMMON_HPP
+#include <up-cpp/uuid/factory/Uuidv8Factory.h>
+#include <up-cpp/uuid/serializer/UuidSerializer.h>
+#include <up-cpp/uri/serializer/LongUriSerializer.h>
+#include <up-cpp/transport/builder/UAttributesBuilder.h>
+#include <up-cpp/transport/UTransport.h>
+#include <up-client-vsomeip-cpp/transport/VsomeipUTransport.hpp>
+#include <chrono>
+#include <csignal>
+#include <unistd.h>
 
-constexpr uint32_t  UT_SUBSCRIPTION_REQUEST_SINK_URI_UEID = 0U;
+using namespace uprotocol::utransport;
+using namespace uprotocol::uuid;
+using namespace uprotocol::v1;
+using namespace uprotocol::uri;
 
-
-#endif // MISCCONFIG_HPP
+#endif
