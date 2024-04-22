@@ -1,54 +1,72 @@
-# gmultifi_uplat_client-vsomeip-cpp
-prereq libs (not available in conan central, require manual builds):
-vsomeip
+# up-client-vsomeip-cpp
+## 1. Overview
+This library provides a C++ vsomeip based implementation of uTransport
 
-Compilation steps:
-1. compile up-cpp: follow their github page for installation
+*_IMPORTANT NOTE:_ This project is under active development*
 
-2. compile boost-1.84.0: write instructions from streamer/doc folder (boost required for vsomeip)
-install in /usr/local/lib
+This module contains the implementation for pub-sub and RPC API`s defined in the uProtocol spec
 
-3. compile vsomeip: write instructions from streamer/doc folder
-can also be installed in /usr/local/lib
-not required though, can be stored some place locally
-for example /tmp/vsomeip/install
-this install folder will have lib and include folders
+## 2. Getting Started
+### 2.1. Requirements:
+- Compiler: GCC/G++ 11 or Clang 13
+- Ubuntu 22.04
+- conan : 1.59 or latest 2.X
+- cmake: 3.20.0+
+- ninja: 1.10.0+ (optional, can instead use 'make' as well)
 
-4. now compile this library using following steps
-two ways:
-4.1
-cd up-client-vsomeip-cpp
-mkdir build
-cd build
+### 2.2. Dependencies
+#### 2.2.1. up-cpp
+Install up-cpp library: https://github.com/eclipse-uprotocol/up-cpp
 
-export LOCAL_VSOMEIP_PATH=/tmp/vsomeip/install
-conan install .. -of .
-cmake -S .. -DCMAKE_TOOLCHAIN_FILE=conan_toolchain.cmake -DCMAKE_BUILD_TYPE=Release
-cmake --build .
+#### 2.2.1. vsomeip
+- Install boost (version: 1.84.0): https://www.boost.org/users/history/version_1_84_0.html
+```
+$ cd boost
+$ ./bootstrap.sh
+$ ./b2
+$ sudo ./b2 install
+```
 
-4.2
-cd up-client-vsomeip-cpp
-conan create .
+- Install vsomeip (version: 3.4.10):
 
+Note: Do not enable signal handlling in vsomeip library
+```
+$ git clone https://github.com/COVESA/vsomeip.git
+$ git cd vsomeip
+$ git checkout 3.4.10
+$ mkdir build
+$ cd build
+$ cmake -DCMAKE_INSTALL_PREFIX:PATH=/usr/local/ -G Ninja ..
+$ ninja
+$ sudo ninja install
+```
 
-5. compile examples
-cd up-client-vsomeip-cpp/examples/uE
-mkdir build
-cd build
+## 3. How to build library
+Two ways:
+### 3.1. Build locally
+```
+$ git clone <repo_link>
+$ cd up-client-vsomeip-cpp
+$ mkdir build
+$ cd build
+$ export LOCAL_VSOMEIP_PATH=/usr/local
+$ conan install .. -of .
+$ cmake -S .. -DCMAKE_TOOLCHAIN_FILE=conan_toolchain.cmake -DCMAKE_BUILD_TYPE=Release
+$ cmake --build .
+```
 
-conan install .. -of .
-cmake .. -DCMAKE_TOOLCHAIN_FILE=conan_toolchain.cmake -DCMAKE_BUILD_TYPE=Release
-cmake --build .
+### 3.2. Build as conan package
+```
+$ cd up-client-vsomeip-cpp
+$ export LOCAL_VSOMEIP_PATH=/usr/local
+$ conan create .
+```
 
-6. execute examples
-for vsomeip lib:
-export LD_LIBRARY_PATH=/tmp/vsomeip/install/lib
-for boost lib:
-export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:/usr/local/lib
+## 4. Examples
+Refer to [EXAMPLES](examples/README.md)
 
-execute examples located inside build folder
-./uE_publisher
-
-7. trouble shoot
-if not able to find a library
-ldconfig -p |grep boost
+## 5. Troubleshooting for common issues
+- If not able to find a library, check using:
+```
+ldconfig -p |grep <lib_name>
+```

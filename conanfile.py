@@ -4,7 +4,7 @@ from conan.tools.files import apply_conandata_patches, copy, export_conandata_pa
 import os
 
 class UpClientVSomeip(ConanFile):
-    name = "gmultifi_client-vsomeip"
+    name = "up-client-vsomeip-cpp"
     package_type = "library"
     license = "Apache-2.0 license"
     homepage = "https://github.com/eclipse-uprotocol"
@@ -46,7 +46,7 @@ class UpClientVSomeip(ConanFile):
         self.requires("protobuf/3.21.12")
         self.requires("gtest/1.14.0")
         self.requires("rapidjson/cci.20230929")
-        # self.requires("vsomeip/3.4.10")
+        # self.requires("vsomeip/3.4.10") // This shall be enabled once, conan.io starts supporting vsomeip library
 
     def generate(self):
         tc = CMakeToolchain(self)
@@ -70,4 +70,4 @@ class UpClientVSomeip(ConanFile):
             cmake.install()
 
     def package_info(self):
-        self.cpp_info.libs = ["gmultifi_client-vsomeip"]
+        self.cpp_info.libs = ["up-client-vsomeip-cpp"]

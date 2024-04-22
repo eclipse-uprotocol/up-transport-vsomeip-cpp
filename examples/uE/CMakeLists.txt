@@ -22,10 +22,10 @@
 
 cmake_minimum_required(VERSION 3.20)
 project(uE VERSION 0.1.0 LANGUAGES CXX)
-set(UStreamerConfigFile "ustreamer-config.json")
+set(SOMEIP_CONFIG_FILE "someip-config.json")
 
 if(DEFINED ENV{LOCAL_VSOMEIP_PATH})
-    message("LOCAL_VSOMEIP_PATH [${LOCAL_VSOMEIP_PATH}]")
+    message("LOCAL_VSOMEIP_PATH [$ENV{LOCAL_VSOMEIP_PATH}]")
     include_directories($ENV{LOCAL_VSOMEIP_PATH}/include)
     link_directories($ENV{LOCAL_VSOMEIP_PATH}/lib)
     # add_link_options(-Wl,--no-as-needed)
@@ -38,19 +38,19 @@ endif()
 
 find_package(spdlog REQUIRED)
 find_package(up-cpp QUIET)
-find_package(gmultifi_client-vsomeip REQUIRED)
+find_package(up-client-vsomeip-cpp REQUIRED)
 find_package(fmt REQUIRED CONFIG)
 find_package(spdlog REQUIRED)
 find_package(protobuf CONFIG REQUIRED)
 add_definitions(-DSPDLOG_FMT_EXTERNAL)
 
-configure_file(${CMAKE_CURRENT_SOURCE_DIR}/config/${UStreamerConfigFile} ${CMAKE_BINARY_DIR}/bin/src/${UStreamerConfigFile} COPYONLY)
+configure_file(${CMAKE_CURRENT_SOURCE_DIR}/../../config/${SOMEIP_CONFIG_FILE} ${CMAKE_BINARY_DIR}/${SOMEIP_CONFIG_FILE} COPYONLY)
 
 #uE_subscriber
-add_executable(uE_subscriber src/uE_subscriber.cpp)
+add_executable(uE_subscriber uE_subscriber.cpp)
 target_link_libraries(uE_subscriber PRIVATE
         up-cpp::up-cpp
-        gmultifi_client-vsomeip::gmultifi_client-vsomeip
+        up-client-vsomeip-cpp::up-client-vsomeip-cpp
         fmt::fmt
         spdlog::spdlog
         protobuf::libprotobuf
@@ -84,10 +84,10 @@ target_include_directories(uE_subscriber
 
 
 #uE_rpcClient
-add_executable(uE_rpcClient src/uE_rpcClient.cpp)
+add_executable(uE_rpcClient uE_rpcClient.cpp)
 target_link_libraries(uE_rpcClient PRIVATE
         up-cpp::up-cpp
-        gmultifi_client-vsomeip::gmultifi_client-vsomeip
+        up-client-vsomeip-cpp::up-client-vsomeip-cpp
         fmt::fmt
         spdlog::spdlog
         protobuf::libprotobuf
@@ -121,10 +121,10 @@ target_include_directories(uE_rpcClient
 
 
 #uE_rpcServer
-add_executable(uE_rpcServer src/uE_rpcServer.cpp)
+add_executable(uE_rpcServer uE_rpcServer.cpp)
 target_link_libraries(uE_rpcServer PRIVATE
         up-cpp::up-cpp
-        gmultifi_client-vsomeip::gmultifi_client-vsomeip
+        up-client-vsomeip-cpp::up-client-vsomeip-cpp
         fmt::fmt
         spdlog::spdlog
         protobuf::libprotobuf
@@ -158,10 +158,10 @@ target_include_directories(uE_rpcServer
 
 
 #uE_publisher
-add_executable(uE_publisher src/uE_publisher.cpp)
+add_executable(uE_publisher uE_publisher.cpp)
 target_link_libraries(uE_publisher PRIVATE
         up-cpp::up-cpp
-        gmultifi_client-vsomeip::gmultifi_client-vsomeip
+        up-client-vsomeip-cpp::up-client-vsomeip-cpp
         fmt::fmt
         spdlog::spdlog
         protobuf::libprotobuf

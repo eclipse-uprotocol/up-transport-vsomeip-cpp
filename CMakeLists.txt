@@ -1,12 +1,10 @@
 cmake_minimum_required(VERSION 3.20.1)
 
-set(this_lib gmultifi_client-vsomeip)
-
 # project name
-project(${this_lib} LANGUAGES CXX)
+project(${PROJECT_NAME} LANGUAGES CXX)
 
 if(DEFINED ENV{LOCAL_VSOMEIP_PATH})
-    message("LOCAL_VSOMEIP_PATH [${LOCAL_VSOMEIP_PATH}]")
+    message("LOCAL_VSOMEIP_PATH [$ENV{LOCAL_VSOMEIP_PATH}]")
     include_directories($ENV{LOCAL_VSOMEIP_PATH}/include)
     link_directories($ENV{LOCAL_VSOMEIP_PATH}/lib)
     add_link_options(-Wl,--no-as-needed)
@@ -38,9 +36,8 @@ add_library(
     src/SomeipHandler.cpp
     src/MessageTranslator.cpp)
 
-add_library(gmultifi_client-vsomeip::${PROJECT_NAME} ALIAS ${PROJECT_NAME})
+add_library(${PROJECT_NAME}::${PROJECT_NAME} ALIAS ${PROJECT_NAME})
 
-#TODO: -fPIC and -Werror needs to be added later. Currently it is causing issues because uTransport throws error.
 target_compile_options(${PROJECT_NAME} PRIVATE
     -O2
     #-fPIC
@@ -59,7 +56,7 @@ target_compile_options(${PROJECT_NAME} PRIVATE
     -Wfloat-equal
 )
 
-target_link_libraries(${this_lib} PUBLIC
+target_link_libraries(${PROJECT_NAME} PUBLIC
     rapidjson
     protobuf::libprotobuf
     fmt::fmt
