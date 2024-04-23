@@ -20,7 +20,7 @@
 cmake_minimum_required(VERSION 3.20.1)
 
 # project name
-project(${PROJECT_NAME} LANGUAGES CXX)
+project(up-client-vsomeip-cpp LANGUAGES CXX)
 
 if(DEFINED ENV{LOCAL_VSOMEIP_PATH})
     message("LOCAL_VSOMEIP_PATH [$ENV{LOCAL_VSOMEIP_PATH}]")
