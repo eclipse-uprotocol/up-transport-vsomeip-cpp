@@ -156,13 +156,13 @@ int main() {
             spdlog::error("sendMessage failed");
             break;
         }
-        sleep(10);
+        sleep(2);
         static uint8_t *temperatureDataOFF = getLedOFFMsg();
         if (UCode::OK != sendMessage(*ledControllerURI, temperatureDataOFF, 5)) {
             spdlog::error("sendMessage failed");
             break;
         }
-        sleep(10);
+        sleep(2);
     }
 
     spdlog::info("Exiting from vsomeip client...");

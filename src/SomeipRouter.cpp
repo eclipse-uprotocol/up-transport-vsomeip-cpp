@@ -28,12 +28,15 @@
 #include <up-cpp/uri/serializer/LongUriSerializer.h>
 #include <up-client-vsomeip-cpp/routing/SomeipWrapper.hpp>
 #include <up-client-vsomeip-cpp/routing/MiscConfig.hpp>
+#include "rapidjson/document.h"
 #include <fstream>
 #include <filesystem>
-#include "rapidjson/document.h"
+#include <cstdlib>
 
 using namespace uprotocol::utransport;
 using namespace uprotocol::v1;
+
+const char* SOMEIP_CONFIG_FILE = std::getenv("VSOMEIP_CONFIGURATION");
 
 /**
  * @brief @see @ref SomeipRouter::SomeipRouter()
@@ -157,7 +160,7 @@ void SomeipRouter::offerServicesAndEvents(std::shared_ptr<UUri> uriPtr) {
     //TODO: Change this path if you need to run vsomeip-client-example uE test cases.
     //uE testcases already runs in bin folder whereas uStreamer runs outside bin folder.
     //Add/Remove bin folder path depends on whether you run uStreamer or vsoemip-client example test cases.
-    jsonDirectoryPath = jsonDirectoryPath + "/bin/src/ustreamer-config.json";
+    jsonDirectoryPath = jsonDirectoryPath + "/" +std::string(SOMEIP_CONFIG_FILE);
     std::ifstream jsonFile(jsonDirectoryPath);
 
     LogInfo("{} JSON file Path : {}", __FUNCTION__, jsonDirectoryPath);
