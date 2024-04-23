@@ -43,6 +43,8 @@ $ sudo ninja install
 
 ## 3. How to build library
 Two ways:
+
+Note: If you are planning on running the examples, follow, 3.2 Build as conan package instructions
 ### 3.1. Build locally
 ```
 $ git clone <repo_link>
