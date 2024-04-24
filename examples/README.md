@@ -41,6 +41,13 @@ $ export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:/usr/local/lib
 ```
 - For pub/sub examples, sequence in which corresponding uE and mE are executed, doesn't matter
 - For rpc examples, always execute the rpcServer before rpcClient
+- You will require to enable multicasting on network interface, use the provided script [setupNwForSomeip.sh](./setupNwForSomeip.sh)
+
+```
+$ chmod +x setupNwForSomeip.sh
+$ ./setupNwForSomeip.sh
+```
+
 
 ### 3.2. Running uE
 - Execute examples located inside uE/build folder, using command:

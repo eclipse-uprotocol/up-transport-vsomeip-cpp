@@ -1,0 +1,17 @@
+.idea/*
+build/*
+examples/uE/build/*
+examples/mE/build
+CMakeCache.txt
+CMakeFiles/
+Makefile
+cmake-build-debug/
+cmake-build-release/
+cmake_install.cmake
+.vscode/settings.json
+/.cmake/
+/build.ninja
+/Testing/Temporary/LastTest.log
+/.ninja_deps
+/.ninja_log
+.vscode
