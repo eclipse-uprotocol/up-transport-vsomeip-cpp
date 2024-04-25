@@ -31,12 +31,9 @@
 #include "rapidjson/document.h"
 #include <fstream>
 #include <filesystem>
-#include <cstdlib>
 
 using namespace uprotocol::utransport;
 using namespace uprotocol::v1;
-
-const char* SOMEIP_CONFIG_FILE = std::getenv("VSOMEIP_CONFIGURATION");
 
 /**
  * @brief @see @ref SomeipRouter::SomeipRouter()
@@ -155,16 +152,15 @@ void SomeipRouter::offerServicesAndEvents(std::shared_ptr<UUri> uriPtr) {
   */
  std::shared_ptr<std::vector<std::shared_ptr<UUri>>> SomeipRouter::getUriList(const std::string &serviceType) {
     LogTrace("{}", __FUNCTION__);
-    std::filesystem::path currentPath = std::filesystem::current_path();
-    std::string jsonDirectoryPath(currentPath.c_str());
-    //TODO: Change this path if you need to run vsomeip-client-example uE test cases.
-    //uE testcases already runs in bin folder whereas uStreamer runs outside bin folder.
-    //Add/Remove bin folder path depends on whether you run uStreamer or vsoemip-client example test cases.
-    jsonDirectoryPath = jsonDirectoryPath + "/" +std::string(SOMEIP_CONFIG_FILE);
+
+    const char* someipConfigFile = std::getenv("VSOMEIP_CONFIGURATION");
+    if (nullptr == someipConfigFile) {
+        LogErr("VSOMEIP_CONFIGURATION environment variable is not set");
+        return nullptr;
+    }
+    std::string jsonDirectoryPath(someipConfigFile);
     std::ifstream jsonFile(jsonDirectoryPath);
-
     LogInfo("{} JSON file Path : {}", __FUNCTION__, jsonDirectoryPath);
-
     std::string const jsonString((std::istreambuf_iterator<char>(jsonFile)), std::istreambuf_iterator<char>());
 
       // Parse the JSON string using RapidJSON:

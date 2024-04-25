@@ -36,6 +36,7 @@ $ ninja
 ## 3. How to run examples
 ### 3.1. Setup & Overview
 - Setup run environment for boost and vsomeip libraries
+- Assuming both boost and vsomeip libraries were installed in /usr/local/lib (custom paths also work):
 ```
 $ export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:/usr/local/lib
 ```

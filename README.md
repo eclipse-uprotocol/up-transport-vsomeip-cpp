@@ -67,7 +67,7 @@ $ conan create .
 ## 4. Examples & using the library
 Examples provided, are the best place to start customization and learn about how to use the library.
 
-Refer to their[EXAMPLES](examples/README.md)
+Refer to the [EXAMPLES](examples/README.md)
 
 ## 5. Troubleshooting tips
 - If not able to find a library, check using:
