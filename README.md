@@ -9,10 +9,10 @@ This module contains the implementation for pub-sub and RPC API`s defined in the
 ## 2. Getting Started
 ### 2.1. Requirements:
 - Compiler: GCC/G++ 11 or Clang 13
-- Ubuntu 22.04
-- conan : 1.59 or latest 2.X
-- cmake: 3.20.0+
-- ninja: 1.10.0+ (optional, can instead use 'make' as well)
+- Ubuntu  : 22.04
+- conan   : 1.59 or latest 2.X
+- cmake   : 3.20.0+
+- ninja   : 1.10.0+ (optional, can instead use 'make' as well)
 
 ### 2.2. Dependencies
 #### 2.2.1. up-cpp
@@ -22,7 +22,7 @@ Install up-cpp library: https://github.com/eclipse-uprotocol/up-cpp
 - Install boost (version: 1.84.0): https://www.boost.org/users/history/version_1_84_0.html
 ```
 $ cd boost
-$ ./bootstrap.sh
+$ ./bootstrap.sh --prefix=<installation-directory> # can be left as default /usr/local
 $ ./b2
 $ sudo ./b2 install
 ```

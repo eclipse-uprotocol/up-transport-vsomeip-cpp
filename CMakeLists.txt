@@ -34,7 +34,6 @@ else()
 endif()
 
 find_package(up-cpp REQUIRED)
-find_package(Boost REQUIRED)
 find_package(spdlog REQUIRED)
 find_package(fmt REQUIRED CONFIG)
 find_package(protobuf CONFIG REQUIRED)
@@ -80,11 +79,7 @@ target_link_libraries(${PROJECT_NAME} PUBLIC
     protobuf::libprotobuf
     fmt::fmt
     spdlog::spdlog
-    ${VSOMEIP_LIB}
-    Boost::boost
-    Boost::system
-    Boost::thread
-    Boost::filesystem)
+    ${VSOMEIP_LIB})
 
 if(BUILD_TESTING)
     enable_testing()

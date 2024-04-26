@@ -9,7 +9,7 @@ class UpClientVSomeip(ConanFile):
     license = "Apache-2.0 license"
     homepage = "https://github.com/eclipse-uprotocol"
     url = "https://github.com/conan-io/conan-center-index"
-    description = "C++ vSomeip library for GM-SDV-UP"
+    description = "C++ vSomeip library implementing UTransport"
     topics = ("ulink client", "transport")
     # Binary configuration
     settings = "os", "compiler", "build_type", "arch"
@@ -31,7 +31,7 @@ class UpClientVSomeip(ConanFile):
         "shared": True,
         "fPIC": False,
         "build_cross_compiling": False,
-        "build_testing": True,
+        "build_testing": False,
         "build_unbundled": False,
     }
     def configure(self):
@@ -39,7 +39,7 @@ class UpClientVSomeip(ConanFile):
         self.options["libuuid"].shared = True
 
     def requirements(self):
-        self.requires("up-cpp/0.1.1-dev")
+        self.requires("up-cpp/0.1.2-dev")
         self.requires("spdlog/1.13.0")
         self.requires("fmt/10.2.1")
         self.requires("boost/1.84.0")

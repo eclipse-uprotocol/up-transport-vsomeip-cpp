@@ -23,7 +23,7 @@ class gmultifi_client_vsomeip_uE(ConanFile):
         self.requires("up-client-vsomeip-cpp/0.1.1")
         self.requires("spdlog/1.13.0")
         self.requires("fmt/10.2.1")
-        self.requires("up-cpp/0.1.1-dev")
+        self.requires("up-cpp/0.1.2-dev")
         self.requires("protobuf/3.21.12" + ("@cross/cross" if self.options.build_cross_compiling else ""))
 
     def imports(self):
