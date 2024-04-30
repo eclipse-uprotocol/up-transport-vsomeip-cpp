@@ -14,7 +14,6 @@
         }
     ],
 
-    "routing":"mE_rpcClient",
     "service-discovery":
     {
         "enable":"true",

@@ -25,7 +25,6 @@
         }
     ],
 
-    "routing":"mE_rpcServer",
     "service-discovery":
     {
         "enable":"true",

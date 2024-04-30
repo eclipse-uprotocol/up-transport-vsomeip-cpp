@@ -22,7 +22,6 @@
             "unreliable" : "30509"
         }
     ],
-    "routing" : "mE_publisher",
     "service-discovery" :
     {
         "enable" : "true",

@@ -40,9 +40,12 @@ $ ninja
 ```
 $ export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:/usr/local/lib
 ```
-- For pub/sub examples, sequence in which corresponding uE and mE are executed, doesn't matter
-- For rpc examples, always execute the rpcServer before rpcClient
-- You will require to enable multicasting on network interface, use the provided script [setupNwForSomeip.sh](./setupNwForSomeip.sh)
+Some points to remember:
+
+- For pub/sub examples, execute the publisher before subscriber
+- For rpc examples, execute the rpcServer before rpcClient
+- These examples can either be run on the same machine or different machines connected over ethernet. If running on different machines, make sure they are on same subnet (can reach each other), a good test would be to check if they can ping each other. Also, their IP addesses need to be updated in corresponding config.json files under unicast tag.
+- It is required to enable multicasting on network interface, use the provided script [setupNwForSomeip.sh](./setupNwForSomeip.sh). If using two separate machines, then it should be run for both of them. Make sure to update the interface name correctly in that script.
 
 ```
 $ chmod +x setupNwForSomeip.sh
