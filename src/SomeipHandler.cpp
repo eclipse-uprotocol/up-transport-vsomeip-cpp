@@ -61,14 +61,14 @@ SomeipHandler::SomeipHandler(
                                 queue_(qPriorityLevels),
                                 isServiceAvailable_(false) {
 
-    LogDebug("{}", __FUNCTION__);
+    SPDLOG_INFO("{}", __FUNCTION__);
     instanceId_ = static_cast<uint16_t>(INSTANCE_ID_PER_SPEC);
     service_t serviceId = static_cast<service_t>(uEntityData_.id());
 
     registerMessageHandler();
     if (type_ == HandlerType::Client) {
         if (routerInterface_.isStateRegistered()) {
-            LogInfo("{} State registered", __FUNCTION__);
+            SPDLOG_INFO("{} State registered", __FUNCTION__);
             someIpInterface_.registerAvailabilityHandler(
                 serviceId,
                 instanceId_,
@@ -81,10 +81,10 @@ SomeipHandler::SomeipHandler(
             someIpInterface_.requestService(serviceId, instanceId_);
         }
     } else if (type_ == HandlerType::Server) {
-        LogDebug("{} Offer Service for serviceID : 0x[{:x}]", __FUNCTION__, serviceId);
+        SPDLOG_INFO("{} Offer Service for serviceID : 0x[{:x}]", __FUNCTION__, serviceId);
         someIpInterface_.offerService(serviceId, instanceId_);
     } else {
-        LogErr("{} Unknown handler type", __FUNCTION__);
+        SPDLOG_ERROR("{} Unknown handler type", __FUNCTION__);
         return;
     }
 }
@@ -98,7 +98,7 @@ void SomeipHandler::offerEvent(std::shared_ptr<std::set<eventgroup_t>> eventGrou
     service_t serviceId = static_cast<service_t>(uEntityData_.id());
     // Iterate all event groups associated with service ID and offer event
     for (const auto &eventGroupId : *eventGroupSetPtr) {
-        LogTrace("{} - Offer Event EID[0x{:x}] for SID[0x{:x}] ", __FUNCTION__, eventGroupId, serviceId);
+        SPDLOG_INFO("{} - Offer Event EID[0x{:x}] for SID[0x{:x}] ", __FUNCTION__, eventGroupId, serviceId);
         std::stringstream ss;
         ss << std::hex << eventGroupId;
 
@@ -129,13 +129,13 @@ void SomeipHandler::offerEvent(std::shared_ptr<std::set<eventgroup_t>> eventGrou
   * @param @see @ref SomeipHandler::queueOfferUResource
   */
 void SomeipHandler::queueOfferUResource(std::shared_ptr<UUri> uriPtr) {
-    LogDebug("{}", __FUNCTION__);
+    SPDLOG_INFO("{}", __FUNCTION__);
     if (running_) {
         if(! postMessageToQueue(HandlerMsgType::OfferUResource, 0UL, uriPtr)) {
-            LogErr("{} Failed to post message to queue", __FUNCTION__);
+            SPDLOG_ERROR("{} Failed to post message to queue", __FUNCTION__);
         }
     } else {
-        LogWarn("%s Current handler is not running in any thread.", __FUNCTION__);
+        SPDLOG_WARN("%s Current handler is not running in any thread.", __FUNCTION__);
     }
 }
 
@@ -145,7 +145,7 @@ void SomeipHandler::queueOfferUResource(std::shared_ptr<UUri> uriPtr) {
  *  @param[in] msg @see @ref SomeipHandler::queueOutboundMsg()
  */
 void SomeipHandler::queueOutboundMsg(const UMessage &msg) {
-    LogDebug("{}", __FUNCTION__);
+    SPDLOG_INFO("{}", __FUNCTION__);
     if (running_) {
         /*
             TODO: Need to check how to optimize/remove this copy. There are 2 ways of fixing this.
@@ -154,10 +154,10 @@ void SomeipHandler::queueOutboundMsg(const UMessage &msg) {
         */
         auto messagePtr = std::make_shared<UMessage>(msg);
         if(! postMessageToQueue(HandlerMsgType::Outbound, 0UL, messagePtr)) {
-            LogErr("{} Failed to post message to queue", __FUNCTION__);
+            SPDLOG_ERROR("{} Failed to post message to queue", __FUNCTION__);
         }
     } else {
-        LogWarn("%s Current handler is not running in any thread.", __FUNCTION__);
+        SPDLOG_WARN("%s Current handler is not running in any thread.", __FUNCTION__);
     }
 }
 
@@ -167,17 +167,17 @@ void SomeipHandler::queueOutboundMsg(const UMessage &msg) {
  *  @param[in] msg @see @ref SomeipHandler::onMessage()
  */
 void SomeipHandler::onMessage(std::shared_ptr<message> const &msg) {
-    LogDebug("{}", __FUNCTION__);
+    SPDLOG_INFO("{}", __FUNCTION__);
     if (!running_) {
-        LogWarn("{} Current handler is not running in any thread.", __FUNCTION__);
+        SPDLOG_WARN("{} Current handler is not running in any thread.", __FUNCTION__);
         if(!startThread()) {
-            LogErr("{} Failed to start thread", __FUNCTION__);
+            SPDLOG_ERROR("{} Failed to start thread", __FUNCTION__);
         }
     } else {
-        LogDebug("{} Handler already has a thread ", __FUNCTION__);
+        SPDLOG_INFO("{} Handler already has a thread ", __FUNCTION__);
     }
     if(! postMessageToQueue(HandlerMsgType::Inbound, 0UL, msg)) {
-        LogErr("{} Failed to post message to queue", __FUNCTION__);
+        SPDLOG_ERROR("{} Failed to post message to queue", __FUNCTION__);
     }
 }
 
@@ -193,7 +193,7 @@ void SomeipHandler::onAvailability(service_t service, instance_t instance, const
     if(isAvailable) {
         isServiceAvailable_.setValueAndNotify(isAvailable);
     }
-    LogInfo("{} service[0x{:x}] instance[0x{:x}] {}", __FUNCTION__, service, instance, str);
+    SPDLOG_INFO("{} service[0x{:x}] instance[0x{:x}] {}", __FUNCTION__, service, instance, str);
 }
 
 /**
@@ -215,7 +215,7 @@ bool SomeipHandler::onSubscription(
     std::ignore = secClient;
     bool bRet = false;
 
-    LogInfo("{} client[0x{:x}] . eventIdStr[{}], serviceid[{:x}], isSubscribed[{}]",
+    SPDLOG_INFO("{} client[0x{:x}] . eventIdStr[{}], serviceid[{:x}], isSubscribed[{}]",
         __FUNCTION__, client, eventIdStr.c_str(), uEntityData_.id(), isSubscribed);
 
     std::stringstream ss;
@@ -228,15 +228,15 @@ bool SomeipHandler::onSubscription(
         subStatus->isSubscribed = isSubscribed;
         subStatus->eventgroup = eventgroup;
 
-        LogInfo("{} - eventgroup[0x{:x}]", __FUNCTION__, eventgroup);
+        SPDLOG_INFO("{} - eventgroup[0x{:x}]", __FUNCTION__, eventgroup);
         if(! postMessageToQueue(HandlerMsgType::InboundSubscription, 0UL, subStatus)) {
-            LogErr("{} Failed to post message to queue", __FUNCTION__);
+            SPDLOG_ERROR("{} Failed to post message to queue", __FUNCTION__);
             bRet = false;
         }
         bRet = true;
     }
     catch(const std::exception& e) {
-        LogErr("{} Exception caught: {}", __FUNCTION__, e.what());
+        SPDLOG_ERROR("{} Exception caught: {}", __FUNCTION__, e.what());
         bRet = false;
     }
     return bRet;
@@ -259,7 +259,7 @@ void SomeipHandler::onSubscriptionStatus(
     uint16_t const status) {
 
     static_cast<void>(event);
-    LogInfo("{} service[0x{:x}] instance[0x{:x}] eventgrp[0x{:x}] status[{}]",
+    SPDLOG_INFO("{} service[0x{:x}] instance[0x{:x}] eventgrp[0x{:x}] status[{}]",
         __FUNCTION__, service, instance, eventGroup, status);
 
     bool const isSubscribed = (status == 0U) ? true : false;
@@ -269,11 +269,11 @@ void SomeipHandler::onSubscriptionStatus(
         subStatus->isSubscribed = isSubscribed;
         subStatus->eventgroup = eventGroup;
         if(! postMessageToQueue(HandlerMsgType::InboundSubscriptionAck, 0UL, subStatus)) {
-            LogErr("{} Failed to post message to queue", __FUNCTION__);
+            SPDLOG_ERROR("{} Failed to post message to queue", __FUNCTION__);
         }
     }
     catch(const std::exception& e) {
-        LogErr("{} Exception caught: {}", __FUNCTION__, e.what());
+        SPDLOG_ERROR("{} Exception caught: {}", __FUNCTION__, e.what());
     }
 }
 
@@ -307,9 +307,9 @@ void SomeipHandler::flush() {
  *  @return @see @ref SomeipHandler::startThread()
  */
 bool SomeipHandler::startThread() {
-    LogTrace("{}", __FUNCTION__);
+    SPDLOG_INFO("{}", __FUNCTION__);
     if (! running_) {
-        LogTrace("{} Starting new handler thread",__FUNCTION__);
+        SPDLOG_INFO("{} Starting new handler thread",__FUNCTION__);
         std::function<void()> const func = std::bind(&SomeipHandler::executor, this);
         AsioThreadPool::getInstance().post(func);
         running_ = true;
@@ -324,9 +324,9 @@ bool SomeipHandler::startThread() {
  *  @return @see @ref SomeipHandler::stopThread()
  */
 void SomeipHandler::stopThread() noexcept {
-    LogTrace("{}", __FUNCTION__);
+    SPDLOG_INFO("{}", __FUNCTION__);
     if (running_) {
-        LogTrace("{} Stopping handler thread", __FUNCTION__);
+        SPDLOG_INFO("{} Stopping handler thread", __FUNCTION__);
         postMessageToQueue(HandlerMsgType::Stop, 0UL, nullptr);
         running_ = false;
     }
@@ -359,7 +359,7 @@ bool SomeipHandler::postMessageToQueue(
             qCondVar_.notify_one(); // wake up the worker
         }
     } else {
-        LogWarn("Current handler is not running in any thread.");
+        SPDLOG_WARN("Current handler is not running in any thread.");
     }
     return isOk;
 }
@@ -368,7 +368,7 @@ bool SomeipHandler::postMessageToQueue(
  *  @brief @see @ref SomeipHandler::executor()
  */
 void SomeipHandler::executor() {
-    LogDebug("{}", __FUNCTION__);
+    SPDLOG_INFO("{}", __FUNCTION__);
     while (true) {
         std::unique_lock<std::mutex> lck(qMutex_);
         //TODO need to replace this wait with wait_for, to avoid indefinite wait(allow timeout)
@@ -395,7 +395,7 @@ void SomeipHandler::executor() {
  *  @param[in] item @see @ref SomeipHandler::processMessage()
  */
 void SomeipHandler::processMessage(std::unique_ptr<QItem>const item) {
-    LogDebug("{} msgReceivedp[{}]", __FUNCTION__, static_cast<int>(item->getMsgType()));
+    SPDLOG_INFO("{} msgReceivedp[{}]", __FUNCTION__, static_cast<int>(item->getMsgType()));
     switch (item->getMsgType()) {
         case HandlerMsgType::Outbound: {
             handleOutboundMsg(std::static_pointer_cast<UMessage>(item->getPtr()));
@@ -421,7 +421,7 @@ void SomeipHandler::processMessage(std::unique_ptr<QItem>const item) {
         }
         break;
         default: {
-            LogErr("Unknown message type");
+            SPDLOG_ERROR("Unknown message type");
         }
         break;
     }
@@ -433,7 +433,7 @@ void SomeipHandler::processMessage(std::unique_ptr<QItem>const item) {
  *  @param[in] uMsg @see @ref SomeipHandler::handleOutboundMsg()
  */
 void SomeipHandler::handleOutboundMsg(std::shared_ptr<UMessage> const uMsg) {
-    LogTrace("{}", __FUNCTION__);
+    SPDLOG_INFO("{}", __FUNCTION__);
 
     switch (uMsg->attributes().type()) {
         case UMessageType::UMESSAGE_TYPE_PUBLISH: {
@@ -449,7 +449,7 @@ void SomeipHandler::handleOutboundMsg(std::shared_ptr<UMessage> const uMsg) {
             break;
         }
         default: {
-            LogErr("{} Unknown message type [{}]", __FUNCTION__, static_cast<uint16_t>(uMsg->attributes().type()));
+            SPDLOG_ERROR("{} Unknown message type [{}]", __FUNCTION__, static_cast<uint16_t>(uMsg->attributes().type()));
             break;
         }
     }
@@ -461,7 +461,7 @@ void SomeipHandler::handleOutboundMsg(std::shared_ptr<UMessage> const uMsg) {
  *  @param[in] msg @see @ref SomeipHandler::handleInboundMsg()
  */
 void SomeipHandler::handleInboundMsg(std::shared_ptr<message> const msg) {
-    LogDebug("{}", __FUNCTION__);
+    SPDLOG_INFO("{}", __FUNCTION__);
     message_type_e const messageType = msg->get_message_type();
     switch (messageType) {
         case message_type_e::MT_REQUEST: {
@@ -477,7 +477,7 @@ void SomeipHandler::handleInboundMsg(std::shared_ptr<message> const msg) {
         }
         break;
         default: {
-            LogErr("{} Unknown message type", __FUNCTION__);
+            SPDLOG_ERROR("{} Unknown message type", __FUNCTION__);
         }
         break;
     }
@@ -490,7 +490,7 @@ void SomeipHandler::handleInboundMsg(std::shared_ptr<message> const msg) {
  *  @param[in] sMsg @see @ref SomeipHandler::handleInboundNotification()
  */
 void SomeipHandler::handleInboundNotification(std::shared_ptr<message> sMsg) {
-    LogDebug("{}", __FUNCTION__);
+    SPDLOG_INFO("{}", __FUNCTION__);
     method_t const method = sMsg->get_method(); //someip method is same as eventgroup for notifications
     auto const subscriptionEntry = subscriptionsForRemoteServices_.find(method);
     if (subscriptionEntry != subscriptionsForRemoteServices_.end()) {
@@ -503,7 +503,7 @@ void SomeipHandler::handleInboundNotification(std::shared_ptr<message> sMsg) {
         (void)routerInterface_.routeInboundMsg(*uMsg);
 
     } else {
-        LogWarn("{} received a non-requested notification for service[0x{:x}] method[0x{:x}] ",
+        SPDLOG_WARN("{} received a non-requested notification for service[0x{:x}] method[0x{:x}] ",
             __FUNCTION__, uEntityData_.id(), method);
     }
 }
@@ -514,7 +514,7 @@ void SomeipHandler::handleInboundNotification(std::shared_ptr<message> sMsg) {
  *  @param[in] sMsg @see @ref SomeipHandler::handleInboundRequest()
  */
 void SomeipHandler::handleInboundRequest(std::shared_ptr<message> sMsg) {
-    LogDebug("{}", __FUNCTION__);
+    SPDLOG_INFO("{}", __FUNCTION__);
     std::shared_ptr<ResourceInformation> resourceInfo = offeredResources_.at(sMsg->get_method());
     if(resourceInfo != nullptr) {
         const UResource& uResource     = resourceInfo->getUResource();
@@ -533,9 +533,9 @@ void SomeipHandler::handleInboundRequest(std::shared_ptr<message> sMsg) {
  *  @param[in] sMsg @see @ref SomeipHandler::handleInboundResponse()
  */
 void SomeipHandler::handleInboundResponse(std::shared_ptr<message> sMsg) {
-    LogDebug("{}", __FUNCTION__);
+    SPDLOG_INFO("{}", __FUNCTION__);
     request_t requestId = sMsg->get_request();
-    LogDebug("{} Inbound response for requestId[0x{:x}] ", __FUNCTION__, requestId);
+    SPDLOG_INFO("{} Inbound response for requestId[0x{:x}] ", __FUNCTION__, requestId);
 
     auto search = someipReqIdToUTransportRequestLookup_.find(requestId);
     if (search != someipReqIdToUTransportRequestLookup_.end()) {
@@ -545,7 +545,7 @@ void SomeipHandler::handleInboundResponse(std::shared_ptr<message> sMsg) {
         static_cast<void>(routerInterface_.routeInboundMsg(*responseUMsg));
         static_cast<void>(someipReqIdToUTransportRequestLookup_.erase(requestId));
     } else {
-        LogErr("{} Unable to process inbound response requestId[0x{:x}].", __FUNCTION__, requestId);
+        SPDLOG_ERROR("{} Unable to process inbound response requestId[0x{:x}].", __FUNCTION__, requestId);
     }
 
 }
@@ -556,11 +556,11 @@ void SomeipHandler::handleInboundResponse(std::shared_ptr<message> sMsg) {
  *  @param[in] subStatus @see @ref SomeipHandler::handleInboundSubscription()
  */
 void SomeipHandler::handleInboundSubscription(std::shared_ptr<subscriptionStatus> const subStatus) {
-    LogDebug("{}", __FUNCTION__);
+    SPDLOG_INFO("{}", __FUNCTION__);
 
     UResourceId_t resourceId = static_cast<UResourceId_t>(subStatus->eventgroup);
     if (subStatus->isSubscribed) {
-        LogDebug("{} Inbound subscription request received for event[0x{:x}]", __FUNCTION__, subStatus->eventgroup);
+        SPDLOG_INFO("{} Inbound subscription request received for event[0x{:x}]", __FUNCTION__, subStatus->eventgroup);
         auto const searchResult = offeredResources_.find(resourceId);
         if ( searchResult != offeredResources_.end()) {
             searchResult->second->addSubscriber();
@@ -568,15 +568,15 @@ void SomeipHandler::handleInboundSubscription(std::shared_ptr<subscriptionStatus
             //std::shared<UUri> uriPtr = translateSomeipToURIForSubscription(serviceId_, resourceId, searchResult->second);
             //routerInterface_.routeInboundSubscription()
         } else {
-            LogErr("{} Received event subscription request for unsupported event[0x{:x}]",__FUNCTION__, subStatus->eventgroup);
+            SPDLOG_ERROR("{} Received event subscription request for unsupported event[0x{:x}]",__FUNCTION__, subStatus->eventgroup);
         }
     } else {
-        LogDebug("{} Inbound unsubscribe request received for event[0x{:x}]", __FUNCTION__, subStatus->eventgroup);
+        SPDLOG_INFO("{} Inbound unsubscribe request received for event[0x{:x}]", __FUNCTION__, subStatus->eventgroup);
         auto const searchResult = offeredResources_.find(resourceId);
         if (searchResult != offeredResources_.end()) {
             searchResult->second->removeSubscriber();
         } else {
-            LogErr("{} Received event unsubscription request for unsupported event[0x{:x}]",__FUNCTION__, subStatus->eventgroup);
+            SPDLOG_ERROR("{} Received event unsubscription request for unsupported event[0x{:x}]",__FUNCTION__, subStatus->eventgroup);
         }
     }
 
@@ -588,13 +588,13 @@ void SomeipHandler::handleInboundSubscription(std::shared_ptr<subscriptionStatus
  *  @param[in] subStatus @see @ref SomeipHandler::handleInboundSubscriptionAck()
  */
 void SomeipHandler::handleInboundSubscriptionAck(std::shared_ptr<subscriptionStatus> const subStatus) {
-    LogDebug("{}", __FUNCTION__);
+    SPDLOG_INFO("{}", __FUNCTION__);
 
     eventgroup_t eventGroup = subStatus->eventgroup;
     auto eventGrpEntry = subscriptionsForRemoteServices_.find(eventGroup);
 
     if (eventGrpEntry != subscriptionsForRemoteServices_.end()) {
-        LogInfo("{} Subscription ack received for eventgroup[0x{:x}]", __FUNCTION__, eventGroup);
+        SPDLOG_INFO("{} Subscription ack received for eventgroup[0x{:x}]", __FUNCTION__, eventGroup);
         std::shared_ptr<ResourceInformation> resourceInfo = eventGrpEntry->second;
         std::shared_ptr<UMessage> uMessageSubAck = routerInterface_.getMessageTranslator()
             .translateSomeipToUMsgForSubscriptionAck(uEntityData_,uAuthorityData_, resourceInfo->getUResource());\
@@ -602,7 +602,7 @@ void SomeipHandler::handleInboundSubscriptionAck(std::shared_ptr<subscriptionSta
         routerInterface_.routeInboundMsg(*uMessageSubAck);
 
     } else {
-        LogWarn("{} received a non-requested subscription ack for eventgroup[0x{:x}] ", __FUNCTION__, eventGroup);
+        SPDLOG_WARN("{} received a non-requested subscription ack for eventgroup[0x{:x}] ", __FUNCTION__, eventGroup);
     }
 
 }
@@ -613,7 +613,7 @@ void SomeipHandler::handleInboundSubscriptionAck(std::shared_ptr<subscriptionSta
  *  @param[in] uMsg @see @ref SomeipHandler::handleOutboundNotification()
  */
 void SomeipHandler::handleOutboundNotification(std::shared_ptr<UMessage> const uMsgPtr) {
-    LogDebug("{}", __FUNCTION__);
+    SPDLOG_INFO("{}", __FUNCTION__);
     UMessage const &uMsg = *uMsgPtr;
     service_t serviceId = static_cast<service_t>(uEntityData_.id());
     std::vector<uint8_t>  payloadData = buildSomeipPayloadFromUMessage(uMsg);
@@ -625,10 +625,10 @@ void SomeipHandler::handleOutboundNotification(std::shared_ptr<UMessage> const u
                                 INSTANCE_ID_PER_SPEC,
                                 static_cast<uint16_t>(uMsg.attributes().source().resource().id()),
                                 its_payload);
-        LogInfo("{} Outbound notification is published for service[0x{:x}] eventgroup[0x{:x}]",
+        SPDLOG_INFO("{} Outbound notification is published for service[0x{:x}] eventgroup[0x{:x}]",
                 __FUNCTION__, serviceId, uMsg.attributes().source().resource().id());
     } else {
-        LogWarn("{} Outbound notification is not published as no subscription found for eventgroup[0x{:x}]",
+        SPDLOG_WARN("{} Outbound notification is not published as no subscription found for eventgroup[0x{:x}]",
                 __FUNCTION__, uMsg.attributes().source().resource().id());
     }
 
@@ -640,7 +640,7 @@ void SomeipHandler::handleOutboundNotification(std::shared_ptr<UMessage> const u
  *  @param[in] uMsg @see @ref SomeipHandler::handleOutboundRequest()
  */
 void SomeipHandler::handleOutboundRequest(std::shared_ptr<UMessage> const uMsgPtr) {
-    LogDebug("{}", __FUNCTION__);
+    SPDLOG_INFO("{}", __FUNCTION__);
 
     if (uMsgPtr->attributes().sink().entity().id() == UT_SUBSCRIPTION_REQUEST_SINK_URI_UEID) {
         // Subscription request for remote service
@@ -654,13 +654,13 @@ void SomeipHandler::handleOutboundRequest(std::shared_ptr<UMessage> const uMsgPt
     bool serviceAvailableStatus = isServiceAvailable_.isReadableWithWait(std::chrono::milliseconds(uMsgPtr->attributes().ttl()));
 
     if(serviceAvailableStatus) {
-        LogInfo("{} Service is available with service[0x{:x}] methodId[0x{:x}]",
+        SPDLOG_INFO("{} Service is available with service[0x{:x}] methodId[0x{:x}]",
             __FUNCTION__,
             uEntityData_.id(),
             uMsgPtr->attributes().sink().resource().id());
         someIpInterface_.send(someIpRequest);
         request_t requestId = someIpRequest->get_request();
-        LogInfo("{} New request service[0x{:x}] methodId[0x{:x}] requestId[0x{:x}]",
+        SPDLOG_INFO("{} New request service[0x{:x}] methodId[0x{:x}] requestId[0x{:x}]",
             __FUNCTION__,
             uEntityData_.id(),
             uMsgPtr->attributes().sink().resource().id(),
@@ -668,7 +668,7 @@ void SomeipHandler::handleOutboundRequest(std::shared_ptr<UMessage> const uMsgPt
         (void)someipReqIdToUTransportRequestLookup_.insert({requestId, uMsgPtr});
     }
     else {
-       LogWarn("{} Service is unavailable with service[0x{:x}] methodId[0x{:x}]",
+       SPDLOG_WARN("{} Service is unavailable with service[0x{:x}] methodId[0x{:x}]",
             __FUNCTION__,
             uEntityData_.id(),
             uMsgPtr->attributes().sink().resource().id());
@@ -681,16 +681,16 @@ void SomeipHandler::handleOutboundRequest(std::shared_ptr<UMessage> const uMsgPt
  *  @param[in] UUri @see @ref SomeipHandler::handleSubscriptionRequestForRemoteService()
  */
 void SomeipHandler::handleSubscriptionRequestForRemoteService(std::shared_ptr<uprotocol::utransport::UMessage> const uMsgPtr) {
-    LogDebug("{}", __FUNCTION__);
+    SPDLOG_INFO("{}", __FUNCTION__);
 
     if ((routerInterface_.isStateRegistered())) {
-        LogInfo("{} State registered and service available", __FUNCTION__);
+        SPDLOG_INFO("{} State registered and service available", __FUNCTION__);
         eventgroup_t eventGroup = static_cast<eventgroup_t>(uMsgPtr->attributes().source().resource().id());
         std::shared_ptr<ResourceInformation> resource =
             std::make_shared<ResourceInformation>(uMsgPtr->attributes().source().resource());
 
         if (! doesSubscriptionForRemoteServiceExist(eventGroup)) {
-            LogInfo("{} Adding new eventgroup[0x{:x}] subscription entry", __FUNCTION__, eventGroup);
+            SPDLOG_INFO("{} Adding new eventgroup[0x{:x}] subscription entry", __FUNCTION__, eventGroup);
             event_t const event = eventGroup; // event will be same as eventGroup
             registerSubscriptionStatusHandler(eventGroup);
             addSubscriptionForRemoteService(eventGroup, resource);
@@ -700,11 +700,11 @@ void SomeipHandler::handleSubscriptionRequestForRemoteService(std::shared_ptr<up
             someIpInterface_.requestEvent(serviceId, instanceId_, event, eventGroups, event_type_e::ET_FIELD);
             someIpInterface_.subscribe(serviceId, instanceId_, eventGroup);
         } else {
-            LogInfo("{} eventgroup[{}] subscription entry already exist", __FUNCTION__, eventGroup);
+            SPDLOG_INFO("{} eventgroup[{}] subscription entry already exist", __FUNCTION__, eventGroup);
             actOnBehalfOfSubscriptionAck(eventGroup);
         }
     } else {
-        LogWarn("{} State not registered or service not available", __FUNCTION__);
+        SPDLOG_WARN("{} State not registered or service not available", __FUNCTION__);
     }
 }
 
@@ -714,7 +714,7 @@ void SomeipHandler::handleSubscriptionRequestForRemoteService(std::shared_ptr<up
  *  @param[in] uMsg @see @ref SomeipHandler::handleOutboundResponse()
  */
 void SomeipHandler::handleOutboundResponse(std::shared_ptr<UMessage> const uMsgPtr) {
-    LogDebug("{}", __FUNCTION__);
+    SPDLOG_INFO("{}", __FUNCTION__);
     UMessage const &uMsg = *uMsgPtr;
     std::string strUUID = uprotocol::uuid::UuidSerializer::serializeToString(uMsg.attributes().reqid());
     auto search = uuidToSomeipRequestLookup_.find(strUUID);
@@ -729,14 +729,14 @@ void SomeipHandler::handleOutboundResponse(std::shared_ptr<UMessage> const uMsgP
         someipResponseMsg->set_payload(responsePayload);
 
         someIpInterface_.send(someipResponseMsg);
-        LogInfo("{} Outbound response is sent for service[0x{:x}] methodId[0x{:x}]",
+        SPDLOG_INFO("{} Outbound response is sent for service[0x{:x}] methodId[0x{:x}]",
                 __FUNCTION__,
                 static_cast<service_t>(uEntityData_.id()),
                 uMsg.attributes().source().resource().id());
 
         (void)uuidToSomeipRequestLookup_.erase(strUUID);
     } else {
-        LogErr("{} Request not found for UUID[{}]", __FUNCTION__, strUUID);
+        SPDLOG_ERROR("{} Request not found for UUID[{}]", __FUNCTION__, strUUID);
         return;
     }
 }
@@ -747,7 +747,7 @@ void SomeipHandler::handleOutboundResponse(std::shared_ptr<UMessage> const uMsgP
  *  @param[in] listenerInfo @see @ref SomeipHandler::handleOfferUResource()
  */
 void SomeipHandler::handleOfferUResource(std::shared_ptr<UUri> const uriPtr) {
-    LogInfo("{}",__FUNCTION__);
+    SPDLOG_INFO("{}",__FUNCTION__);
     UResourceId_t resourceId     = uriPtr->resource().id();
     std::shared_ptr<ResourceInformation> resourceInformation =
         std::make_shared<ResourceInformation>(uriPtr->resource());
@@ -760,7 +760,7 @@ void SomeipHandler::handleOfferUResource(std::shared_ptr<UUri> const uriPtr) {
         std::ignore = eventGroupSetPtr->insert(eventGroup);
         offerEvent(eventGroupSetPtr);
     } else {
-        LogInfo("{} resource id[0x{:x}] is a method, no need to offer", __FUNCTION__, resourceId);
+        SPDLOG_INFO("{} resource id[0x{:x}] is a method, no need to offer", __FUNCTION__, resourceId);
     }
 }
 
@@ -770,7 +770,7 @@ void SomeipHandler::handleOfferUResource(std::shared_ptr<UUri> const uriPtr) {
  *  @param[in] eventGroup @see @ref SomeipHandler::registerSubscriptionStatusHandler()
  */
 void SomeipHandler::registerSubscriptionStatusHandler(eventgroup_t const eventGroup) {
-    LogDebug("{}", __FUNCTION__);
+    SPDLOG_INFO("{}", __FUNCTION__);
     someIpInterface_.registerSubscriptionStatusHandler(
         static_cast<service_t>(uEntityData_.id()),
         instanceId_,
@@ -802,7 +802,7 @@ void SomeipHandler::registerMessageHandler() {
  *  @return    @see @ref SomeipHandler::doesSubscriptionForRemoteServiceExist()
  */
 bool SomeipHandler::doesSubscriptionForRemoteServiceExist(eventgroup_t const eventGroup) {
-    LogDebug("{}", __FUNCTION__);
+    SPDLOG_INFO("{}", __FUNCTION__);
     auto const search = subscriptionsForRemoteServices_.find(eventGroup);
     if (search != subscriptionsForRemoteServices_.end()) {
         return true;
@@ -819,7 +819,7 @@ void SomeipHandler::addSubscriptionForRemoteService(
     UResourceId_t resourceId,
     std::shared_ptr<ResourceInformation> resource) {
 
-    LogDebug("{}", __FUNCTION__);
+    SPDLOG_INFO("{}", __FUNCTION__);
 
     auto search = subscriptionsForRemoteServices_.find(resourceId);
     if (search == subscriptionsForRemoteServices_.end()) {
@@ -838,7 +838,7 @@ void SomeipHandler::addSubscriptionForRemoteService(
  *  @param[in] @see @ref SomeipHandler::removeSubscriptionForRemoteService()
  */
 void SomeipHandler::removeSubscriptionForRemoteService(UResourceId_t resourceId) {
-    LogDebug("{}", __FUNCTION__);
+    SPDLOG_INFO("{}", __FUNCTION__);
     auto search = subscriptionsForRemoteServices_.find(resourceId);
     if (search != subscriptionsForRemoteServices_.end()) {
         search->second->removeSubscriber();
@@ -855,7 +855,7 @@ void SomeipHandler::removeSubscriptionForRemoteService(UResourceId_t resourceId)
  *  @param[in] eventGroup @see @ref SomeipHandler::simulateOutboundSubscriptionAck()
  */
 void SomeipHandler::actOnBehalfOfSubscriptionAck(eventgroup_t const eventGroup) {
-    LogDebug("{}", __FUNCTION__);
+    SPDLOG_INFO("{}", __FUNCTION__);
     onSubscriptionStatus(static_cast<service_t>(uEntityData_.id()), instanceId_, eventGroup, eventGroup, 0U);
 }
 
@@ -867,7 +867,7 @@ void SomeipHandler::actOnBehalfOfSubscriptionAck(eventgroup_t const eventGroup) 
  *  @return    @see @ref SomeipHandler::doesInboundSubscriptionExist()
  */
 bool SomeipHandler::doesInboundSubscriptionExist(eventgroup_t const eventGroup) {
-    LogDebug("{}", __FUNCTION__);
+    SPDLOG_INFO("{}", __FUNCTION__);
     auto const search = offeredResources_.find(static_cast<UResourceId_t>(eventGroup));
     if (search != offeredResources_.end()) {
         std::shared_ptr<ResourceInformation> resourceInformation = search->second;

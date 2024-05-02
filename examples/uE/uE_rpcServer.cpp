@@ -89,15 +89,15 @@ std::shared_ptr<UUri> getListenerURI() {
 }
 
 void registerListener(RpcListener &listner) {
-    LogTrace("{}", __FUNCTION__);
+    SPDLOG_INFO("{}", __FUNCTION__);
 
     std::shared_ptr<UUri> listenerURI = getListenerURI();
 
     if (listenerURI != nullptr) {
         if (UCode::OK != VsomeipUTransport::instance().registerListener(*listenerURI, listner).code()) {
-            LogErr("VsomeipUTransport::instance().registerListener failed");
+            SPDLOG_ERROR("VsomeipUTransport::instance().registerListener failed");
         } else {
-            LogInfo("VsomeipUTransport::instance().registerListener success");
+            SPDLOG_INFO("VsomeipUTransport::instance().registerListener success");
         }
     }
 }

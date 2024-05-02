@@ -44,14 +44,14 @@ SomeipRouter::SomeipRouter(UListener const &listener) :
     msgTranslator_(std::make_unique<MessageTranslator>(*someipInterface_)),
     listener_(listener) {
 
-    LogTrace("{} SomeipRouter is initialized !!!", __FUNCTION__);
+    SPDLOG_INFO("{} SomeipRouter is initialized !!!", __FUNCTION__);
 }
 
 /**
  * @brief @see @ref void SomeipRouter::stopService().
  */
 void SomeipRouter::stopService(){
-        LogTrace("{}", __FUNCTION__);
+        SPDLOG_INFO("{}", __FUNCTION__);
         someipInterface_->stop();
         someipInterface_.reset();
         msgTranslator_.reset();
@@ -64,7 +64,7 @@ SomeipRouter::~SomeipRouter() {
         try {
         stopService();
     } catch(const std::exception& e) {
-        LogErr("{} Destructor failed !!!", __FUNCTION__);
+        SPDLOG_ERROR("{} Destructor failed !!!", __FUNCTION__);
     }
 }
 
@@ -74,17 +74,17 @@ SomeipRouter::~SomeipRouter() {
  * @return
  */
 bool SomeipRouter::init() {
-    LogTrace("{}", __FUNCTION__);
+    SPDLOG_INFO("{}", __FUNCTION__);
     if (!someipInterface_->init()) {
-        LogErr("{} Someip Interface init failed !!!", __FUNCTION__);
+        SPDLOG_ERROR("{} Someip Interface init failed !!!", __FUNCTION__);
         return false;
     } else {
-        LogTrace("{} Registering state handler", __FUNCTION__);
+        SPDLOG_INFO("{} Registering state handler", __FUNCTION__);
         someipInterface_->registerStateHandler(
             std::bind(&SomeipRouter::onState, this, std::placeholders::_1));
-        LogTrace("{} starting someip eventloop", __FUNCTION__);
+        SPDLOG_INFO("{} starting someip eventloop", __FUNCTION__);
         someipInterface_->start();
-        LogInfo("{} Someip Interface init successful !!!", __FUNCTION__);
+        SPDLOG_INFO("{} Someip Interface init successful !!!", __FUNCTION__);
     }
 
     enableAllLocalServices();
@@ -101,10 +101,10 @@ void SomeipRouter::enableAllLocalServices() {
         for (auto it = (*uriList).begin(); it != (*uriList).end(); ++it) {
             offerServicesAndEvents(*it);
             auto strURI = uprotocol::uri::LongUriSerializer::serialize(**it);
-            LogInfo("{} Initializing local service with URI[{}]",__FUNCTION__, strURI);
+            SPDLOG_INFO("{} Initializing local service with URI[{}]",__FUNCTION__, strURI);
         }
     } else {
-        LogErr("Failed to get URI list");
+        SPDLOG_ERROR("Failed to get URI list");
     }
 }
 
@@ -112,12 +112,12 @@ void SomeipRouter::enableAllLocalServices() {
   * @brief @see @ref SomeipRouter::offerServicesAndEvents
   */
 void SomeipRouter::offerServicesAndEvents(std::shared_ptr<UUri> uriPtr) {
-    LogInfo("{}",__FUNCTION__);
+    SPDLOG_INFO("{}",__FUNCTION__);
     uint16_t ueId = 0U;
     if (uriPtr->entity().has_id()) {
         ueId = static_cast<uint16_t>(uriPtr->entity().id());
     } else {
-        LogErr("{} URI does not have a UE-ID", __FUNCTION__);
+        SPDLOG_ERROR("{} URI does not have a UE-ID", __FUNCTION__);
         return;
     }
 
@@ -127,21 +127,21 @@ void SomeipRouter::offerServicesAndEvents(std::shared_ptr<UUri> uriPtr) {
     if (nullptr == hptr) {
         handlerType = HandlerType::Server;
         hptr = newHandler(handlerType, uriPtr->entity(), uriPtr->authority());
-        LogDebug("{} New Server handler created for UEID[0x{:x}]", __FUNCTION__, ueId);
+        SPDLOG_INFO("{} New Server handler created for UEID[0x{:x}]", __FUNCTION__, ueId);
     }
 
     if (nullptr == hptr) {
         // Something is terribly wrong
-        LogCrit("{} Handler not found and creation also failed!!!", __FUNCTION__);
+        SPDLOG_CRITICAL("{} Handler not found and creation also failed!!!", __FUNCTION__);
         return;
     }
     if (!hptr->isRunning()) {
-        LogInfo("{} Handler UEId[0x{:x}] Starting new thread", __FUNCTION__, ueId);
+        SPDLOG_INFO("{} Handler UEId[0x{:x}] Starting new thread", __FUNCTION__, ueId);
         if(! hptr->startThread()) {
-            LogErr("{} Handler UEId[0x{:x}] Failed to start thread.", __FUNCTION__, ueId);
+            SPDLOG_ERROR("{} Handler UEId[0x{:x}] Failed to start thread.", __FUNCTION__, ueId);
         }
     } else {
-        LogInfo("{} Handler UEId[0x{:x}] already running in a thread.", __FUNCTION__, ueId);
+        SPDLOG_INFO("{} Handler UEId[0x{:x}] already running in a thread.", __FUNCTION__, ueId);
     }
     hptr->queueOfferUResource(uriPtr);
 }
@@ -151,23 +151,23 @@ void SomeipRouter::offerServicesAndEvents(std::shared_ptr<UUri> uriPtr) {
   * @param @return  serviceType - @see @ref SomeipRouter::getUriList
   */
  std::shared_ptr<std::vector<std::shared_ptr<UUri>>> SomeipRouter::getUriList(const std::string &serviceType) {
-    LogTrace("{}", __FUNCTION__);
+    SPDLOG_INFO("{}", __FUNCTION__);
 
     const char* someipConfigFile = std::getenv("VSOMEIP_CONFIGURATION");
     if (nullptr == someipConfigFile) {
-        LogErr("VSOMEIP_CONFIGURATION environment variable is not set");
+        SPDLOG_ERROR("VSOMEIP_CONFIGURATION environment variable is not set");
         return nullptr;
     }
     std::string jsonDirectoryPath(someipConfigFile);
     std::ifstream jsonFile(jsonDirectoryPath);
-    LogInfo("{} JSON file Path : {}", __FUNCTION__, jsonDirectoryPath);
+    SPDLOG_INFO("{} JSON file Path : {}", __FUNCTION__, jsonDirectoryPath);
     std::string const jsonString((std::istreambuf_iterator<char>(jsonFile)), std::istreambuf_iterator<char>());
 
       // Parse the JSON string using RapidJSON:
     rapidjson::Document documentObj;
     std::ignore = documentObj.Parse(jsonString.c_str());
     if (documentObj.HasParseError()) {
-        LogErr("Failed to parse JSON file");
+        SPDLOG_ERROR("Failed to parse JSON file");
         return nullptr;
     }
     if (documentObj.HasMember(serviceType.c_str()) && (documentObj[serviceType.c_str()].IsArray())) {
@@ -244,7 +244,7 @@ void SomeipRouter::offerServicesAndEvents(std::shared_ptr<UUri> uriPtr) {
    * @return true if outbound message is routed successfully and false otherwise
    */
 bool SomeipRouter::routeOutboundMsg(const UMessage &umsg) {
-    LogTrace("{}", __FUNCTION__);
+    SPDLOG_INFO("{}", __FUNCTION__);
     uint16_t ueId = 0U;
     std::shared_ptr<SomeipHandler> hptr = nullptr;
 
@@ -269,7 +269,7 @@ bool SomeipRouter::routeOutboundMsg(const UMessage &umsg) {
                 } else {
                     hptr = newHandler(HandlerType::Client, sinkUri.entity(), sinkUri.authority());
                 }
-                LogDebug("{} New client handler created for UEID[0x{:x}]", __FUNCTION__, ueId);
+                SPDLOG_INFO("{} New client handler created for UEID[0x{:x}]", __FUNCTION__, ueId);
             }
         }
         break;
@@ -280,36 +280,36 @@ bool SomeipRouter::routeOutboundMsg(const UMessage &umsg) {
                 ueId =  static_cast<uint16_t> (umsg.attributes().source().entity().id());
             }
             else {
-                LogErr("{} Source URI entityId is not found for outbound message.", __FUNCTION__);
+                SPDLOG_ERROR("{} Source URI entityId is not found for outbound message.", __FUNCTION__);
                 return false;
             }
 
             hptr = getHandler(ueId);
             if (nullptr == hptr) {
-                LogErr("{} No service handler found for UEID[0x{:x}]", __FUNCTION__, ueId);
+                SPDLOG_ERROR("{} No service handler found for UEID[0x{:x}]", __FUNCTION__, ueId);
                 return false;
             }
         }
         break;
         default:
-            LogErr("{} Invalid message type", __FUNCTION__);
+            SPDLOG_ERROR("{} Invalid message type", __FUNCTION__);
             return false;
     }
 
     if (nullptr == hptr) {
         // Something is terribly wrong
-        LogCrit("{} Handler not found and creation also failed!!!", __FUNCTION__);
+        SPDLOG_CRITICAL("{} Handler not found and creation also failed!!!", __FUNCTION__);
         return false;
     }
 
     if (!hptr->isRunning()) {
-        LogTrace("{} - borrowing new thread", __FUNCTION__);
+        SPDLOG_INFO("{} - borrowing new thread", __FUNCTION__);
         if(! hptr->startThread()) {
-            LogErr("{} Failed to start thread", __FUNCTION__);
+            SPDLOG_ERROR("{} Failed to start thread", __FUNCTION__);
             return false;
         }
     } else {
-        LogTrace("{} - handler already exist. No new thread created.", __FUNCTION__);
+        SPDLOG_INFO("{} - handler already exist. No new thread created.", __FUNCTION__);
     }
 
     hptr->queueOutboundMsg(umsg);
@@ -324,7 +324,7 @@ bool SomeipRouter::routeOutboundMsg(const UMessage &umsg) {
  * @return @see @ref SomeipRouter::routeInboundMsg
  */
 bool SomeipRouter::routeInboundMsg(uprotocol::utransport::UMessage &umsg) {
-    LogTrace("{}", __FUNCTION__);
+    SPDLOG_INFO("{}", __FUNCTION__);
     std::ignore = listener_.onReceive(umsg);
     return true;
 }
@@ -362,9 +362,9 @@ MessageTranslator& SomeipRouter::getMessageTranslator() {
  * @return Handler Id A shared pointer to the SomeipHandler object, or nullptr if no handler is found.
  */
 std::shared_ptr<SomeipHandler> SomeipRouter::getHandler(uint16_t UEId) {
-    LogTrace("{}",__FUNCTION__);
+    SPDLOG_INFO("{}",__FUNCTION__);
     if (const auto search=handlers_.find(UEId); search != handlers_.end()) {
-        LogTrace("{} handler found with UEID [0x{:x}]",__FUNCTION__, UEId);
+        SPDLOG_INFO("{} handler found with UEID [0x{:x}]",__FUNCTION__, UEId);
         return search->second;
     } else {
         return nullptr;
@@ -384,7 +384,7 @@ std::shared_ptr<SomeipHandler> SomeipRouter::newHandler(
     const UEntity &uEntityInfo,
     const uprotocol::v1::UAuthority &uAuthorityInfo) {
 
-    LogTrace("{} Creating new handler with UEID [0x{:x}]", __FUNCTION__, uEntityInfo.id());
+    SPDLOG_INFO("{} Creating new handler with UEID [0x{:x}]", __FUNCTION__, uEntityInfo.id());
 
     try {
         std::shared_ptr<SomeipHandler> newSIPHandler =
@@ -398,7 +398,7 @@ std::shared_ptr<SomeipHandler> SomeipRouter::newHandler(
         return iter->second;
 
     } catch(const std::exception& e) {
-        LogErr("{} Exception occurred while creating new handler with UEID [0x{:x}]", __FUNCTION__, uEntityInfo.id());
+        SPDLOG_ERROR("{} Exception occurred while creating new handler with UEID [0x{:x}]", __FUNCTION__, uEntityInfo.id());
         return nullptr;
     }
 }
@@ -424,7 +424,7 @@ void SomeipRouter::removeHandler(uint16_t const UEId) {
  * @param[in] currentState The new state of the SomeipRouter.
  */
 void SomeipRouter::onState(state_type_e const currentState) {
-    LogInfo("{} SomeIP state changed to {}", __FUNCTION__, stateTypeAsStr(currentState));
+    SPDLOG_INFO("{} SomeIP state changed to {}", __FUNCTION__, stateTypeAsStr(currentState));
     state_ = currentState;
 }
 

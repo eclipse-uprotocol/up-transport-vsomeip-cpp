@@ -50,19 +50,19 @@ client_t SomeipWrapper::getClient() const {
  * @return
  */
 bool SomeipWrapper::init() {
-    LogTrace("{}", __FUNCTION__);
+    SPDLOG_INFO("{}", __FUNCTION__);
     app_ = vsomeip::runtime::get()->create_application("uStreamer-client");
     if (nullptr == app_) {
-        LogErr("{} vsomeip create_application failed !!!", __FUNCTION__);
+        SPDLOG_ERROR("{} vsomeip create_application failed !!!", __FUNCTION__);
         return false;
     } else {
-        LogInfo("{} vsomeip create_application succeeded !!!", __FUNCTION__);
+        SPDLOG_INFO("{} vsomeip create_application succeeded !!!", __FUNCTION__);
     }
     bool const bok = app_->init();
     if (bok) {
-        LogInfo("{} vsomeip init succeeded !!!", __FUNCTION__);
+        SPDLOG_INFO("{} vsomeip init succeeded !!!", __FUNCTION__);
     } else {
-        LogErr("{} vsomeip init failed !!!", __FUNCTION__);
+        SPDLOG_ERROR("{} vsomeip init failed !!!", __FUNCTION__);
     }
     return bok;
 }
@@ -71,7 +71,7 @@ bool SomeipWrapper::init() {
  * @brief @see @ref SomeipInterface::start
  */
 void SomeipWrapper::start() {
-    LogTrace("{}", __FUNCTION__);
+    SPDLOG_INFO("{}", __FUNCTION__);
     someipEventLoopThread_ = std::move(std::thread(std::bind(SomeipWrapper::eventLoopFn, this)));
 }
 
@@ -79,11 +79,11 @@ void SomeipWrapper::start() {
  * @brief @see @ref SomeipInterface::stop
  */
 void SomeipWrapper::stop() {
-    LogTrace("{}", __FUNCTION__);
+    SPDLOG_INFO("{}", __FUNCTION__);
     app_->stop();
-    LogTrace("{} Before someip event loop join", __FUNCTION__);
+    SPDLOG_INFO("{} Before someip event loop join", __FUNCTION__);
     someipEventLoopThread_.join();
-    LogTrace("{} After someip event loop join", __FUNCTION__);
+    SPDLOG_INFO("{} After someip event loop join", __FUNCTION__);
     app_ = nullptr;
 }
 
@@ -93,7 +93,7 @@ void SomeipWrapper::stop() {
  * @param sipw
  */
 void SomeipWrapper::eventLoopFn(SomeipWrapper* sipw) {
-    LogInfo("{} Starting a new thread for vsomeip event loop", __FUNCTION__);
+    SPDLOG_INFO("{} Starting a new thread for vsomeip event loop", __FUNCTION__);
     sipw->app_->start();
 }
 

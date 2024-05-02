@@ -26,8 +26,8 @@
 #ifndef SOMEIP_HANDLER_HPP
 #define SOMEIP_HANDLER_HPP
 
+#include <queue>
 #include <up-cpp/transport/UTransport.h>
-#include <up-client-vsomeip-cpp/utils/EventQueue.hpp>
 #include <up-client-vsomeip-cpp/utils/Logger.hpp>
 #include <up-client-vsomeip-cpp/utils/Utils.hpp>
 #include "SomeipRouterInterface.hpp"
@@ -106,7 +106,7 @@ public:
      */
     void addSubscriber() noexcept {
         subscriberCount_++;
-        LogInfo("{} Current subscription count for event[0x{:x}] is [{}]",
+        SPDLOG_INFO("{} Current subscription count for event[0x{:x}] is [{}]",
             __FUNCTION__, resourceInfo_.id(), subscriberCount_);
     }
 
@@ -117,7 +117,7 @@ public:
         if(subscriberCount_ > 0U) {
             subscriberCount_--;
         }
-        LogInfo("{} Current subscription count for event[0x{:x}] is [{}]",
+        SPDLOG_INFO("{} Current subscription count for event[0x{:x}] is [{}]",
             __FUNCTION__, resourceInfo_.id(), subscriberCount_);
     }
 

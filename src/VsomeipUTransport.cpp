@@ -40,17 +40,17 @@ VsomeipUTransport& VsomeipUTransport::instance(void) noexcept {
   */
 UStatus VsomeipUTransport::init(const UListener &listener) noexcept {
     UStatus status;
-    LogInfo("{}", __FUNCTION__);
+    SPDLOG_INFO("{}", __FUNCTION__);
 
     try{
         router_ = std::make_unique<SomeipRouter>(listener);
     } catch (const std::bad_alloc& e) {
-        LogErr("Failed to allocate memory for SomeipRouter: {}", e.what());
+        SPDLOG_ERROR("Failed to allocate memory for SomeipRouter: {}", e.what());
         status.set_code(UCode::RESOURCE_EXHAUSTED);
         return status;
     }
         if (! router_->init()) {
-        LogErr("Failed to initialize SomeipRouter");
+        SPDLOG_ERROR("Failed to initialize SomeipRouter");
         status.set_code(UCode::UNAVAILABLE);
         return status;
     }
@@ -61,7 +61,7 @@ UStatus VsomeipUTransport::init(const UListener &listener) noexcept {
 
 UStatus VsomeipUTransport::terminate() noexcept {
     UStatus status;
-    LogInfo("{}", __FUNCTION__);
+    SPDLOG_INFO("{}", __FUNCTION__);
     router_.reset();
     status.set_code(UCode::OK);
     return status;
@@ -86,7 +86,7 @@ UStatus VsomeipUTransport::send(const UMessage &message) noexcept {
 
 UStatus VsomeipUTransport::registerListener(const UUri &uri,
                                             const UListener &listener) noexcept {
-    LogInfo("{}", __FUNCTION__);
+    SPDLOG_INFO("{}", __FUNCTION__);
     static_cast<void>(uri);
     UStatus status = init(listener);
     return status;

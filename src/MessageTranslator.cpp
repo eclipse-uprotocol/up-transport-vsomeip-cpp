@@ -45,7 +45,7 @@ MessageTranslator::MessageTranslator(
     SomeipInterface& someipInterfaceObj) :
     someipInterfaceRef_(someipInterfaceObj) {
 
-    LogTrace("{}", __FUNCTION__);
+    SPDLOG_INFO("{}", __FUNCTION__);
 
 }
 
@@ -55,7 +55,7 @@ MessageTranslator::MessageTranslator(
  */
 std::shared_ptr<message> MessageTranslator::translateUMessageToSomeipMsgForRequest(std::shared_ptr<UMessage> uMessage) {
 
-    LogTrace("{}", __FUNCTION__);
+    SPDLOG_INFO("{}", __FUNCTION__);
     std::shared_ptr<message> someIpMessage = someipInterfaceRef_.createRequest();
 
     someIpMessage->set_service(static_cast<service_t>(uMessage->attributes().sink().entity().id()));
@@ -128,7 +128,7 @@ std::shared_ptr<UMessage> MessageTranslator::translateSomeipToUMsgForNotificatio
     UAuthority const &uAuthority,
     UResource const &uResource) const {
 
-    LogInfo("{} serviceid[0x{:x}] instance[0x{:x}] eventgrpid[0x{:x}]",
+    SPDLOG_INFO("{} serviceid[0x{:x}] instance[0x{:x}] eventgrpid[0x{:x}]",
             __FUNCTION__, someIpMessage->get_service(), someIpMessage->get_instance(), someIpMessage->get_method());
 
     //build URI
@@ -229,7 +229,7 @@ std::shared_ptr<UMessage> MessageTranslator::translateSomeipToUMsgForRequest(
     UEntity const &uEntity,
     UResource const &uResource) const {
 
-    LogInfo("{} serviceid[0x{:x}] methodId[0x{:x}]",
+    SPDLOG_INFO("{} serviceid[0x{:x}] methodId[0x{:x}]",
             __FUNCTION__, someIpMessage->get_service(), someIpMessage->get_method());
 
     UUID const &generatedUUID = uprotocol::uuid::Uuidv8Factory::create();
@@ -274,7 +274,7 @@ UMessageType MessageTranslator::convertSomeipToUMessageType(message_type_e const
     } else if (messageType == message_type_e::MT_REQUEST_ACK) {
         type = UMessageType::UMESSAGE_TYPE_RESPONSE;
     } else {
-        LogErr("{} Undefined message type", __FUNCTION__);
+        SPDLOG_ERROR("{} Undefined message type", __FUNCTION__);
     }
 
     return type;

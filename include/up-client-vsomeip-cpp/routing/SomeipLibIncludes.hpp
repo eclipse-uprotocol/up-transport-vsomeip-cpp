@@ -43,8 +43,8 @@
  */
 
 /* This version of SomeipLibIncludes is for vsomeip library */
-#include "vsomeip/vsomeip.hpp"
-#include "vsomeip/handler.hpp"
+#include <vsomeip/vsomeip.hpp>
+#include <vsomeip/handler.hpp>
 #include <vsomeip/primitive_types.hpp>
 
 using namespace vsomeip_v3;

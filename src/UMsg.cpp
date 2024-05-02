@@ -109,7 +109,7 @@ void UMsg::setResponseReceived() {
  *  @brief @see @ref UMsg::evaluateSubscriptionPayload
  */
 void UMsg::evaluateSubscriptionPayload() {
-    LogTrace("{}", __FUNCTION__);
+    SPDLOG_INFO("{}", __FUNCTION__);
     std::string payloadData(static_cast<const char*>(static_cast<const void*>(payload_->data())));
     std::stringstream ssPayload(payloadData);
     int iCount = 0;
@@ -124,11 +124,11 @@ void UMsg::evaluateSubscriptionPayload() {
         else if (iCount == 1) {
             token >> uEResourceId_;
         } else {
-            LogWarn("{} Payload data improperly formed !!!", __FUNCTION__);
+            SPDLOG_WARN("{} Payload data improperly formed !!!", __FUNCTION__);
         }
         iCount++;
     }
-    LogInfo("{} ueId[0x{:x}], ueResourceId[0x{:x}]", __FUNCTION__, uEId_, uEResourceId_);
+    SPDLOG_INFO("{} ueId[0x{:x}], ueResourceId[0x{:x}]", __FUNCTION__, uEId_, uEResourceId_);
 }
 
 /**
@@ -137,7 +137,7 @@ void UMsg::evaluateSubscriptionPayload() {
 void UMsg::setUUIDAsStr() {
     std::string const retVal= uprotocol::uuid::UuidSerializer::serializeToString(attrs_->id());
     const char *uuidStr = retVal.c_str();
-    LogInfo("{} setting attributes uuid {}", __FUNCTION__, uuidStr);
+    SPDLOG_INFO("{} setting attributes uuid {}", __FUNCTION__, uuidStr);
     uuId_ = retVal;
 }
 

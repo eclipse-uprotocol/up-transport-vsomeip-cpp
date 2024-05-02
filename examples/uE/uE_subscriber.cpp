@@ -93,9 +93,9 @@ void registerListener(UEListener &listner) {
 
     if (listenerURI != nullptr) {
         if (UCode::OK != VsomeipUTransport::instance().registerListener(*listenerURI, listner).code()) {
-            LogErr("VsomeipUTransport::instance().registerListener failed");
+            SPDLOG_ERROR("VsomeipUTransport::instance().registerListener failed");
         } else {
-            LogInfo("VsomeipUTransport::instance().registerListener success");
+            SPDLOG_INFO("VsomeipUTransport::instance().registerListener success");
         }
     }
 }
