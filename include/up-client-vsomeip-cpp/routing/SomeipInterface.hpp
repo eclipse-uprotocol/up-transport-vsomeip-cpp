@@ -1,31 +1,58 @@
-/*
- * Copyright (c) 2024 General Motors GTO LLC
+/********************************************************************************
+ * Copyright (c) 2024 Contributors to the Eclipse Foundation
  *
- * Licensed to the Apache Software Foundation (ASF) under one
- * or more contributor license agreements.  See the NOTICE file
- * distributed with this work for additional information
- * regarding copyright ownership.  The ASF licenses this file
- * to you under the Apache License, Version 2.0 (the
- * "License"); you may not use this file except in compliance
- * with the License.  You may obtain a copy of the License at
+ * See the NOTICE file(s) distributed with this work for additional
+ * information regarding copyright ownership.
  *
- *   http://www.apache.org/licenses/LICENSE-2.0
+ * This program and the accompanying materials are made available under the
+ * terms of the Apache License Version 2.0 which is available at
+ * https://www.apache.org/licenses/LICENSE-2.0
  *
- * Unless required by applicable law or agreed to in writing,
- * software distributed under the License is distributed on an
- * "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
- * KIND, either express or implied.  See the License for the
- * specific language governing permissions and limitations
- * under the License.
- *
- * SPDX-FileType: SOURCE
- * SPDX-FileCopyrightText: 2024 General Motors GTO LLC
  * SPDX-License-Identifier: Apache-2.0
- */
+ ********************************************************************************/
 
 #ifndef SOMEIP_INTERFACE_HPP
 #define SOMEIP_INTERFACE_HPP
-#include "SomeipLibIncludes.hpp"
+
+#include <vsomeip/vsomeip.hpp>
+#include <vsomeip/handler.hpp>
+#include <vsomeip/primitive_types.hpp>
+
+/**
+ * @brief typecasting stateType as state_type_e
+ *
+ */
+using stateType = vsomeip_v3::state_type_e;
+
+/**
+ * @brief typecasting secClientType as vsomeip_sec_client_t
+ *
+ */
+using secClientType = vsomeip_sec_client_t;
+
+/**
+ * @brief This function converts the stateType from enum to string
+ *
+ * @param enVal enum val that is to be converted into string
+ * @return enum value in string format
+ *
+ */
+constexpr const char *stateTypeAsStr(stateType const enVal) noexcept {
+    const char *ret = "InvalidInput";
+    switch (enVal)
+    {
+    case stateType::ST_REGISTERED:
+        ret = "ST_REGISTERED";
+        break;
+    case stateType::ST_DEREGISTERED:
+        ret = "ST_DEREGISTERED";
+        break;
+
+    default:
+        break;
+    }
+    return ret;
+}
 
 /**
  * @Note: In someip, It is common practise and recommended to split the ID space of the Method ID
@@ -125,7 +152,7 @@ public:
      * @return Client ID of application
      *
      */
-    virtual client_t getClient() const = 0;
+    virtual vsomeip_v3::client_t getClient() const = 0;
 
     /**
      * @brief Initializes the application.
@@ -185,10 +212,10 @@ public:
      *
      */
     virtual void offerService(
-        service_t service,
-        instance_t instance,
-        major_version_t majorVersion = DEFAULT_MAJOR,
-        minor_version_t minorVersion = DEFAULT_MINOR) = 0;
+        vsomeip_v3::service_t service,
+        vsomeip_v3::instance_t instance,
+        vsomeip_v3::major_version_t majorVersion = vsomeip_v3::DEFAULT_MAJOR,
+        vsomeip_v3::minor_version_t minorVersion = vsomeip_v3::DEFAULT_MINOR) = 0;
 
     /**
      * @brief Stops offering a SOME/IP service instance.
@@ -202,10 +229,10 @@ public:
      *
      */
     virtual void stopOfferService(
-        service_t service,
-        instance_t instance,
-        major_version_t majorVersion = DEFAULT_MAJOR,
-        minor_version_t minorVersion = DEFAULT_MINOR) = 0;
+        vsomeip_v3::service_t service,
+        vsomeip_v3::instance_t instance,
+        vsomeip_v3::major_version_t majorVersion = vsomeip_v3::DEFAULT_MAJOR,
+        vsomeip_v3::minor_version_t minorVersion = vsomeip_v3::DEFAULT_MINOR) = 0;
 
     /* Someip Client related interfaces (When acting like a client) */
 
@@ -224,10 +251,10 @@ public:
      *
      */
     virtual void requestService(
-        service_t service,
-        instance_t instance,
-        major_version_t majorVersion = ANY_MAJOR,
-        minor_version_t minorVersion = ANY_MINOR) = 0;
+        vsomeip_v3::service_t service,
+        vsomeip_v3::instance_t instance,
+        vsomeip_v3::major_version_t majorVersion = vsomeip_v3::ANY_MAJOR,
+        vsomeip_v3::minor_version_t minorVersion = vsomeip_v3::ANY_MINOR) = 0;
 
     /**
      * @brief Unregister the application as client of a service instance.
@@ -244,7 +271,7 @@ public:
      * @param instance Instance identifier of the offered service instance.
      *
      */
-    virtual void releaseService(service_t service, instance_t instance) = 0;
+    virtual void releaseService(vsomeip_v3::service_t service, vsomeip_v3::instance_t instance) = 0;
 
     /**
      *
@@ -278,15 +305,17 @@ public:
      * instance's reliability configuration. This parameter has no effect for
      * events of local services.
      */
-    virtual void offerEvent(service_t service, instance_t instance,
-                event_t eventID,
-                const std::set<eventgroup_t> &_eventgroups,
-                event_type_e _type = event_type_e::ET_EVENT,
+    virtual void offerEvent(
+                vsomeip_v3::service_t service,
+                vsomeip_v3::instance_t instance,
+                vsomeip_v3::event_t eventID,
+                const std::set<vsomeip_v3::eventgroup_t> &_eventgroups,
+                vsomeip_v3::event_type_e _type = vsomeip_v3::event_type_e::ET_EVENT,
                 std::chrono::milliseconds _cycle = std::chrono::milliseconds::zero(),
                 bool _change_resets_cycle = false,
                 bool _update_on_change = true,
-                const epsilon_change_func_t &_epsilon_change_func = nullptr,
-                reliability_type_e _reliability = reliability_type_e::RT_UNKNOWN) = 0;
+                const vsomeip_v3::epsilon_change_func_t &_epsilon_change_func = nullptr,
+                vsomeip_v3::reliability_type_e _reliability = vsomeip_v3::reliability_type_e::RT_UNKNOWN) = 0;
 
     /**
      *
@@ -319,12 +348,12 @@ public:
      * type are known which might result in missing events.
      */
     virtual void requestEvent(
-        service_t service,
-        instance_t instance,
-        event_t event,
-        std::set<eventgroup_t> const &eventgroups,
-        event_type_e type = event_type_e::ET_EVENT,
-        reliability_type_e reliability = reliability_type_e::RT_UNKNOWN) = 0;
+        vsomeip_v3::service_t service,
+        vsomeip_v3::instance_t instance,
+        vsomeip_v3::event_t event,
+        std::set<vsomeip_v3::eventgroup_t> const &eventgroups,
+        vsomeip_v3::event_type_e type = vsomeip_v3::event_type_e::ET_EVENT,
+        vsomeip_v3::reliability_type_e reliability = vsomeip_v3::reliability_type_e::RT_UNKNOWN) = 0;
 
     /**
      * @brief Unregister the application as user of an event or field.
@@ -340,27 +369,27 @@ public:
      *
      */
     virtual void releaseEvent(
-        service_t service,
-        instance_t instance,
-        event_t event) = 0;
+        vsomeip_v3::service_t service,
+        vsomeip_v3::instance_t instance,
+        vsomeip_v3::event_t event) = 0;
 
     /**
      * @brief Create a Request object
      *
-     * @return std::shared_ptr<message>
+     * @return std::shared_ptr<vsomeip_v3::message>
      *
      */
-    virtual std::shared_ptr<message> createRequest() = 0;
+    virtual std::shared_ptr<vsomeip_v3::message> createRequest() = 0;
 
     /**
      * @brief Create a Response object
      *
      * @param request
-     * @return std::shared_ptr<message>
+     * @return std::shared_ptr<vsomeip_v3::message>
      *
      */
-    virtual std::shared_ptr<message> createResponse(
-        const std::shared_ptr<message> &request) = 0;
+    virtual std::shared_ptr<vsomeip_v3::message> createResponse(
+        const std::shared_ptr<vsomeip_v3::message> &request) = 0;
 
     /**
      * @brief Create a Payload object
@@ -368,7 +397,7 @@ public:
      * @return std::shared_ptr<payload>
      *
      */
-    virtual std::shared_ptr<payload> createPayload() = 0;
+    virtual std::shared_ptr<vsomeip_v3::payload> createPayload() = 0;
 
     /**
      * @brief Subscribes to an eventgroup.
@@ -394,11 +423,11 @@ public:
      *
      */
     virtual void subscribe(
-        service_t service,
-        instance_t instance,
-        eventgroup_t eventgroup,
-        major_version_t majorVersion = DEFAULT_MAJOR,
-        event_t event = ANY_EVENT) = 0;
+        vsomeip_v3::service_t service,
+        vsomeip_v3::instance_t instance,
+        vsomeip_v3::eventgroup_t eventgroup,
+        vsomeip_v3::major_version_t majorVersion = vsomeip_v3::DEFAULT_MAJOR,
+        vsomeip_v3::event_t event = vsomeip_v3::ANY_EVENT) = 0;
 
     /**
      * @brief Unsubscribes from an eventgroup.
@@ -411,9 +440,9 @@ public:
      *
      */
     virtual void unsubscribe(
-        service_t service,
-        instance_t instance,
-        eventgroup_t eventgroup) = 0;
+        vsomeip_v3::service_t service,
+        vsomeip_v3::instance_t instance,
+        vsomeip_v3::eventgroup_t eventgroup) = 0;
 
     /**
      * @brief Retrieve for the availability of a service instance.
@@ -423,19 +452,19 @@ public:
      *
      * @param service Service identifier of the service instance.
      * @param instance Instance identifier of the service instance.
-     * @param majorVersion Major interface version. Use ANY_MAJOR to ignore the
+     * @param majorVersion Major interface version. Use vsomeip_v3::ANY_MAJOR to ignore the
      * majorVersion version.
-     * @param minorVersion Minor interface version. Use ANY_MINOR to ignore the
+     * @param minorVersion Minor interface version. Use vsomeip_v3::ANY_MINOR to ignore the
      * minorVersion version.
      * @return True
      * @return False
      *
      */
     virtual bool isAvailable(
-        service_t service,
-        instance_t instance,
-        major_version_t majorVersion = ANY_MAJOR,
-        minor_version_t minorVersion = ANY_MINOR) const = 0;
+        vsomeip_v3::service_t service,
+        vsomeip_v3::instance_t instance,
+        vsomeip_v3::major_version_t majorVersion = vsomeip_v3::ANY_MAJOR,
+        vsomeip_v3::minor_version_t minorVersion = vsomeip_v3::ANY_MINOR) const = 0;
 
     /* Common interfaces (irrespective of being server or client) */
     /**
@@ -449,7 +478,7 @@ public:
      * @param message Message object.
      *
      */
-    virtual void send(std::shared_ptr<message> message) = 0;
+    virtual void send(std::shared_ptr<vsomeip_v3::message> message) = 0;
 
     /**
      * @brief Fire an event or field notification.
@@ -472,10 +501,10 @@ public:
      *
      */
     virtual void notify(
-        service_t service,
-        instance_t instance,
-        event_t event,
-        std::shared_ptr<payload> payload,
+        vsomeip_v3::service_t service,
+        vsomeip_v3::instance_t instance,
+        vsomeip_v3::event_t event,
+        std::shared_ptr<vsomeip_v3::payload> payload,
         bool force = false) const = 0;
 
     /**
@@ -509,10 +538,10 @@ public:
      *
      */
     virtual void registerMessageHandler(
-        service_t service,
-        instance_t instance,
-        method_t method,
-        message_handler_t const &handler) = 0;
+        vsomeip_v3::service_t service,
+        vsomeip_v3::instance_t instance,
+        vsomeip_v3::method_t method,
+        vsomeip_v3::message_handler_t const &handler) = 0;
 
     /**
      * @brief Unregisters the message handler for the specified service
@@ -530,9 +559,9 @@ public:
      *
      */
     virtual void unregisterMessageHandler(
-        service_t service,
-        instance_t instance,
-        method_t method) = 0;
+        vsomeip_v3::service_t service,
+        vsomeip_v3::instance_t instance,
+        vsomeip_v3::method_t method) = 0;
 
     /**
      * @brief Register a callback that is called when service instances
@@ -541,8 +570,8 @@ public:
      * @note This method allows for the registration of callbacks that are called
      * whenever a service appears or disappears. It is possible to specify
      * wildcards for service, instance and/or version. Additionally, the
-     * version specification is optional and defaults to DEFAULT_MAJOR
-     * /DEFAULT_MINOR.
+     * version specification is optional and defaults to vsomeip_v3::DEFAULT_MAJOR
+     * /vsomeip_v3::DEFAULT_MINOR.
      *
      * @param service Service identifier of the service instance whose
      * availability shall be reported. Can be set to ANY_SERVICE.
@@ -550,17 +579,17 @@ public:
      * availability shall be reported. Can be set to ANY_INSTANCE.
      * @param handler Callback to be called if availability changes.
      * @param majorVersion Major service version. The parameter defaults to
-     * DEFAULT_MAJOR and can be set to ANY_MAJOR.
+     * vsomeip_v3::DEFAULT_MAJOR and can be set to vsomeip_v3::ANY_MAJOR.
      * @param minorVersion Minor service version. The parameter defaults to
-     * DEFAULT_MINOR and can be set to ANY_MINOR.
+     * vsomeip_v3::DEFAULT_MINOR and can be set to vsomeip_v3::ANY_MINOR.
      *
      */
     virtual void registerAvailabilityHandler(
-        service_t service,
-        instance_t instance,
-        availability_handler_t const &handler,
-        major_version_t majorVersion = ANY_MAJOR,
-        minor_version_t minorVersion = ANY_MINOR) = 0;
+        vsomeip_v3::service_t service,
+        vsomeip_v3::instance_t instance,
+        vsomeip_v3::availability_handler_t const &handler,
+        vsomeip_v3::major_version_t majorVersion = vsomeip_v3::ANY_MAJOR,
+        vsomeip_v3::minor_version_t minorVersion = vsomeip_v3::ANY_MINOR) = 0;
 
     /**
      * @brief Unregister an availability callback.
@@ -570,16 +599,16 @@ public:
      * @param instance Instance identifier of the service instance whose
      * availability shall be reported. Can be set to ANY_INSTANCE.
      * @param majorVersion Major service version. The parameter defaults to
-     * DEFAULT_MAJOR and can be set to ANY_MAJOR.
+     * vsomeip_v3::DEFAULT_MAJOR and can be set to vsomeip_v3::ANY_MAJOR.
      * @param minorVersion Minor service version. The parameter defaults to
-     * DEFAULT_MINOR and can be set to ANY_MINOR.
+     * vsomeip_v3::DEFAULT_MINOR and can be set to vsomeip_v3::ANY_MINOR.
      *
      */
     virtual void unregisterAvailabilityHandler(
-        service_t service,
-        instance_t instance,
-        major_version_t majorVersion = ANY_MAJOR,
-        minor_version_t minorVersion = ANY_MINOR) = 0;
+        vsomeip_v3::service_t service,
+        vsomeip_v3::instance_t instance,
+        vsomeip_v3::major_version_t majorVersion = vsomeip_v3::ANY_MAJOR,
+        vsomeip_v3::minor_version_t minorVersion = vsomeip_v3::ANY_MINOR) = 0;
 
     /**
      * @brief Registers a subscription status listener.
@@ -602,11 +631,11 @@ public:
      *
      */
     virtual void registerSubscriptionStatusHandler(
-        service_t service,
-        instance_t instance,
-        eventgroup_t eventgroup,
-        event_t event,
-        subscription_status_handler_t handler,
+        vsomeip_v3::service_t service,
+        vsomeip_v3::instance_t instance,
+        vsomeip_v3::eventgroup_t eventgroup,
+        vsomeip_v3::event_t event,
+        vsomeip_v3::subscription_status_handler_t handler,
         bool is_selective = false) = 0;
 
     /**
@@ -623,10 +652,10 @@ public:
      *
      */
     virtual void unregisterSubscriptionStatusHandler(
-        service_t service,
-        instance_t instance,
-        eventgroup_t eventgroup,
-        event_t event) = 0;
+        vsomeip_v3::service_t service,
+        vsomeip_v3::instance_t instance,
+        vsomeip_v3::eventgroup_t eventgroup,
+        vsomeip_v3::event_t event) = 0;
 
     /**
      * @brief Registers a subscription handler.
@@ -648,10 +677,10 @@ public:
      *
      */
     virtual void registerSubscriptionHandler(
-        service_t service,
-        instance_t instance,
-        eventgroup_t eventgroup,
-        subscription_handler_sec_t const &handler) = 0;
+        vsomeip_v3::service_t service,
+        vsomeip_v3::instance_t instance,
+        vsomeip_v3::eventgroup_t eventgroup,
+        vsomeip_v3::subscription_handler_sec_t const &handler) = 0;
 
     /**
      * @brief Unregister a subscription handler.
@@ -665,9 +694,9 @@ public:
      *
      */
     virtual void unregisterSubscriptionHandler(
-        service_t service,
-        instance_t instance,
-        eventgroup_t eventgroup) = 0;
+        vsomeip_v3::service_t service,
+        vsomeip_v3::instance_t instance,
+        vsomeip_v3::eventgroup_t eventgroup) = 0;
 
     /**
      * @brief Register a state handler with the vsomeip runtime.
@@ -680,7 +709,7 @@ public:
      * @param handler Handler function to be called on state change.
      *
      */
-    virtual void registerStateHandler(state_handler_t const &handler) = 0;
+    virtual void registerStateHandler(vsomeip_v3::state_handler_t const &handler) = 0;
 
     /**
      * @brief Unregister the state handler.
@@ -701,7 +730,7 @@ public:
      * @return true
      * @return false
      */
-    virtual bool isMethod(const method_t &methodId) const = 0;
+    virtual bool isMethod(const vsomeip_v3::method_t &methodId) const = 0;
 };
 
 #endif //SOMEIP_INTERFACE_HPP

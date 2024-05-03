@@ -33,16 +33,6 @@
 #include <up-client-vsomeip-cpp/routing/SomeipRouter.hpp>
 #include <memory>
 
-// using namespace uprotocol::v1;
-// using namespace uprotocol::utransport;
-
-// class ListenerContainer {
-//     public:
-//         std::vector<z_owned_subscriber_t> subVector_;
-//         std::vector<z_owned_queryable_t> queryVector_;
-//         std::vector<const UListener*> listenerVector_;
-// };
-
 class VsomeipUTransport : public uprotocol::utransport::UTransport {
 public:
 

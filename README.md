@@ -16,7 +16,7 @@ This module contains the implementation for pub-sub and RPC API`s defined in the
 
 ### 2.2. Dependencies
 #### 2.2.1. up-cpp
-Install up-cpp library (verssion v0.1.2-dev): https://github.com/eclipse-uprotocol/up-cpp
+Install up-cpp library (version v0.1.2-dev): https://github.com/eclipse-uprotocol/up-cpp
 
 #### 2.2.1. vsomeip
 - Install boost (version: 1.84.0): https://www.boost.org/users/history/version_1_84_0.html

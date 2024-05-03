@@ -1,27 +1,15 @@
-/*
- * Copyright (c) 2024 General Motors GTO LLC
+/********************************************************************************
+ * Copyright (c) 2024 Contributors to the Eclipse Foundation
  *
- * Licensed to the Apache Software Foundation (ASF) under one
- * or more contributor license agreements.  See the NOTICE file
- * distributed with this work for additional information
- * regarding copyright ownership.  The ASF licenses this file
- * to you under the Apache License, Version 2.0 (the
- * "License"); you may not use this file except in compliance
- * with the License.  You may obtain a copy of the License at
+ * See the NOTICE file(s) distributed with this work for additional
+ * information regarding copyright ownership.
  *
- *   http://www.apache.org/licenses/LICENSE-2.0
+ * This program and the accompanying materials are made available under the
+ * terms of the Apache License Version 2.0 which is available at
+ * https://www.apache.org/licenses/LICENSE-2.0
  *
- * Unless required by applicable law or agreed to in writing,
- * software distributed under the License is distributed on an
- * "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
- * KIND, either express or implied.  See the License for the
- * specific language governing permissions and limitations
- * under the License.
- *
- * SPDX-FileType: SOURCE
- * SPDX-FileCopyrightText: 2024 General Motors GTO LLC
  * SPDX-License-Identifier: Apache-2.0
- */
+ ********************************************************************************/
 
 #ifndef MESSAGE_TRANSLATOR_HPP
 #define MESSAGE_TRANSLATOR_HPP
@@ -29,9 +17,8 @@
 #include <up-client-vsomeip-cpp/routing/SomeipInterface.hpp>
 #include <memory>
 
-constexpr instance_t INSTANCE_ID_PER_SPEC  = 0x0U;
+constexpr vsomeip_v3::instance_t INSTANCE_ID_PER_SPEC  = 0x0U;
 
-class UStreamer;
 /**
 * @brief MessageTranslator class is a utility class that can translate uMessage into someipMessage and vice-versa
 */
@@ -49,14 +36,14 @@ public:
      * @param uMessage, pointer to uMessage which is translated to the some ip message.
      * @return shared pointer to some ip message
      */
-    std::shared_ptr<message> translateUMessageToSomeipMsgForRequest(std::shared_ptr<uprotocol::utransport::UMessage> uMessage);
+    std::shared_ptr<vsomeip_v3::message> translateUMessageToSomeipMsgForRequest(std::shared_ptr<uprotocol::utransport::UMessage> uMessage);
 
     /**
      * @brief Converts the message type from someip to UMessageType
      * @param[in] messageType, someip message type to be converted
      * @return UMessageType, converted UMessageType
      */
-    uprotocol::v1::UMessageType convertSomeipToUMessageType(message_type_e const &messageType) const;
+    uprotocol::v1::UMessageType convertSomeipToUMessageType(vsomeip_v3::message_type_e const &messageType) const;
 
     /**
      * @brief Translates a SomeIP message to a UMessage using shared pointers.
@@ -66,7 +53,7 @@ public:
      * @return UMessage shared ptr
      */
     std::shared_ptr<uprotocol::utransport::UMessage> translateSomeipToUMsgForRequest(
-        std::shared_ptr<message> const &someIpMessage,
+        std::shared_ptr<vsomeip_v3::message> const &someIpMessage,
         uprotocol::v1::UEntity const &uEntity ,
         uprotocol::v1::UResource const &uResource) const ;
 
@@ -78,7 +65,7 @@ public:
      * @return shared pointer to UMessage
      */
     std::shared_ptr<uprotocol::utransport::UMessage> translateSomeipToUMsgForResponse(
-        std::shared_ptr<message> const &someIpMessage,
+        std::shared_ptr<vsomeip_v3::message> const &someIpMessage,
 		std::shared_ptr<uprotocol::utransport::UMessage> originalRequestMsg) const ;
 
     /**
@@ -90,7 +77,7 @@ public:
      * @return shared pointer to UMessage
      */
     std::shared_ptr<uprotocol::utransport::UMessage> translateSomeipToUMsgForNotification(
-        std::shared_ptr<message> const someIpMessage,
+        std::shared_ptr<vsomeip_v3::message> const someIpMessage,
         uprotocol::v1::UEntity const &uEntity ,
         uprotocol::v1::UAuthority const &uAuthority,
         uprotocol::v1::UResource const &uResource) const ;
@@ -121,7 +108,7 @@ private:
         uprotocol::v1::UUri const &uriSource,
         uprotocol::v1::UUri const &uriSink,
         uprotocol::v1::UUID const &generatedUUID,
-        message_type_e const &messageType,
+        vsomeip_v3::message_type_e const &messageType,
         uprotocol::v1::UPriority priority = uprotocol::v1::UPriority::UPRIORITY_CS0) const;
 
     /**
@@ -130,7 +117,7 @@ private:
      *
      * @return shared pointer to UPayload
     */
-    std::shared_ptr<uprotocol::utransport::UPayload> buildUPayload(std::shared_ptr<message> const someIpMessage) const;
+    std::shared_ptr<uprotocol::utransport::UPayload> buildUPayload(std::shared_ptr<vsomeip_v3::message> const someIpMessage) const;
 
     /**
      * @brief Reference to someIpInterface

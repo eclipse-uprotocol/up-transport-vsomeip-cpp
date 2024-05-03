@@ -1,27 +1,15 @@
-/*
- * Copyright (c) 2024 General Motors GTO LLC
+/********************************************************************************
+ * Copyright (c) 2024 Contributors to the Eclipse Foundation
  *
- * Licensed to the Apache Software Foundation (ASF) under one
- * or more contributor license agreements.  See the NOTICE file
- * distributed with this work for additional information
- * regarding copyright ownership.  The ASF licenses this file
- * to you under the Apache License, Version 2.0 (the
- * "License"); you may not use this file except in compliance
- * with the License.  You may obtain a copy of the License at
+ * See the NOTICE file(s) distributed with this work for additional
+ * information regarding copyright ownership.
  *
- *   http://www.apache.org/licenses/LICENSE-2.0
+ * This program and the accompanying materials are made available under the
+ * terms of the Apache License Version 2.0 which is available at
+ * https://www.apache.org/licenses/LICENSE-2.0
  *
- * Unless required by applicable law or agreed to in writing,
- * software distributed under the License is distributed on an
- * "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
- * KIND, either express or implied.  See the License for the
- * specific language governing permissions and limitations
- * under the License.
- *
- * SPDX-FileType: SOURCE
- * SPDX-FileCopyrightText: 2024 General Motors GTO LLC
  * SPDX-License-Identifier: Apache-2.0
- */
+ ********************************************************************************/
 
 #ifndef VSOMEIP_WRAPPER_H
 #define VSOMEIP_WRAPPER_H
@@ -57,7 +45,7 @@ public:
      *
      * @return
      */
-    client_t getClient() const override;
+    vsomeip_v3::client_t getClient() const override;
 
     /**
      * @brief @see @ref SomeipInterface::eventLoopFn
@@ -106,15 +94,15 @@ public:
      * @param reliability @see @ref SomeipInterface::offerEvent
      */
     void offerEvent(
-        service_t service,
-        instance_t instance,
-        event_t eventID, std::set<eventgroup_t> const &eventgroups,
-        event_type_e type = event_type_e::ET_EVENT,
+        vsomeip_v3::service_t service,
+        vsomeip_v3::instance_t instance,
+        vsomeip_v3::event_t eventID, std::set<vsomeip_v3::eventgroup_t> const &eventgroups,
+        vsomeip_v3::event_type_e type = vsomeip_v3::event_type_e::ET_EVENT,
         std::chrono::milliseconds cycle = std::chrono::milliseconds::zero(),
         bool change_resets_cycle = false,
         bool update_on_change = true,
-        epsilon_change_func_t const &epsilon_change_func = nullptr,
-        reliability_type_e reliability = reliability_type_e::RT_UNKNOWN) override;
+        vsomeip_v3::epsilon_change_func_t const &epsilon_change_func = nullptr,
+        vsomeip_v3::reliability_type_e reliability = vsomeip_v3::reliability_type_e::RT_UNKNOWN) override;
 
     /**
      * @brief @see @ref SomeipInterface::offerService
@@ -125,10 +113,10 @@ public:
      * @param minorVersion
      */
     void offerService(
-        service_t service,
-        instance_t instance,
-        major_version_t majorVersion = DEFAULT_MAJOR,
-        minor_version_t minorVersion = DEFAULT_MINOR) override;
+        vsomeip_v3::service_t service,
+        vsomeip_v3::instance_t instance,
+        vsomeip_v3::major_version_t majorVersion = vsomeip_v3::DEFAULT_MAJOR,
+        vsomeip_v3::minor_version_t minorVersion = vsomeip_v3::DEFAULT_MINOR) override;
 
     /**
      * @brief @see @ref SomeipInterface::stopOfferService
@@ -139,10 +127,10 @@ public:
      * @param minorVersion
      */
     void stopOfferService(
-        service_t service,
-        instance_t instance,
-        major_version_t majorVersion = DEFAULT_MAJOR,
-        minor_version_t minorVersion = DEFAULT_MINOR) override;
+        vsomeip_v3::service_t service,
+        vsomeip_v3::instance_t instance,
+        vsomeip_v3::major_version_t majorVersion = vsomeip_v3::DEFAULT_MAJOR,
+        vsomeip_v3::minor_version_t minorVersion = vsomeip_v3::DEFAULT_MINOR) override;
 
     /**
      * @brief @see @ref SomeipInterface::requestService
@@ -153,10 +141,10 @@ public:
      * @param minorVersion
      */
     void requestService(
-        service_t service,
-        instance_t instance,
-        major_version_t majorVersion = ANY_MAJOR,
-        minor_version_t minorVersion = ANY_MINOR) override;
+        vsomeip_v3::service_t service,
+        vsomeip_v3::instance_t instance,
+        vsomeip_v3::major_version_t majorVersion = vsomeip_v3::ANY_MAJOR,
+        vsomeip_v3::minor_version_t minorVersion = vsomeip_v3::ANY_MINOR) override;
 
     /**
      *  @brief @see @ref SomeipInterface::releaseService
@@ -165,8 +153,8 @@ public:
      * @param instance
      */
     void releaseService(
-        service_t service,
-        instance_t instance) override;
+        vsomeip_v3::service_t service,
+        vsomeip_v3::instance_t instance) override;
 
     /**
      * @brief @see @ref SomeipInterface::requestEvent
@@ -179,12 +167,12 @@ public:
      * @param reliability
      */
     void requestEvent(
-        service_t service,
-        instance_t instance,
-        event_t event,
-        std::set<eventgroup_t> const &eventgroups,
-        event_type_e type = event_type_e::ET_EVENT,
-        reliability_type_e reliability = reliability_type_e::RT_UNKNOWN) override;
+        vsomeip_v3::service_t service,
+        vsomeip_v3::instance_t instance,
+        vsomeip_v3::event_t event,
+        std::set<vsomeip_v3::eventgroup_t> const &eventgroups,
+        vsomeip_v3::event_type_e type = vsomeip_v3::event_type_e::ET_EVENT,
+        vsomeip_v3::reliability_type_e reliability = vsomeip_v3::reliability_type_e::RT_UNKNOWN) override;
 
     /**
     * @brief @see @ref SomeipInterface::releaseEvent
@@ -194,16 +182,16 @@ public:
     * @param event
     */
     void releaseEvent(
-        service_t service,
-        instance_t instance,
-        event_t event) override;
+        vsomeip_v3::service_t service,
+        vsomeip_v3::instance_t instance,
+        vsomeip_v3::event_t event) override;
 
     /**
      * @brief @see @ref SomeipInterface::createRequest
      *
      * @return
      */
-    std::shared_ptr<message> createRequest() override;
+    std::shared_ptr<vsomeip_v3::message> createRequest() override;
 
     /**
      * @brief @see @ref SomeipInterface::createResponse
@@ -212,15 +200,15 @@ public:
      *
      * @return
      */
-    std::shared_ptr<message> createResponse(
-        const std::shared_ptr<message> &request) override;
+    std::shared_ptr<vsomeip_v3::message> createResponse(
+        const std::shared_ptr<vsomeip_v3::message> &request) override;
 
     /**
      * @brief @see @ref SomeipInterface::createPayload
      *
      * @return
      */
-    std::shared_ptr<payload> createPayload() override;
+    std::shared_ptr<vsomeip_v3::payload> createPayload() override;
 
     /**
      * @brief @see @ref SomeipInterface::subscribe
@@ -232,11 +220,11 @@ public:
      * @param event
      */
     void subscribe(
-        service_t service,
-        instance_t instance,
-        eventgroup_t eventgroup,
-        major_version_t majorVersion = DEFAULT_MAJOR,
-        event_t event = ANY_EVENT) override;
+        vsomeip_v3::service_t service,
+        vsomeip_v3::instance_t instance,
+        vsomeip_v3::eventgroup_t eventgroup,
+        vsomeip_v3::major_version_t majorVersion = vsomeip_v3::DEFAULT_MAJOR,
+        vsomeip_v3::event_t event = vsomeip_v3::ANY_EVENT) override;
 
    /**
     * @brief @see @ref SomeipInterface::unSubscribe
@@ -246,9 +234,9 @@ public:
     * @param eventgroup
     */
     void unsubscribe(
-        service_t service,
-        instance_t instance,
-        eventgroup_t eventgroup) override;
+        vsomeip_v3::service_t service,
+        vsomeip_v3::instance_t instance,
+        vsomeip_v3::eventgroup_t eventgroup) override;
 
    /**
     * @brief @see @ref SomeipInterface::isAvailable
@@ -261,17 +249,17 @@ public:
     * @return
     */
     bool isAvailable(
-        service_t service,
-        instance_t instance,
-        major_version_t majorVersion = ANY_MAJOR,
-        minor_version_t minorVersion = ANY_MINOR) const override;
+        vsomeip_v3::service_t service,
+        vsomeip_v3::instance_t instance,
+        vsomeip_v3::major_version_t majorVersion = vsomeip_v3::ANY_MAJOR,
+        vsomeip_v3::minor_version_t minorVersion = vsomeip_v3::ANY_MINOR) const override;
 
     /**
      * @brief @see @ref SomeipInterface::send
      *
      * @param message
      */
-    void send(std::shared_ptr<message> message) override;
+    void send(std::shared_ptr<vsomeip_v3::message> message) override;
 
     /**
      * @brief @see @ref SomeipInterface::notify
@@ -283,10 +271,10 @@ public:
      * @param force
     */
     void notify(
-        service_t service,
-        instance_t instance,
-        event_t event,
-        std::shared_ptr<payload> payload,
+        vsomeip_v3::service_t service,
+        vsomeip_v3::instance_t instance,
+        vsomeip_v3::event_t event,
+        std::shared_ptr<vsomeip_v3::payload> payload,
         bool force = false) const override;
 
    /**
@@ -298,10 +286,10 @@ public:
     * @param handler
     */
     void registerMessageHandler(
-        service_t service,
-        instance_t instance,
-        method_t method,
-        message_handler_t const &handler) override;
+        vsomeip_v3::service_t service,
+        vsomeip_v3::instance_t instance,
+        vsomeip_v3::method_t method,
+        vsomeip_v3::message_handler_t const &handler) override;
 
    /**
     * @brief @see @ref SomeipInterface::unregisterMessageHandler
@@ -311,9 +299,9 @@ public:
     * @param method
     */
     void unregisterMessageHandler(
-        service_t service,
-        instance_t instance,
-        method_t method) override;
+        vsomeip_v3::service_t service,
+        vsomeip_v3::instance_t instance,
+        vsomeip_v3::method_t method) override;
 
     /**
      * @brief @see @ref SomeipInterface::registerAvailabilityHandler
@@ -324,11 +312,11 @@ public:
      * @param majorVersion
      * @param minorVersion
      */
-    void registerAvailabilityHandler(service_t service,
-        instance_t instance,
-        availability_handler_t const &handler,
-        major_version_t majorVersion = ANY_MAJOR,
-        minor_version_t minorVersion = ANY_MINOR) override;
+    void registerAvailabilityHandler(vsomeip_v3::service_t service,
+        vsomeip_v3::instance_t instance,
+        vsomeip_v3::availability_handler_t const &handler,
+        vsomeip_v3::major_version_t majorVersion = vsomeip_v3::ANY_MAJOR,
+        vsomeip_v3::minor_version_t minorVersion = vsomeip_v3::ANY_MINOR) override;
 
    /**
     * @brief @see @ref SomeipInterface::unregisterAvailabilityHandler
@@ -339,10 +327,10 @@ public:
     * @param minorVersion
     */
     void unregisterAvailabilityHandler(
-        service_t service,
-        instance_t instance,
-        major_version_t majorVersion = ANY_MAJOR,
-        minor_version_t minorVersion = ANY_MINOR) override;
+        vsomeip_v3::service_t service,
+        vsomeip_v3::instance_t instance,
+        vsomeip_v3::major_version_t majorVersion = vsomeip_v3::ANY_MAJOR,
+        vsomeip_v3::minor_version_t minorVersion = vsomeip_v3::ANY_MINOR) override;
 
     /**
      * @brief @see @ref SomeipInterface::registerSubscriptionStatusHandler
@@ -355,11 +343,11 @@ public:
      * @param is_selective
      */
     void registerSubscriptionStatusHandler(
-        service_t service,
-        instance_t instance,
-        eventgroup_t eventgroup,
-        event_t event,
-        subscription_status_handler_t handler,
+        vsomeip_v3::service_t service,
+        vsomeip_v3::instance_t instance,
+        vsomeip_v3::eventgroup_t eventgroup,
+        vsomeip_v3::event_t event,
+        vsomeip_v3::subscription_status_handler_t handler,
         bool is_selective = false) override;
 
     /**
@@ -371,10 +359,10 @@ public:
     * @param event
     */
     void unregisterSubscriptionStatusHandler(
-        service_t service,
-        instance_t instance,
-        eventgroup_t eventgroup,
-        event_t event) override;
+        vsomeip_v3::service_t service,
+        vsomeip_v3::instance_t instance,
+        vsomeip_v3::eventgroup_t eventgroup,
+        vsomeip_v3::event_t event) override;
 
     /**
     * @brief @see @ref SomeipInterface::registerSubscriptionHandler
@@ -385,10 +373,10 @@ public:
     * @param handler
     */
     void registerSubscriptionHandler(
-        service_t service,
-        instance_t instance,
-        eventgroup_t eventgroup,
-        subscription_handler_sec_t const &handler) override;
+        vsomeip_v3::service_t service,
+        vsomeip_v3::instance_t instance,
+        vsomeip_v3::eventgroup_t eventgroup,
+        vsomeip_v3::subscription_handler_sec_t const &handler) override;
 
     /**
     * @brief @see @ref SomeipInterface::unregisterSubscriptionHandler
@@ -398,16 +386,16 @@ public:
     * @param eventgroup
     */
     void unregisterSubscriptionHandler(
-        service_t service,
-        instance_t instance,
-        eventgroup_t eventgroup) override;
+        vsomeip_v3::service_t service,
+        vsomeip_v3::instance_t instance,
+        vsomeip_v3::eventgroup_t eventgroup) override;
 
     /**
     * @brief @see @ref SomeipInterface::registerStateHandler
     *
     * @param handler
     */
-    void registerStateHandler(state_handler_t const &handler) override;
+    void registerStateHandler(vsomeip_v3::state_handler_t const &handler) override;
 
     /**
     * @brief @see @ref SomeipInterface::unregisterStateHandler
@@ -426,7 +414,7 @@ public:
      * @return true
      * @return false
      */
-    bool isMethod(const method_t &methodId) const override;
+    bool isMethod(const vsomeip_v3::method_t &methodId) const override;
 
 private:
     /**

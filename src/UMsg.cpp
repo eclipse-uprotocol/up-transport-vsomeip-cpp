@@ -7,6 +7,7 @@
 using namespace uprotocol::v1;
 using namespace std;
 using namespace uprotocol::utransport;
+using namespace vsomeip_v3;
 
 /**
  *  @brief     @see @ref UMsg::UMsg

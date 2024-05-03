@@ -1,27 +1,15 @@
-/*
- * Copyright (c) 2024 General Motors GTO LLC
+/********************************************************************************
+ * Copyright (c) 2024 Contributors to the Eclipse Foundation
  *
- * Licensed to the Apache Software Foundation (ASF) under one
- * or more contributor license agreements.  See the NOTICE file
- * distributed with this work for additional information
- * regarding copyright ownership.  The ASF licenses this file
- * to you under the Apache License, Version 2.0 (the
- * "License"); you may not use this file except in compliance
- * with the License.  You may obtain a copy of the License at
+ * See the NOTICE file(s) distributed with this work for additional
+ * information regarding copyright ownership.
  *
- *   http://www.apache.org/licenses/LICENSE-2.0
+ * This program and the accompanying materials are made available under the
+ * terms of the Apache License Version 2.0 which is available at
+ * https://www.apache.org/licenses/LICENSE-2.0
  *
- * Unless required by applicable law or agreed to in writing,
- * software distributed under the License is distributed on an
- * "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
- * KIND, either express or implied.  See the License for the
- * specific language governing permissions and limitations
- * under the License.
- *
- * SPDX-FileType: SOURCE
- * SPDX-FileCopyrightText: 2024 General Motors GTO LLC
  * SPDX-License-Identifier: Apache-2.0
- */
+ ********************************************************************************/
 
 #ifndef SOMEIP_HANDLER_HPP
 #define SOMEIP_HANDLER_HPP
@@ -191,7 +179,7 @@ struct subscriptionStatus {
     /**
      *    @brief Subscription event group.
      */
-    eventgroup_t eventgroup;
+    vsomeip_v3::eventgroup_t eventgroup;
 };
 
 /**
@@ -216,7 +204,7 @@ public:
         HandlerType const someIpRouterHandlerType,
         uprotocol::v1::UEntity const &uEntityInfo,
         uprotocol::v1::UAuthority const &uAuthorityInfo,
-        instance_t const instanceIdentifier=ANY_INSTANCE,
+        vsomeip_v3::instance_t const instanceIdentifier=vsomeip_v3::ANY_INSTANCE,
         uint16_t qPriorityLevels=DEFAULT_PRIORITY_LEVELS);
 
     /**
@@ -270,7 +258,7 @@ public:
      *
      *  @param[in] msg - message to be placed in queue.
      */
-    void onMessage(std::shared_ptr< message > const& msg);
+    void onMessage(std::shared_ptr< vsomeip_v3::message > const& msg);
     /**
      *  @brief     Set availability status of SomeipHandler.
      *
@@ -278,7 +266,7 @@ public:
      *  @param[in] instance - service instance identifier.
      *  @param[in] isAvailable - availability status of SomeipHandler.
      */
-    void onAvailability(service_t service, instance_t instance, const bool isAvailable);
+    void onAvailability(vsomeip_v3::service_t service, vsomeip_v3::instance_t instance, const bool isAvailable);
     /**
      *  @brief     Called when subscription is requested.
      *
@@ -290,7 +278,7 @@ public:
      *  @return bool - true after subscription is called.
      */
     bool onSubscription(
-        client_t const clientId,
+        vsomeip_v3::client_t const clientId,
         secClientType const* const secClient,
         std::string const& eventIdStr,
         bool const isSubscribed) noexcept;
@@ -306,10 +294,10 @@ public:
      *  @param[in] status - subscription status.
      */
     void onSubscriptionStatus(
-        service_t const service,
-        instance_t const instance,
-        eventgroup_t const eventGroup,
-        event_t const event,
+        vsomeip_v3::service_t const service,
+        vsomeip_v3::instance_t const instance,
+        vsomeip_v3::eventgroup_t const eventGroup,
+        vsomeip_v3::event_t const event,
         uint16_t const status);
 
 protected:
@@ -317,9 +305,9 @@ protected:
     /**
       * @brief This function is used to offer event for given service. This is needed step for inbound subscription.
       *
-      * @param[in] eventGroupSetPtr Set of eventgroup_t. Each element is event group ID to offer
+      * @param[in] eventGroupSetPtr Set of vsomeip_v3::eventgroup_t. Each element is event group ID to offer
       */
-      void offerEvent(std::shared_ptr<std::set<eventgroup_t>> eventGroupSetPtr);
+      void offerEvent(std::shared_ptr<std::set<vsomeip_v3::eventgroup_t>> eventGroupSetPtr);
 
     /**
      * @brief This struct is used to store the message in the queue.
@@ -405,7 +393,7 @@ private:
      *
      *  @param[in] msg - message for handling.
      */
-    void handleInboundMsg(std::shared_ptr<message> const msg);
+    void handleInboundMsg(std::shared_ptr<vsomeip_v3::message> const msg);
     /**
      *  @brief     Route subscription ack message through UTransport if the event group of the message
      *             is found in the map.
@@ -420,21 +408,21 @@ private:
      *
      *  @param[in] sMsg - message for handling.
      */
-    void handleInboundNotification(std::shared_ptr<message> sMsg);
+    void handleInboundNotification(std::shared_ptr<vsomeip_v3::message> sMsg);
     /**
      *  @brief     Handle inbound requests by changing them to a UMessage type,
      *             adding them to the someIp request map, and then routing them.
      *
      *  @param[in] sMsg - message for handling.
      */
-    void handleInboundRequest(std::shared_ptr<message> sMsg);
+    void handleInboundRequest(std::shared_ptr<vsomeip_v3::message> sMsg);
     /**
      *  @brief     Handle inbound response by retrieving the original request message,
      *             changing the message to a UMessage type, and then routing the message.
      *
      *  @param[in] sMsg - message for handling.
      */
-    void handleInboundResponse(std::shared_ptr<message> sMsg);
+    void handleInboundResponse(std::shared_ptr<vsomeip_v3::message> sMsg);
     /**
      *  @brief     Handle inbound subscription. In the future, it will ensure the message is the right type,
      *             and then route the message.
@@ -486,7 +474,7 @@ private:
      *
      *  @param[in] eventGroup - the event group to register the handler for.
      */
-    void registerSubscriptionStatusHandler(eventgroup_t const eventGroup);
+    void registerSubscriptionStatusHandler(vsomeip_v3::eventgroup_t const eventGroup);
     /**
      *  @brief Registers a message handler for the specific event.
      */
@@ -498,13 +486,13 @@ private:
      *
      *  @return    bool - true if a subscription exists.
      */
-    bool doesSubscriptionForRemoteServiceExist(eventgroup_t const eventGroup);
+    bool doesSubscriptionForRemoteServiceExist(vsomeip_v3::eventgroup_t const eventGroup);
     /**
      *  @brief     Simulates the acknowledgment of a subscription event.
      *
      *  @param[in] eventGroup The event group identifier.
      */
-    void actOnBehalfOfSubscriptionAck(eventgroup_t const eventGroup);
+    void actOnBehalfOfSubscriptionAck(vsomeip_v3::eventgroup_t const eventGroup);
     /**
      *  @brief     Adds a subscription entry to 'subscriptionsForRemoteServices_' with the given eventGroup, uuid, and uPTopic.
      *
@@ -525,7 +513,7 @@ private:
      *
      * @param[in] eventGroup - Event Group ID to check for subscription.
      */
-    bool doesInboundSubscriptionExist(eventgroup_t const eventGroup);
+    bool doesInboundSubscriptionExist(vsomeip_v3::eventgroup_t const eventGroup);
 
     /**
      * @brief Create vsomeip Payload message from UMessage
@@ -557,7 +545,7 @@ private:
     /**
      *  @brief Service instance ID.
      */
-    instance_t instanceId_;
+    vsomeip_v3::instance_t instanceId_;
     /**
      *  @brief UEntity proto object.
      */
@@ -602,7 +590,7 @@ private:
     /**
      *  @brief Map from UUID to SomeIp request.
      */
-    std::unordered_map<std::string, std::shared_ptr<message>> uuidToSomeipRequestLookup_;
+    std::unordered_map<std::string, std::shared_ptr<vsomeip_v3::message>> uuidToSomeipRequestLookup_;
 };
 
 #endif /* SOMEIP_HANDLER_HPP */
