@@ -85,28 +85,6 @@ std::shared_ptr<UPayload> MessageTranslator::buildUPayload(std::shared_ptr<messa
  }
 
 /**
-  * @brief @return @see @ref MessageTranslator::buildUAttribute()
-  * @param[in] uriSource @see @ref MessageTranslator::buildUAttribute()
-  * @param[in] uriSink @see @ref MessageTranslator::buildUAttribute()
-  * @param[in] generatedUUID @see @ref MessageTranslator::buildUAttribute()
-  * @param[in] messageType @see @ref MessageTranslator::buildUAttribute()
-  */
-std::shared_ptr<UAttributes> MessageTranslator::buildUAttribute(
-    UUri const &uriSource,
-    uprotocol::v1::UUri const &uriSink,
-    UUID const &generatedUUID,
-    message_type_e const &messageType,
-    UPriority priority) const {
-
-    //TODO: Pass correct URI according to 1_5_7 to UAttributesBuilder
-    UMessageType const type = convertSomeipToUMessageType(messageType);
-    UAttributesBuilder builder(uriSource ,generatedUUID, type, priority);
-    builder.setSink(uriSink);
-    std::shared_ptr<UAttributes> attributes = std::make_shared<UAttributes>(builder.build());
-    return attributes;
-}
-
-/**
   * @brief @return @see @ref MessageTranslator::translateSomeipToUMsgForNotification()
   * @param[in] someIpMessage @see @ref MessageTranslator::translateSomeipToUMsgForNotification().
   * @param[in] strTopic @see @ref MessageTranslator::translateSomeipToUMsgForNotification().
@@ -128,7 +106,7 @@ std::shared_ptr<UMessage> MessageTranslator::translateSomeipToUMsgForNotificatio
 
     //build Attribute using the URI
     UUID const &generatedUUID = uprotocol::uuid::Uuidv8Factory::create();
-    UMessageType const type = convertSomeipToUMessageType(someIpMessage->get_message_type());
+    UMessageType const type = UMessageType::UMESSAGE_TYPE_PUBLISH;
     UAttributesBuilder builder(*uriPtr ,generatedUUID, type, uprotocol::v1::UPriority::UPRIORITY_CS0);
     std::shared_ptr<UAttributes> attributes = std::make_shared<UAttributes>(builder.build());
 
@@ -190,7 +168,7 @@ std::shared_ptr<UMessage> MessageTranslator::translateSomeipToUMsgForResponse(
     // Build Attributes
     //TODO: attributes.id field of response should be newly generated but currently it is not as per uProtocol 1_5_7
     //so need to set original resquet uuid to attributes.id as a workaround. This needs to be fixed in zenoh uTransport
-    UMessageType const type = convertSomeipToUMessageType(message_type_e::MT_RESPONSE);
+    UMessageType const type = UMessageType::UMESSAGE_TYPE_RESPONSE;
     UAttributesBuilder builder(
         originalRequestMsg->attributes().source() ,
         originalRequestMsg->attributes().id(),
@@ -233,38 +211,15 @@ std::shared_ptr<UMessage> MessageTranslator::translateSomeipToUMsgForRequest(
 
     //TODO: Currenty assigning source URI same value as sink URI, since it is not been used anywhere
     //But this needs to be aligned to uattributes.proto definations of source and sink URI.
-    std::shared_ptr<UAttributes> attributes =
-        buildUAttribute(*uriPtr,
-                        *uriPtr,
-                        generatedUUID,
-                        someIpMessage->get_message_type(),
-                        UPriority::UPRIORITY_CS4);
+    //TODO: Pass correct URI according to 1_5_7 to UAttributesBuilder
+    UMessageType const type = UMessageType::UMESSAGE_TYPE_REQUEST;
+    UAttributesBuilder builder(*uriPtr ,generatedUUID, type, UPriority::UPRIORITY_CS4);
+    builder.setSink(*uriPtr);
+    std::shared_ptr<UAttributes> attributes = std::make_shared<UAttributes>(builder.build());
 
     std::shared_ptr<UMessage> uMessage = std::make_shared<UMessage>();
     uMessage->setPayload(*uPayload);
     uMessage->setAttributes(*attributes);
 
     return uMessage;
-}
-
-/**
-  * @brief @return @see @ref MessageTranslator::convertSomeipToUMessageType()
-  * @param[in] messageType @see @ref MessageTranslator::convertSomeipToUMessageType()
-  */
-UMessageType MessageTranslator::convertSomeipToUMessageType(message_type_e const &messageType) const {
-
-    UMessageType type =  UMessageType::UMESSAGE_TYPE_UNSPECIFIED;
-    if (messageType == message_type_e::MT_REQUEST) {
-        type = UMessageType::UMESSAGE_TYPE_REQUEST;
-    } else if (messageType == message_type_e::MT_NOTIFICATION) {
-        type = UMessageType::UMESSAGE_TYPE_PUBLISH;
-    } else if (messageType == message_type_e::MT_RESPONSE) {
-        type = UMessageType::UMESSAGE_TYPE_RESPONSE;
-    } else if (messageType == message_type_e::MT_REQUEST_ACK) {
-        type = UMessageType::UMESSAGE_TYPE_RESPONSE;
-    } else {
-        SPDLOG_ERROR("{} Undefined message type", __FUNCTION__);
-    }
-
-    return type;
 }

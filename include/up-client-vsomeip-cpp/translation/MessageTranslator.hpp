@@ -39,13 +39,6 @@ public:
     std::shared_ptr<vsomeip_v3::message> translateUMessageToSomeipMsgForRequest(std::shared_ptr<uprotocol::utransport::UMessage> uMessage);
 
     /**
-     * @brief Converts the message type from someip to UMessageType
-     * @param[in] messageType, someip message type to be converted
-     * @return UMessageType, converted UMessageType
-     */
-    uprotocol::v1::UMessageType convertSomeipToUMessageType(vsomeip_v3::message_type_e const &messageType) const;
-
-    /**
      * @brief Translates a SomeIP message to a UMessage using shared pointers.
      * @param[in] someIpMessage shared pointer to the SomeIP message to be translated to UMessage.
      * @param[in] uEntity UEntity for inbound request.
@@ -95,21 +88,6 @@ public:
         uprotocol::v1::UResource const &uResource) const;
 
 private:
-    /**
-     * @brief Create UAttributes with UUID and Someip message type
-     * @param[in] uriSource Source URI to be passed
-     * @param[in] uriSink Sink URI to be passed
-     * @param[in] generatedUUID UUID to be passed
-     * @param[in] messageType Someip message type to be passed
-     *
-     * @return shared pointer to UAttributes
-    */
-    std::shared_ptr<uprotocol::v1::UAttributes> buildUAttribute(
-        uprotocol::v1::UUri const &uriSource,
-        uprotocol::v1::UUri const &uriSink,
-        uprotocol::v1::UUID const &generatedUUID,
-        vsomeip_v3::message_type_e const &messageType,
-        uprotocol::v1::UPriority priority = uprotocol::v1::UPriority::UPRIORITY_CS0) const;
 
     /**
      * @brief Create UPayload with Someip payload
