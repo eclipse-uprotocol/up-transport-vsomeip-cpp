@@ -53,10 +53,7 @@ std::shared_ptr<message> MessageTranslator::translateUMessageToSomeipMsgForReque
     someIpMessage->set_message_type(message_type_e::MT_REQUEST);
 
     std::shared_ptr<payload> const payload = someipInterfaceRef_.createPayload();
-    std::vector<uint8_t> payloadData;
-    for(size_t iCount = 0 ; iCount < uMessage->payload().size(); iCount++) {
-        payloadData.push_back(uMessage->payload().data()[iCount]);
-    }
+    std::vector<uint8_t> payloadData (uMessage->payload().data(), uMessage->payload().data() + uMessage->payload().size());
     payload->set_data(payloadData);
     someIpMessage->set_payload(payload);
 

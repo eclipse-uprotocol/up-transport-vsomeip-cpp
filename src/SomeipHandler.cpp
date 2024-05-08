@@ -874,9 +874,6 @@ bool SomeipHandler::doesInboundSubscriptionExist(eventgroup_t const eventGroup) 
   * @return @see @ref SomeipHandler::buildSomeipPayloadFromUMessage
   */
 std::vector<uint8_t> SomeipHandler::buildSomeipPayloadFromUMessage(const UMessage &uMessage) {
-    std::vector<uint8_t> payloadData;
-    for(size_t iCount = 0 ; iCount < uMessage.payload().size(); iCount++) {
-        payloadData.push_back(uMessage.payload().data()[iCount]);
-    }
+    std::vector<uint8_t> payloadData (uMessage.payload().data(), uMessage.payload().data() + uMessage.payload().size());
     return payloadData;
 }
