@@ -1,0 +1,76 @@
+{
+    "unicast" : "172.17.0.2",
+    "logging" :
+    {
+        "level" : "debug",
+        "console" : "true",
+        "file" : { "enable" : "false", "path" : "/tmp/vsomeip.log" },
+        "dlt" : "false"
+    },
+    "remoteServices":
+    [
+        {
+            "service":"0x1101",
+            "UEntityName": "0x1101",
+            "UEntityVersionMajor":"1",
+            "UEntityVersionMinor":"0",
+            "UAuthorityIP":"172.17.0.1",
+            "UResourceID":"0x8101",
+            "UResourceName": "0x8101",
+            "UResourceInstance":"",
+            "Comment_NotUsed":"Usecase 1: uE subscribe and mE publishes"
+        },
+        {
+            "service":"0x1102",
+            "UEntityName": "0x1102",
+            "UEntityVersionMajor":"1",
+            "UEntityVersionMinor":"0",
+            "UAuthorityIP":"172.17.0.1",
+            "UResourceID":"0x0102",
+            "UResourceName": "rpc",
+            "UResourceInstance":"0x0102",
+            "Comment_NotUsed":"Usecase 2: uE sends rpc and mE responds"
+        }
+    ],
+    "services":
+    [
+        {
+            "service":"0x1103",
+            "instance":"0x0",
+            "unreliable":"30509",
+            "UEntityName": "0x1103",
+            "UEntityVersionMajor":"1",
+            "UEntityVersionMinor":"0",
+            "UResourceID":"0x100",
+            "UResourceName": "rpc",
+            "UResourceInstance":"0x0100",
+            "Comment_NotUsed":"Usecase 3: mE sends rpc and uE responds"
+        },
+        {
+            "service":"0x1104",
+            "instance":"0x0",
+            "unreliable":"30509",
+            "UEntityName": "0x1104",
+            "UEntityVersionMajor":"1",
+            "UEntityVersionMinor":"0",
+            "UResourceID":"0x8100",
+            "UResourceName": "0x8100",
+            "UResourceInstance":"",
+            "Comment_NotUsed":"Usecase 4: mE subscribe and uE publishes"
+        }
+    ],
+    "service-discovery" :
+    {
+        "enable" : "true",
+        "multicast" : "224.224.224.245",
+        "port" : "30490",
+        "protocol" : "udp",
+        "initial_delay_min" : "10",
+        "initial_delay_max" : "100",
+        "repetitions_base_delay" : "200",
+        "repetitions_max" : "3",
+        "ttl" : "3",
+        "cyclic_offer_delay" : "2000",
+        "request_response_delay" : "1500"
+    }
+}
