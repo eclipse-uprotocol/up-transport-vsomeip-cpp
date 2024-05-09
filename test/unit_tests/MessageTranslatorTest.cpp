@@ -162,26 +162,6 @@ TEST_F(MessageTranslatorTests, translateSomeipToUMsgForSubscriptionAckTest) {
     EXPECT_EQ(result->attributes().priority(), UPriority::UPRIORITY_CS0);
 }
 
-// /**
-//  *  @brief Test to verify conversion from Someip message type to UMessageType.
-//  */
-// TEST_F(MessageTranslatorTests, convertSomeipToUMessageType_RequestTest) {
-//     UMessageType result = translator.convertSomeipToUMessageType(message_type_e::MT_UNKNOWN);
-//     EXPECT_EQ(result, UMessageType::UMESSAGE_TYPE_UNSPECIFIED);
-
-//     result = translator.convertSomeipToUMessageType(message_type_e::MT_REQUEST);
-//     EXPECT_EQ(result, UMessageType::UMESSAGE_TYPE_REQUEST);
-
-//     result = translator.convertSomeipToUMessageType(message_type_e::MT_NOTIFICATION);
-//     EXPECT_EQ(result, UMessageType::UMESSAGE_TYPE_PUBLISH);
-
-//     result = translator.convertSomeipToUMessageType(message_type_e::MT_RESPONSE);
-//     EXPECT_EQ(result, UMessageType::UMESSAGE_TYPE_RESPONSE);
-
-//     result = translator.convertSomeipToUMessageType(message_type_e::MT_REQUEST_ACK);
-//     EXPECT_EQ(result, UMessageType::UMESSAGE_TYPE_RESPONSE);
-// }
-
 /**
  *  @brief Test to verify a Someip message is correctly translated to a UMessage for a notification.
  */
