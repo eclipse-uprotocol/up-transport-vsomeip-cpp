@@ -1,3 +1,6 @@
+#ifndef MOCK_PAYLOAD_HPP
+#define MOCK_PAYLOAD_HPP
+
 #include <gmock/gmock.h>
 #include <vsomeip/primitive_types.hpp>
 #include <vsomeip/vsomeip.hpp>
@@ -22,3 +25,5 @@ public:
 };
 
 } // namespace vsomeip_v3
+
+#endif //MOCK_PAYLOAD_HPP

@@ -1,3 +1,6 @@
+#ifndef MOCK_SOME_IP_INTERFACE_HPP
+#define MOCK_SOME_IP_INTERFACE_HPP
+
 #include <gmock/gmock.h>
 #include <string>
 #include <set>
@@ -132,3 +135,5 @@ public:
 
     MOCK_METHOD(std::shared_ptr<vsomeip::payload>, createPayload, (), (const));
 };
+
+#endif //MOCK_SOME_IP_INTERFACE_HPP

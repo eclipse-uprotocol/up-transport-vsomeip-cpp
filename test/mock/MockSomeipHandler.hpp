@@ -1,3 +1,6 @@
+#ifndef MOCK_SOME_IP_HANDLER_HPP
+#define MOCK_SOME_IP_HANDLER_HPP
+
 #include <gtest/gtest.h>
 #include <gmock/gmock.h>
 #include <gmock/gmock-matchers.h>
@@ -79,3 +82,5 @@ public:
     
     MOCK_METHOD(void, handleOutboundMsg, (std::shared_ptr<uprotocol::utransport::UMessage>), ());
 };
+
+#endif //MOCK_SOME_IP_HANDLER_HPP

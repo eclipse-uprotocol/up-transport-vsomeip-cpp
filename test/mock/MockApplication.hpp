@@ -1,3 +1,6 @@
+#ifndef MOCK_APPLICATION_HPP
+#define MOCK_APPLICATION_HPP
+
 #include <gmock/gmock.h>
 #include "SomeipInterface.hpp"
 #include <vsomeip/application.hpp>
@@ -248,4 +251,6 @@ public:
                                                      method_t,
                                                      const message_handler_t&,
                                                      handler_registration_type_e), (override));
-    };
+};
+
+#endif //MOCK_APPLICATION_HPP

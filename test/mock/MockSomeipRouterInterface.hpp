@@ -1,3 +1,6 @@
+#ifndef MOCK_SOME_IP_ROUTER_INTERFACE_HPP
+#define MOCK_SOME_IP_ROUTER_INTERFACE_HPP
+
 #include <gmock/gmock.h>
 #include "SomeipRouterInterface.hpp"
 #include "Logger.hpp"
@@ -15,3 +18,5 @@ public:
     
     MOCK_METHOD(bool, isStateRegistered, (), (override));
 };
+
+#endif //MOCK_SOME_IP_ROUTER_INTERFACE_HPP

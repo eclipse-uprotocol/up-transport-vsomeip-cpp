@@ -1,3 +1,6 @@
+#ifndef CUSTOM_EVENT_LISTENER_HPP
+#define CUSTOM_EVENT_LISTENER_HPP
+
 #pragma once
 #include "gtest/gtest.h"
 #include "SomeipWrapper.hpp"
@@ -20,3 +23,5 @@ public:
         return someIpWrapperInstance_;
     }
 };
+
+#endif //CUSTOM_EVENT_LISTENER_HPP
