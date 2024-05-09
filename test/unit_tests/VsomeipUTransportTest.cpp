@@ -16,25 +16,9 @@ using namespace uprotocol::uuid;
 using namespace uprotocol::v1;
 
 /**
- *  @brief Assets needed to make a message.
+ *  @brief Payload data.
  */
-auto g_uuidForTransport = Uuidv8Factory::create();
-std::shared_ptr<UUri> g_testUURI = buildUURI();
-auto const g_priority = UPriority::UPRIORITY_CS4;
-auto const g_publishType = UMessageType::UMESSAGE_TYPE_PUBLISH;
-UAttributesBuilder g_builderForTransport(*g_testUURI, g_uuidForTransport, g_publishType, g_priority);
-UAttributes g_attributesForTransport = g_builderForTransport.build();
-
-/**
- *  @brief payload for message.
- */
-static uint8_t g_data[4] = "100";
-UPayload g_payloadForTransport(g_data, sizeof(g_data), UPayloadType::VALUE);
-
-/**
- *  @brief UMessage used for testing.
- */
-UMessage g_messageForTransport(g_payloadForTransport, g_attributesForTransport);
+static uint8_t const g_data[4] = "100";
 
 /**
  *  @brief Translate a UMessage to a string.
@@ -104,6 +88,21 @@ public:
 class VsomeipUTransportTests : public testing::Test {
 protected:
     /**
+     *  @brief payload for message.
+     */
+    UPayload payloadForTransport = UPayload(g_data, sizeof(g_data), UPayloadType::VALUE);
+
+    /**
+     *  @brief Assets needed to make a message.
+     */
+    UUID uuidForTransport = Uuidv8Factory::create();
+    std::shared_ptr<UUri> testUURI = buildUURI();
+    UPriority const priority = UPriority::UPRIORITY_CS4;
+    UMessageType const publishType = UMessageType::UMESSAGE_TYPE_PUBLISH;
+    UAttributesBuilder builderForTransport = UAttributesBuilder(*testUURI, uuidForTransport, publishType, priority);
+    UAttributes attributesForTransport = builderForTransport.build();
+
+    /**
      *  @brief UListener object for testing.
      */
     TestListener listener_;
@@ -121,12 +120,22 @@ protected:
     }
 };
 
+// /**
+//  *  @brief Test that registerListener properly registers a UListener.
+//  */
+// TEST(VsomeipUTransportstandalonetests, registerListenerTest) {
+//     TestListener listener_;
+//     UStatus status = VsomeipUTransport::instance().registerListener(*this->testUURI, listener_);
+
+//     EXPECT_EQ(status.code(), UCode::OK);
+// }
+
 /**
  *  @brief Test that unregisterListener properly unregisters a UListener. Not yet implemented.
  */
 TEST_F(VsomeipUTransportTests, unRegisterListenerTest) {
     TestListener listener_;
-    UStatus status = VsomeipUTransport::instance().unregisterListener(*g_testUURI, listener_);
+    UStatus status = VsomeipUTransport::instance().unregisterListener(*this->testUURI, listener_);
 
     EXPECT_EQ(status.code(), UCode::UNIMPLEMENTED);
 }
@@ -135,9 +144,9 @@ TEST_F(VsomeipUTransportTests, unRegisterListenerTest) {
  *  @brief Test that a payload is received when receive is called. not yet implemented.
  */
 TEST_F(VsomeipUTransportTests, receiveTest) {
-    UStatus status = VsomeipUTransport::instance().receive(*g_testUURI,
-                                                           g_payloadForTransport,
-                                                           g_attributesForTransport);
+    UStatus status = VsomeipUTransport::instance().receive(*this->testUURI,
+                                                           this->payloadForTransport,
+                                                           attributesForTransport);
 
     EXPECT_EQ(status.code(), UCode::UNIMPLEMENTED);
 }

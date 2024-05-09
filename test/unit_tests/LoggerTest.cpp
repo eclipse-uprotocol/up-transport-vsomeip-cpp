@@ -31,27 +31,3 @@ TEST_F(LoggerTests, SetupLoggerEmptyTest) {
     EXPECT_EQ("streamer-log", logger->name());
     EXPECT_EQ(spdlog::level::trace, logger->level());
 }
-
-// /**
-//  *  @brief Test to ensure the level gets set properly by handleLogLevelSignal.
-//  */
-// TEST_F(LoggerTests, HandleLogLevelSignalTest) {
-//     union sigval sval;
-//     spdlog::set_level(spdlog::level::info);
-//     ASSERT_EQ(spdlog::level::info, spdlog::default_logger()->level());
-
-//     sval.sival_int = spdlog::level::warn;
-//     sigqueue(getpid(), SIGUSR1, sval);
-//     std::this_thread::sleep_for(std::chrono::milliseconds(1));
-//     ASSERT_EQ(spdlog::level::warn, spdlog::default_logger()->level());
-
-//     sval.sival_int = spdlog::level::err;
-//     sigqueue(getpid(), SIGUSR1, sval);
-//     std::this_thread::sleep_for(std::chrono::milliseconds(1));
-//     ASSERT_EQ(spdlog::level::err, spdlog::default_logger()->level());
-
-//     sval.sival_int = spdlog::level::debug;
-//     sigqueue(getpid(), SIGUSR1, sval);
-//     std::this_thread::sleep_for(std::chrono::milliseconds(1));
-//     ASSERT_EQ(spdlog::level::debug, spdlog::default_logger()->level());
-// }
