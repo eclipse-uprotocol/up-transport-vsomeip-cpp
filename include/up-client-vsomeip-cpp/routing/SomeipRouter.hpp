@@ -24,12 +24,22 @@
  * @note It provides the necessary methods to handle SomeIP routing operations.
  */
 class SomeipRouter : public SomeipRouterInterface{
+#ifdef BUILD_TESTING
+    friend class SomeipRouterTests;
+#endif //BUILD_TESTING  
 public:
-        /**
+    /**
      * @brief Constructs a SomeipRouter object with a UStreamer reference.
      * @param listener Common listner between uStreamer and vSomeip Client
      */
     SomeipRouter(uprotocol::utransport::UListener const &listener);
+
+    /**
+     * @brief Constructs a SomeipRouter object with a UStreamer and SomeipInterface reference.
+     *
+     * @param listener Common listener between uStreamer and vSomeip Client.
+     */
+    SomeipRouter(uprotocol::utransport::UListener const &listener, std::shared_ptr<SomeipInterface> someipInterface);
 
     /**
      * @brief Deleted copy constructor.

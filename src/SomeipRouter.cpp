@@ -26,10 +26,20 @@ using namespace vsomeip_v3;
 
 /**
  * @brief @see @ref SomeipRouter::SomeipRouter()
+ *
  * @param listener @see @ref SomeipRouter::SomeipRouter()
  */
 SomeipRouter::SomeipRouter(UListener const &listener) :
-    someipInterface_(std::make_shared<SomeipWrapper>()),
+    SomeipRouter(listener, std::make_shared<SomeipWrapper>()) {
+}
+
+/**
+ * @brief @see @ref SomeipRouter::SomeipRouter()
+ *
+ * @param listener @see @ref SomeipRouter::SomeipRouter()
+ */
+SomeipRouter::SomeipRouter(UListener const &listener, std::shared_ptr<SomeipInterface> someipInterface) :
+    someipInterface_(someipInterface),
     msgTranslator_(std::make_unique<MessageTranslator>(*someipInterface_)),
     listener_(listener) {
 

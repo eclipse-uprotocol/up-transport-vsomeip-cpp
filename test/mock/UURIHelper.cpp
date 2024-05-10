@@ -22,7 +22,6 @@ std::shared_ptr<UUri> buildUURI() {
  
     uEntity.set_id(uEntityId);
     uEntity.set_name(uEntityName.c_str());
-    std::cout << "Entity Name: " << uEntity.name() << std::endl;
     uEntity.set_version_major(uEntityVersionMajor);
     uEntity.set_version_minor(uEntityVersionMinor);
  
@@ -30,7 +29,6 @@ std::shared_ptr<UUri> buildUURI() {
  
     uResource.set_id(uResourceId);
     uResource.set_name(uResourceName.c_str());
-    std::cout << "Resource Name: " << uResource.name() << std::endl;
     uResource.set_instance(uResourceInstance);
  
     uriPtr->mutable_resource()->CopyFrom(uResource);
