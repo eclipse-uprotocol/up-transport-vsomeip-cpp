@@ -192,11 +192,11 @@ protected:
         handlerClient->handleInboundMsg(msg);
     }
 
-/**
- *  @brief Member variables for testing.
- */
-static service_t const service = 0x1234;
-static eventgroup_t const eventGroup = 0x0102;
+    /**
+     *  @brief Member variables for testing.
+     */
+    static service_t const service = 0x1234;
+    static eventgroup_t const eventGroup = 0x0102;
 };
 
 /**
