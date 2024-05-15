@@ -16,6 +16,7 @@
 #include "MockSomeipInterface.hpp"
 #include "MockSomeipRouterInterface.hpp"
 #include "MockSomeipHandler.hpp"
+#include <fstream>
 
 using ::testing::Return;
 using namespace uprotocol::utransport;
@@ -59,6 +60,15 @@ protected:
     std::shared_ptr<SomeipRouter> router;
 
     /**
+     *  @brief mocks and variables for a SomeipHandler object.
+     */
+    MockSomeipInterface mockSomeipInterface;
+    MockSomeipRouterInterface mockSomeipRouterInterface;
+    UEntity uEntity;
+    UAuthority uAuthority;
+    uint16_t mockHandlerKey = 0x1102;
+
+    /**
      *  @brief Setup for SomeipRouter.
      */
     void SetUp() override {
@@ -76,12 +86,8 @@ protected:
     /**
      *  @brief Getters for SomeipRouter.
      */
-    std::shared_ptr<SomeipHandler> getHandler(uint16_t UEId){
+    std::shared_ptr<SomeipHandler> getRouterHandler(uint16_t UEId) {
         return router->getHandler(UEId);
-    }
-
-    void offerServicesAndEvents(std::shared_ptr<uprotocol::v1::UUri> uri){
-        return router->offerServicesAndEvents(uri);
     }
 
     std::shared_ptr<std::vector<std::shared_ptr<uprotocol::v1::UUri>>> getUriList(const std::string &serviceType){
@@ -96,11 +102,33 @@ protected:
         router->offerServicesAndEvents(uriPtr);
     }
 
+    std::shared_ptr<std::vector<std::shared_ptr<UUri>>> getRouterUriList(std::string serviceType) {
+        return router->getUriList(serviceType);
+    }
+
     /**
      *  @brief Add a handler to the router.
      */
     void addHandler(std::shared_ptr<SomeipHandler> mockHandler, uint16_t mockHandlerKey) {
         router->handlers_[mockHandlerKey] = mockHandler;
+    }
+
+    void getRemoveHandler(uint16_t mockHandlerKey) {
+        router->removeHandler(mockHandlerKey);
+    }
+
+    bool doesHandlerExist(uint16_t mockHandlerKey) {
+        return router->handlers_.find(mockHandlerKey) != router->handlers_.end();
+    }
+
+    void getEnableAllLocalServices() {
+        router->enableAllLocalServices();
+    }
+
+    std::shared_ptr<SomeipHandler> getNewHandler(HandlerType type,
+                                                 const UEntity &uEntityInfo,
+                                                 const uprotocol::v1::UAuthority &uAuthorityInfo) {
+        return router->newHandler(type, uEntityInfo, uAuthorityInfo);
     }
 };
 
@@ -181,7 +209,7 @@ TEST_F(SomeipRouterTests, RouteInboundSubscriptionTest) {
 */
 TEST_F(SomeipRouterTests, routeInboundMsgTest) {
     uprotocol::utransport::UMessage umsg;
-    
+
     EXPECT_CALL(mockListener,  onReceive(::testing::_)).Times(1);
     EXPECT_TRUE(router->routeInboundMsg(umsg));
 }
@@ -212,8 +240,6 @@ TEST_F(SomeipRouterTests, routeOutboundMsgPublishAndResponseNullTest) {
  *  entity ID.
  */
 TEST_F(SomeipRouterTests, offerServicesAndEventsTest) {
-    MockSomeipInterface mockSomeipInterface;
-    MockSomeipRouterInterface mockSomeipRouterInterface;
     std::string const uEntityName        = "0x1102";
     uint32_t const uEntityVersionMajor   = 0x1; //Major Version
     uint32_t const uEntityVersionMinor   = 0x0; //Minor Version
@@ -222,8 +248,6 @@ TEST_F(SomeipRouterTests, offerServicesAndEventsTest) {
     std::string const uResourceInstance  = "0x0102";
     std::shared_ptr<UUri> uriPtr = std::make_shared<UUri>();
 
-    UEntity uEntity;
-    UAuthority uAuthority;
     UResource uResource;
 
     uEntity.set_name(uEntityName.c_str());
@@ -249,4 +273,101 @@ TEST_F(SomeipRouterTests, offerServicesAndEventsTest) {
     uint16_t mockHandlerKey = 0x1102;
     addHandler(mockHandler, mockHandlerKey);
     EXPECT_NO_THROW(getOfferServicesAndEvents(uriPtr));
+}
+
+/**
+ *  @brief Test that getUriList returns the correct URI list.
+ */
+TEST_F(SomeipRouterTests, GetUriListTest) {
+    std::string testFilePath = "test.json";
+    //Store original value of VSOMEIP_CONFIGURATION
+    char* originalValue = getenv("VSOMEIP_CONFIGURATION");
+    std::string originalValueStr;
+    if (originalValue) {
+        originalValueStr = originalValue;
+    } else {
+        originalValueStr = "";
+    }
+
+    //Set environmental variable to use the test file.
+    setenv("VSOMEIP_CONFIGURATION", testFilePath.c_str(), 1);
+    try {
+        std::ofstream testFile(testFilePath);
+        if (testFile.is_open()) {
+            testFile << R"({
+                "services": [
+                    {
+                        "service": "1234",
+                        "UEntityName": "TestEntity",
+                        "UEntityVersionMajor": "1",
+                        "UEntityVersionMinor": "0",
+                        "UAuthorityIP": "192.168.1.1",
+                        "UResourceID": "5678",
+                        "UResourceName": "TestResource",
+                        "UResourceInstance": "TestInstance"
+                    }
+                ]
+            })";
+            testFile.close();
+        }
+    } catch (std::exception &e) {
+        SPDLOG_ERROR("{} Could not open file!", __FUNCTION__);
+    }
+
+    auto uriList = getRouterUriList("services");
+    ASSERT_NE(uriList, nullptr);
+    EXPECT_EQ(uriList->size(), 1);
+    EXPECT_EQ((*uriList)[0]->entity().id(), 0x1234);
+    EXPECT_EQ((*uriList)[0]->entity().name(), "TestEntity");
+
+    //Return the environmental variable back to the original value.
+    setenv("VSOMEIP_CONFIGURATION", originalValueStr.c_str(), 1);
+    std::remove(testFilePath.c_str());
+}
+
+/**
+ *  @brief Ensure a handler is removed from the list.
+ */
+TEST_F(SomeipRouterTests, removeHandlerTest) {
+    uint16_t mockHandlerKey = 0x1102;
+    std::shared_ptr<MockSomeipHandler> mockHandler = std::make_shared<MockSomeipHandler>(mockSomeipInterface,
+                                                                                         mockSomeipRouterInterface,
+                                                                                         HandlerType::Client,
+                                                                                         uEntity,
+                                                                                         uAuthority,
+                                                                                         0x0102,
+                                                                                         DEFAULT_PRIORITY_LEVELS);
+    
+    addHandler(mockHandler, mockHandlerKey);
+    EXPECT_TRUE(doesHandlerExist(mockHandlerKey));
+    getRemoveHandler(mockHandlerKey);
+    EXPECT_FALSE(doesHandlerExist(mockHandlerKey));
+}
+
+/**
+ *  @brief Check that a handler is retrieved from the list.
+ */
+TEST_F(SomeipRouterTests, getHandlerTest) {
+    uint16_t mockHandlerKey = 0x1102;
+    std::shared_ptr<MockSomeipHandler> mockHandler = std::make_shared<MockSomeipHandler>(mockSomeipInterface,
+                                                                                         mockSomeipRouterInterface,
+                                                                                         HandlerType::Client,
+                                                                                         uEntity,
+                                                                                         uAuthority,
+                                                                                         0x0102,
+                                                                                         DEFAULT_PRIORITY_LEVELS);
+    
+    addHandler(mockHandler, mockHandlerKey);
+    std::shared_ptr<SomeipHandler> handler = getRouterHandler(mockHandlerKey);
+    EXPECT_NE(handler, nullptr);
+}
+
+/**
+ *  @brief Test that a new handler is created.
+ */
+TEST_F(SomeipRouterTests, newHandlerTest) {
+    std::shared_ptr<SomeipHandler> testHandler;
+
+    testHandler = getNewHandler(HandlerType::Client, uEntity, uAuthority);
+    EXPECT_NE(testHandler, nullptr);
 }
