@@ -263,6 +263,20 @@ bool SomeipRouter::routeOutboundMsg(const UMessage &umsg) {
         }
         break;
         case UMessageType::UMESSAGE_TYPE_RESPONSE:
+            if (umsg.attributes().sink().entity().has_id()) {
+                ueId =  static_cast<uint16_t> (umsg.attributes().sink().entity().id());
+            }
+            else {
+                SPDLOG_ERROR("{} Sink URI entityId is not found for outbound message.", __FUNCTION__);
+                return false;
+            }
+
+            hptr = getHandler(ueId);
+            if (nullptr == hptr) {
+                SPDLOG_ERROR("{} No service handler found for UEID[0x{:x}]", __FUNCTION__, ueId);
+                return false;
+            }
+        break;
         /* Fall through expected */
         case UMessageType::UMESSAGE_TYPE_PUBLISH: {
             if (umsg.attributes().source().entity().has_id()) {
