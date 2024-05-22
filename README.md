@@ -32,7 +32,7 @@ $ sudo ./b2 install
 Note: Do not enable signal handlling in vsomeip library
 ```
 $ git clone https://github.com/COVESA/vsomeip.git
-$ git cd vsomeip
+$ cd vsomeip
 $ git checkout 3.4.10
 $ mkdir build
 $ cd build
