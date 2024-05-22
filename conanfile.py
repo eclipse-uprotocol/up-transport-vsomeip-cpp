@@ -46,7 +46,7 @@ class UpClientVSomeip(ConanFile):
         self.requires("protobuf/3.21.12")
         self.requires("gtest/1.14.0")
         self.requires("rapidjson/cci.20230929")
-        # self.requires("vsomeip/3.4.10") // This shall be enabled once, conan.io starts supporting vsomeip library
+        # self.requires("vsomeip/3.4.10") #This shall be enabled once, conan.io starts supporting vsomeip library
 
     def generate(self):
         tc = CMakeToolchain(self)
