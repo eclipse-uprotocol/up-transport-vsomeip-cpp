@@ -40,11 +40,8 @@ include_directories(${up-cpp_INCLUDE_DIR})
 add_library(
     ${PROJECT_NAME} SHARED
     src/VsomeipUTransport.cpp
-    src/Logger.cpp
-    src/SomeipRouter.cpp
     src/SomeipWrapper.cpp
-    src/SomeipHandler.cpp
-    src/MessageTranslator.cpp)
+    src/SomeipHandler.cpp)
 
 add_library(${PROJECT_NAME}::${PROJECT_NAME} ALIAS ${PROJECT_NAME})
 

@@ -1,98 +1,106 @@
 /*
- * Copyright (c) 2024 General Motors GTO LLC
+ * Copyright (c) 2024 Contributors to the Eclipse Foundation
  *
- * Licensed to the Apache Software Foundation (ASF) under one
- * or more contributor license agreements.  See the NOTICE file
- * distributed with this work for additional information
- * regarding copyright ownership.  The ASF licenses this file
- * to you under the Apache License, Version 2.0 (the
- * "License"); you may not use this file except in compliance
- * with the License.  You may obtain a copy of the License at
+ * See the NOTICE file(s) distributed with this work for additional
+ * information regarding copyright ownership.
  *
- *   http://www.apache.org/licenses/LICENSE-2.0
+ * This program and the accompanying materials are made available under the
+ * terms of the Apache License Version 2.0 which is available at
+ * https://www.apache.org/licenses/LICENSE-2.0
  *
- * Unless required by applicable law or agreed to in writing,
- * software distributed under the License is distributed on an
- * "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
- * KIND, either express or implied.  See the License for the
- * specific language governing permissions and limitations
- * under the License.
- *
- * SPDX-FileType: SOURCE
- * SPDX-FileCopyrightText: 2024 General Motors GTO LLC
  * SPDX-License-Identifier: Apache-2.0
  */
 
-#ifndef _VSOMEIP_UTRANSPORT_H_
-#define _VSOMEIP_UTRANSPORT_H_
+#ifndef UP_TRANSPORT_VSOMEIP_CPP_VSOMEIPUTRANSPORT_H
+#define UP_TRANSPORT_VSOMEIP_CPP_VSOMEIPUTRANSPORT_H
 
-// #include <cstddef>
-// #include <unordered_map>
-// #include <atomic>
 #include <up-cpp/transport/UTransport.h>
 #include <up-client-vsomeip-cpp/routing/SomeipRouter.hpp>
 #include <memory>
+#include <filesystem>
+#include <optional>
 
-class VsomeipUTransport : public uprotocol::utransport::UTransport {
-public:
+namespace uprotocol::transport {
 
-    /**
-    * @brief The API provides an instance of the vsomeip session
-    * @return instance of VsomeipUTransport
-    */
-    static VsomeipUTransport& instance(void) noexcept;
+/// @brief Vsomeip implementation of UTransport
+///
+/// This implementation must meet the following requirements:
+///
+/// * [MUST] An implementation MUST support multiple simultaneous instantiatons
+///          from within the same application.
+///
+/// * [MAY]  An implimentation MAY require that each new instance within an
+///          application have a unique configuration from existing instances.
+///
+/// * [MUST] An implementation MUST allow for multiple users of the same
+///          instance.
+///
+/// * [MUST] An implementation MUST be thread-safe.
+///
+/// * [MUST] Throw an exception if the transport fails to initialize or the
+///          configuration is invalid.
 
-    /**
-    * @brief Terminates the vsomeip utransport  - the API should be called by any class that called init
-    * @return Returns OK on SUCCESS and ERROR on failure
-    */
-    uprotocol::v1::UStatus terminate() noexcept;
+struct VsomeipUTransport : public UTransport {
+    /// @brief Constructor
+	///
+	/// @param defaultUri Default Authority and Entity (as a UUri) for
+	///                   clients using this transport instance.
+	/// @param configFile Path to a configuration file containing the VSOMEIP
+	///                   transport configuration.
+    VsomeipUTransport(const v1::UUri& defaultUri,
+                      const std::filesystem::path& configFile);
+    virtual ~VsomeipUTransport() = default;
 
-    /**
-    * @brief Transmit UPayload to the topic using the attributes defined in UTransportAttributes.
-    * @param message UMessage which contains attributes and payload information
-    * @return Returns OKSTATUS if the payload has been successfully sent (ACK'ed), otherwise it
-    * returns FAILSTATUS with the appropriate failure.
-    */
-    uprotocol::v1::UStatus send(const uprotocol::utransport::UMessage &message) noexcept;
+protected:
+	/// @brief Send a message.
+	///
+	/// @param message UMessage to be sent.
+	///
+	/// @returns * OKSTATUS if the payload has been successfully
+	///            sent (ACK'ed)
+	///          * FAILSTATUS with the appropriate failure otherwise.
+    [[nodiscard]] virtual v1::UStatus sendImpl(
+        const v1::UMessage& message) override;
 
-    /**
-    * Register listener to be called when UPayload is received for the specific topic.
-    * @param topic Resolved UUri for where the message arrived via the underlying transport technology.
-    * @param listener The method to execute to process the date for the topic.
-    * @return Returns OKSTATUS if the listener is unregistered correctly, otherwise it returns FAILSTATUS
-    * with the appropriate failure.
-    */
-    uprotocol::v1::UStatus registerListener(const uprotocol::v1::UUri &uri,
-                                const uprotocol::utransport::UListener &listener) noexcept;
+	/// @brief Represents the callable end of a callback connection.
+    using CallableConn = typename UTransport::CallableConn;
 
-    /**
-    * Unregister a listener for a given topic. Messages arriving on this topic will no longer be processed
-    * by this listener.
-    * @param topic Resolved UUri for where the listener was registered to receive messages from.
-    * @param listener The method to execute to process the date for the topic.
-    * @return Returns OKSTATUS if the listener is unregistered correctly, otherwise it returns FAILSTATUS
-    * with the appropriate failure.
-    */
-    uprotocol::v1::UStatus unregisterListener(const uprotocol::v1::UUri &uri,
-                                const uprotocol::utransport::UListener &listener) noexcept;
+	/// @brief Register listener to be called when UMessage is received
+	///        for the given URI.
+	///
+	/// @remarks If this doesn't return OKSTATUS, the public wrapping
+	///          version of registerListener() will reset the connection
+	///          handle before returning it to the caller.
+	///
+	/// @param sink_filter UUri for where messages are expected to arrive via
+	///                    the underlying transport technology. The callback
+	///                    will be called when a message with a matching sink
+	/// @param listener shared_ptr to a connected callback object, to be
+	///                 called when a message is received.
+	/// @param source_filter (Optional) UUri for where messages are expected to
+	///                      have been sent from. The callback will only be
+	///                      called for messages where the source matches.
+	///
+	/// @returns * OKSTATUS if the listener was registered successfully.
+	///          * FAILSTATUS with the appropriate failure otherwise.
+    [[nodiscard]] virtual v1::UStatus registerListenerImpl(
+        const v1::UUri& sink_filter, CallableConn&& listener,
+        std::optional<v1::UUri>&& source_filter) override;
 
-    uprotocol::v1::UStatus receive(const uprotocol::v1::UUri &uri,
-                    const uprotocol::utransport::UPayload &payload,
-                    const uprotocol::v1::UAttributes &attributes) noexcept;
+	/// @brief Clean up on listener disconnect.
+	///
+	/// The transport library can optionally implement this if it needs
+	/// to clean up when a callbacks::Connection is dropped.
+	///
+	/// @note The default implementation does nothing.
+	///
+	/// @param listener shared_ptr of the Connection that has been broken.
+    virtual void cleanupListener(CallableConn listener) override;
 
 private:
-	VsomeipUTransport() {}
-    VsomeipUTransport(const VsomeipUTransport&) = delete;
-    VsomeipUTransport& operator=(const VsomeipUTransport&) = delete;
-        /**
-    * @brief init the VsomeipUTransport
-    * @param listener UListener reference
-    * @return Returns OK on SUCCESS and ERROR on failure
-    */
-    uprotocol::v1::UStatus init(const uprotocol::utransport::UListener &listener) noexcept;
-
     std::unique_ptr<SomeipRouter> router_;
 };
 
-#endif /*_VSOMEIP_UTRANSPORT_H_*/
+}  // namespace uprotocol::transport
+
+#endif  // UP_TRANSPORT_VSOMEIP_CPP_VSOMEIPUTRANSPORT_H
