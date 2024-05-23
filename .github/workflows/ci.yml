@@ -7,8 +7,65 @@ on:
     branches: ["UT_Changes"]
   
 jobs:
+  build-up-cpp:
+    name: Build up-cpp
+    runs-on: ubuntu-latest
+    env:
+      UP_CPP_Repo: https://github.com/eclipse-uprotocol/up-cpp.git
+      UP_CPP_Cache_PFX: up-cpp-conan2
+    outputs:
+      UP_CPP_Cache: ${{ env.UP_CPP_Cache_PFX }}-${{ steps.up-cpp-head.outputs.UP_CPP_HEAD }}
+
+    steps:
+      - name: Check remote head hash
+        id: up-cpp-head
+        shell: bash
+        run: '{ echo -n "UP_CPP_HEAD="; git ls-remote "$UP_CPP_Repo" HEAD | cut -f1; } | tee -a "$GITHUB_OUTPUT"'
+
+      - name: Cache conan artifacts
+        id: cache-conan2
+        uses: actions/cache@v4
+        with:
+          key: ${{ env.UP_CPP_Cache_PFX }}-${{ steps.up-cpp-head.outputs.UP_CPP_HEAD }}
+          path: |
+            ~/.conan2
+
+      - name: Install Conan
+        if: ${{ steps.cache-conan2.outputs.cache-hit != 'true' }}
+        id: conan
+        uses: turtlebrowser/get-conan@main
+
+      - name: Create default Conan profile
+        if: ${{ steps.cache-conan2.outputs.cache-hit != 'true' }}
+        run: conan profile detect
+
+      # NOTE: Checks out the head revision we found using ls-remote above
+      #       to avoid race conditions resulting in mismatch between cache
+      #       and contents of repo.
+      - name: Clone up-cpp repo
+        if: ${{ steps.cache-conan2.outputs.cache-hit != 'true' }}
+        shell: bash
+        env:
+          UP_CPP_HEAD: ${{ steps.up-cpp-head.outputs.UP_CPP_HEAD }}
+        run: |
+          git clone "$UP_CPP_Repo"
+          cd up-cpp && git checkout "$UP_CPP_HEAD"
+          git submodule update --init --recursive
+
+      - name: Create up-cpp Conan package
+        if: ${{ steps.cache-conan2.outputs.cache-hit != 'true' }}
+        shell: bash
+        run: |
+          cd up-cpp
+          conan create . --build=missing
+
+      - name: Clean up conan build files
+        if: ${{ steps.cache-conan2.outputs.cache-hit != 'true' }}
+        run: conan cache clean '*'
+
   build:
     name: Build up-client-vsomeip-cpp and dependencies
+    needs: [ build-up-cpp ]
     runs-on: ubuntu-latest
 
     steps:
