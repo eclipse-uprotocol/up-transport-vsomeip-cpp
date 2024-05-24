@@ -1,60 +1,49 @@
-#Add the new file name under "add_executable" to include any new test files.
+# SPDX-FileCopyrightText: 2024 Contributors to the Eclipse Foundation
+#
+# See the NOTICE file(s) distributed with this work for additional
+# information regarding copyright ownership.
+#
+# This program and the accompanying materials are made available under the
+# terms of the Apache License Version 2.0 which is available at
+# https://www.apache.org/licenses/LICENSE-2.0
+#
+# SPDX-License-Identifier: Apache-2.0
 
-cmake_minimum_required(VERSION 3.20.1)
-set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -g -O0 -fprofile-arcs -ftest-coverage")
+enable_testing()
 
+find_package(GTest REQUIRED)
+include(GoogleTest)
 
-if(BUILD_TESTING)
-    #Add Dependencies for test. These are the actual test files.
-    add_executable(unit_tests
-        ${CMAKE_CURRENT_SOURCE_DIR}/../src/MessageTranslator.cpp
-        ${CMAKE_CURRENT_SOURCE_DIR}/../src/SomeipHandler.cpp
-        ${CMAKE_CURRENT_SOURCE_DIR}/../src/SomeipRouter.cpp
-        ${CMAKE_CURRENT_SOURCE_DIR}/../src/MessageTranslator.cpp
-        ${CMAKE_CURRENT_SOURCE_DIR}/../src/SomeipWrapper.cpp
-        ${CMAKE_CURRENT_SOURCE_DIR}/../src/UMsg.cpp
-        ${CMAKE_CURRENT_SOURCE_DIR}/../src/VsomeipUTransport.cpp
-        unit_tests/ExampleTest.cpp
-    )
-
-    find_package(GTest REQUIRED)
-
-    #To include another cmake for dependencies:
-    #    Include in other cmake: set(this_lib variablename). Ex: set(this_lib ustreamer)
-    #    Include in this cmake: variablename. Ex: ustreamer
-    target_link_libraries(unit_tests PUBLIC
-        GTest::GTest
+# Invoked as add_coverage_test("SomeName" sources...)
+function(add_coverage_test Name)
+    add_executable(${Name} ${ARGN})
+    target_compile_options(${Name} PRIVATE -g -Og)
+    target_link_libraries(${Name}
+        PUBLIC
+        up-core-api::up-core-api
         up-cpp::up-cpp
-        rapidjson
-        protobuf::libprotobuf
-        fmt::fmt
+        up-cpp::up-client-vsomeip-cpp
         spdlog::spdlog
-        vsomeip3::vsomeip3
-        Boost::boost
-        Boost::system
-        Boost::thread
-        Boost::filesystem
+        protobuf::protobuf
+        PRIVATE
+        GTest::gtest_main
+        GTest::gmock
+        pthread
     )
+    target_include_directories(${Name} PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/include)
+    gtest_discover_tests(${Name} XML_OUTPUT_DIR results)
+endfunction()
 
-    #Directories for any required files.
-    target_include_directories(unit_tests PRIVATE
-        ${CMAKE_CURRENT_LIST_DIR}
-        ${PROJECT_SOURCE_DIR}/src
-    )
+# NOTE: This is temporarily just a call to add_coverage_test. When coverage
+#       reporting is added, this might be changed.
+function(add_extra_test Name)
+    add_coverage_test(${Name} ${ARGN})
+endfunction()
 
-    #Set for Test Filtering
-    #Format: "Test Suite"."TestName"
-    #Example: StreamerTest.AssertInitSuccess , StreamerTest.* (Runs all tests in this suite)
-    set (TEST_FILTERING false)
+########################### COVERAGE ##########################################
+# Transport
+add_coverage_test("VsomipUTransportTest" coverage/VsomipUTransportTest.cpp)
 
-    #Run tests and gcovr when building
-    add_custom_command(
-        TARGET unit_tests
-        COMMENT "Run tests and gcovr"
-        POST_BUILD
-        COMMAND unit_tests
-        COMMAND gcovr -r ${CMAKE_SOURCE_DIR} --html --html-details -o index.html -e '.*test.*'-e'.*hpp.*'
-        WORKING_DIRECTORY ${CMAKE_BINARY_DIR}
-    )
-
-endif()
+########################## EXTRAS #############################################
+add_extra_test("PublisherSubscriberTest" extra/PublisherSubscriberTest.cpp)
+add_extra_test("NotificationTest" extra/NotificationTest.cpp)

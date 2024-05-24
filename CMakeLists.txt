@@ -1,4 +1,4 @@
-# Copyright (c) 2024 Contributors to the Eclipse Foundation
+# SPDX-FileCopyrightText: 2024 Contributors to the Eclipse Foundation
 #
 # See the NOTICE file(s) distributed with this work for additional
 # information regarding copyright ownership.
@@ -9,72 +9,53 @@
 #
 # SPDX-License-Identifier: Apache-2.0
 
-cmake_minimum_required(VERSION 3.20.1)
+cmake_minimum_required(VERSION 3.10.0)
+project(up-client-vsomeip-cpp VERSION 0.0.1  LANGUAGES CXX DESCRIPTION "C++ VSOMEIP Transport for uProtocol")
 
-# project name
-project(up-client-vsomeip-cpp LANGUAGES CXX)
-
-if(DEFINED ENV{LOCAL_VSOMEIP_PATH})
-    message("LOCAL_VSOMEIP_PATH [$ENV{LOCAL_VSOMEIP_PATH}]")
-    include_directories($ENV{LOCAL_VSOMEIP_PATH}/include)
-    link_directories($ENV{LOCAL_VSOMEIP_PATH}/lib)
-    add_link_options(-Wl,--no-as-needed)
-    set(VSOMEIP_LIB vsomeip3)
-else()
-    find_package(vsomeip3 REQUIRED)
-    set(VSOMEIP_LIB vsomeip3::vsomeip3)
-endif()
-
-find_package(up-cpp REQUIRED)
+find_package(protobuf REQUIRED)
 find_package(spdlog REQUIRED)
-find_package(fmt REQUIRED CONFIG)
-find_package(protobuf CONFIG REQUIRED)
-find_package(RapidJSON CONFIG REQUIRED)
-add_definitions(-DSPDLOG_FMT_EXTERNAL)
+find_package(up-core-api REQUIRED)
+find_package(up-cpp REQUIRED)
 
+# TODO NEEDED?
+#add_definitions(-DSPDLOG_FMT_EXTERNAL)
 
-message("up-cpp_INCLUDE_DIR = ${up-cpp_INCLUDE_DIR}")
-include_directories(include)
-include_directories(${up-cpp_INCLUDE_DIR})
-
-add_library(
-    ${PROJECT_NAME} SHARED
-    src/VsomeipUTransport.cpp
-    src/SomeipWrapper.cpp
-    src/SomeipHandler.cpp)
-
-add_library(${PROJECT_NAME}::${PROJECT_NAME} ALIAS ${PROJECT_NAME})
-
-target_compile_options(${PROJECT_NAME} PRIVATE
-    -O2
-    #-fPIC
-    -g
-    -Wall
-    -Wextra
-    -pedantic
-    -Werror
-    -Wcast-qual
-    -Wunused
-    -Wuninitialized
-    -Wmissing-declarations
-    -Wconversion
-    -Wpointer-arith
-    -Wshadow
-    -Wfloat-equal
-)
-
-target_link_libraries(${PROJECT_NAME} PUBLIC
-    rapidjson
-    protobuf::libprotobuf
-    fmt::fmt
-    spdlog::spdlog
-    ${VSOMEIP_LIB})
-
-if(BUILD_TESTING)
-    enable_testing()
-    add_subdirectory(test)
-    set(CMAKE_EXPORT_COMPILE_COMMANDS ON CACHE INTERNAL "")
+# This is the root CMakeLists.txt file; We can set project wide settings here
+# TODO: Is this needed?
+if(${CMAKE_SOURCE_DIR} STREQUAL ${CMAKE_CURRENT_SOURCE_DIR})
+	set(CMAKE_CXX_STANDARD 17)
+	# place libraries in a lib directory and executables in a bin directory,
+	set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/lib)
+	set(CMAKE_LIBRARY_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/lib)
+	set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/bin)
 endif()
+
+file(GLOB_RECURSE SRC_FILES "${CMAKE_CURRENT_SOURCE_DIR}/src/*.cpp")
+
+add_library(${PROJECT_NAME} ${SRC_FILES})
+add_library(up-cpp::${PROJECT_NAME} ALIAS ${PROJECT_NAME})
+
+target_include_directories(${PROJECT_NAME}
+	PUBLIC
+	$<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
+	$<INSTALL_INTERFACE:${CMAKE_INSTALL_INCLUDEDIR}>
+	$<BUILD_INTERFACE:${CMAKE_BINARY_DIR}>
+	${up-cpp_INCLUDE_DIR}
+	${up-core-api_INCLUDE_DIR}
+	${protobuf_INCLUDE_DIR}
+	${spdlog_INCLUDE_DIR})
+
+set_property(TARGET ${PROJECT_NAME} PROPERTY POSITION_INDEPENDENT_CODE ON)
+
+target_link_libraries(${PROJECT_NAME}
+	PRIVATE
+	up-cpp::up-cpp
+	up-core-api::up-core-api
+	protobuf::libprotobuf
+	spdlog::spdlog)
+
+enable_testing()
+add_subdirectory(test)
 
 INSTALL(TARGETS ${PROJECT_NAME})
 INSTALL(DIRECTORY include DESTINATION .)
