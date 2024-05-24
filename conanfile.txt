@@ -1,48 +1,19 @@
-[package]
-name = up-client-vsomeip-cpp
-version = 0.1.1
-description = C++ vSomeip library implementing UTransport
-homepage = https://github.com/eclipse-uprotocol
-url = https://github.com/conan-io/conan-center-index
-license = Apache-2.0 license
-topics = ulink client, transport
-
-[settings]
-os
-compiler
-build_type
-arch
-
-[options]
-shared = [True, False]
-fPIC = [True, False]
-build_cross_compiling = [True, False]
-build_testing = [True, False]
-build_unbundled = [True, False]
-
-[default_options]
-shared = True
-fPIC = False
-build_cross_compiling = False
-build_testing = False
-build_unbundled = False
-
 [requires]
-up-cpp/0.1.2-dev
-spdlog/1.13.0
+up-cpp/0.2.0
 fmt/10.2.1
-boost/1.84.0
-protobuf/3.21.12
-gtest/1.14.0
 rapidjson/cci.20230929
-# vsomeip/3.4.10
+boost/1.84.0
+spdlog/[>=1.13.0]
+up-core-api/[>=1.5.8]
+protobuf/[>=3.21.12]
+
+
+[test_requires]
+gtest/1.14.0
 
 [generators]
 CMakeDeps
 CMakeToolchain
 
-[exports_sources]
-CMakeLists.txt
-conaninfo/*
-src/*
-include/*
+[layout]
+cmake_layout

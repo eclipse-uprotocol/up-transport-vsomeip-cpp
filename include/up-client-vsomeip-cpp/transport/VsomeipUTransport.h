@@ -1,25 +1,23 @@
-/*
- * Copyright (c) 2024 Contributors to the Eclipse Foundation
- *
- * See the NOTICE file(s) distributed with this work for additional
- * information regarding copyright ownership.
- *
- * This program and the accompanying materials are made available under the
- * terms of the Apache License Version 2.0 which is available at
- * https://www.apache.org/licenses/LICENSE-2.0
- *
- * SPDX-License-Identifier: Apache-2.0
- */
-
+//
+// Copyright (c) 2024 Contributors to the Eclipse Foundation
+//
+// See the NOTICE file(s) distributed with this work for additional
+// information regarding copyright ownership.
+//
+// This program and the accompanying materials are made available under the
+// terms of the Apache License Version 2.0 which is available at
+// https://www.apache.org/licenses/LICENSE-2.0
+//
+// SPDX-License-Identifier: Apache-2.0
+//
 #ifndef UP_TRANSPORT_VSOMEIP_CPP_VSOMEIPUTRANSPORT_H
 #define UP_TRANSPORT_VSOMEIP_CPP_VSOMEIPUTRANSPORT_H
 
 #include <up-cpp/transport/UTransport.h>
-#include <up-client-vsomeip-cpp/routing/SomeipRouter.hpp>
-#include <memory>
-#include <filesystem>
-#include <optional>
 
+#include <filesystem>
+#include <memory>
+#include <optional>
 namespace uprotocol::transport {
 
 /// @brief Vsomeip implementation of UTransport
@@ -41,15 +39,16 @@ namespace uprotocol::transport {
 ///          configuration is invalid.
 
 struct VsomeipUTransport : public UTransport {
-    /// @brief Constructor
+	/// @brief Constructor
 	///
 	/// @param defaultUri Default Authority and Entity (as a UUri) for
 	///                   clients using this transport instance.
 	/// @param configFile Path to a configuration file containing the VSOMEIP
 	///                   transport configuration.
-    VsomeipUTransport(const v1::UUri& defaultUri,
-                      const std::filesystem::path& configFile);
-    virtual ~VsomeipUTransport() = default;
+	VsomeipUTransport(const v1::UUri& defaultUri,
+	                  const std::filesystem::path& configFile);
+
+	virtual ~VsomeipUTransport() = default;
 
 protected:
 	/// @brief Send a message.
@@ -59,11 +58,11 @@ protected:
 	/// @returns * OKSTATUS if the payload has been successfully
 	///            sent (ACK'ed)
 	///          * FAILSTATUS with the appropriate failure otherwise.
-    [[nodiscard]] virtual v1::UStatus sendImpl(
-        const v1::UMessage& message) override;
+	[[nodiscard]] virtual v1::UStatus sendImpl(
+	    const v1::UMessage& message) override;
 
 	/// @brief Represents the callable end of a callback connection.
-    using CallableConn = typename UTransport::CallableConn;
+	using CallableConn = typename UTransport::CallableConn;
 
 	/// @brief Register listener to be called when UMessage is received
 	///        for the given URI.
@@ -83,9 +82,9 @@ protected:
 	///
 	/// @returns * OKSTATUS if the listener was registered successfully.
 	///          * FAILSTATUS with the appropriate failure otherwise.
-    [[nodiscard]] virtual v1::UStatus registerListenerImpl(
-        const v1::UUri& sink_filter, CallableConn&& listener,
-        std::optional<v1::UUri>&& source_filter) override;
+	[[nodiscard]] virtual v1::UStatus registerListenerImpl(
+	    const v1::UUri& sink_filter, CallableConn&& listener,
+	    std::optional<v1::UUri>&& source_filter) override;
 
 	/// @brief Clean up on listener disconnect.
 	///
@@ -95,10 +94,9 @@ protected:
 	/// @note The default implementation does nothing.
 	///
 	/// @param listener shared_ptr of the Connection that has been broken.
-    virtual void cleanupListener(CallableConn listener) override;
+	virtual void cleanupListener(CallableConn listener) override;
 
 private:
-    std::unique_ptr<SomeipRouter> router_;
 };
 
 }  // namespace uprotocol::transport
