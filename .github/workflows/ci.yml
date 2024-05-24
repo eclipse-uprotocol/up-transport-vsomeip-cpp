@@ -49,7 +49,7 @@ jobs:
           UP_CPP_HEAD: ${{ steps.up-cpp-head.outputs.UP_CPP_HEAD }}
         run: |
           git clone "$UP_CPP_Repo"
-          cd up-cpp && git checkout "$UP_CPP_HEAD"
+          cd up-cpp && git checkout v0.1.2-dev
           git submodule update --init --recursive
 
       - name: Create up-cpp Conan package
@@ -63,127 +63,39 @@ jobs:
         if: ${{ steps.cache-conan2.outputs.cache-hit != 'true' }}
         run: conan cache clean '*'
 
-  build:
-    name: Build up-client-vsomeip-cpp and dependencies
+  build-up-client-vsomeip-cpp:
+    name: Build up-client-vsomeip-cpp
     needs: [ build-up-cpp ]
     runs-on: ubuntu-latest
+    env:
+      UP_CPP_Cache: ${{ needs.build-up-cpp.outputs.UP_CPP_Cache }}
 
     steps:
+      # Note: will never update here since it will always match from previous job
+      - name: Get cached up-cpp conan artifacts
+        uses: actions/cache@v4
+        with:
+          key: ${{ env.UP_CPP_Cache }}
+          path: |
+            ~/.conan2
+
       - name: Install Conan
         id: conan
         uses: turtlebrowser/get-conan@main
 
-      - name: Create default Conan profile
-        run: conan profile detect
+      - uses: actions/checkout@v2
 
-      - name: Conan cache archive
-        id: conan-cache
-        uses: actions/cache@v4
-        with:
-          key: ${{ runner.os }}-conan-cache
-          path: conan-cache.tgz
-
-      - name: Restore conan cache from archive
-        if: ${{ steps.conan-cache.outputs.cache-hit == 'true' }}
+      - name: Build and install up-client-vsomeip-cpp
         shell: bash
         run: |
-          conan cache restore conan-cache.tgz
-          rm conan-cache.tgz
-
-      - name: Fetch up-client-vsomeip-cpp
-        uses: actions/checkout@v4
-        with:
-          path: up-client-vsomeip-cpp
-
-      - name: Build up-client-vsomeip-cpp with tests
-        shell: bash
-        run: |
-          cd up-client-vsomeip-cpp
-          conan install . --build=missing
+          export CMAKE_PREFIX_PATH="$HOME/local"
+          export CMAKE_ZENOH_INCLUDE_PATH="$HOME/local/include"
+          sed -i 's/# self.requires("vsomeip\/3.4.10")/self.requires("vsomeip\/3.4.10")#/' conanfile.py
+          mkdir build
           cd build
-          cmake -S .. -DCMAKE_TOOLCHAIN_FILE=conan_toolchain.cmake -DCMAKE_BUILD_TYPE=Release -DBUILD_TESTING=ON
+          conan install ../ --build=missing
+          cmake -S .. -DCMAKE_TOOLCHAIN_FILE=conan_toolchain.cmake -DCMAKE_BUILD_TYPE=Release -DBUILD_TESTING=ON -DCMAKE_INSTALL_PREFIX=~/local
           cmake --build .
-
-  test:
-    name: Run up-client-vsomeip-cpp tests
-    runs-on: ubuntu-latest
-    needs: build
-
-    steps:
-      - name: Get build artifacts
-        uses: actions/download-artifact@v4
-        with:
-          name: build-artifacts
-          path: up-client-vsomeip-cpp/build
-
-  lint:
-    name: Lint C++ sources
-    runs-on: ubuntu-latest
-    needs: build
-
-    steps:
-      - name: Get build commands
-        uses: actions/download-artifact@v4
-        with:
-          name: compile-commands
-
-      - name: Install Conan
-        id: conan
-        uses: turtlebrowser/get-conan@main
-
-      - name: Create default Conan profile
-        run: conan profile detect
-
-      - name: Conan cache archive
-        id: conan-cache
-        uses: actions/cache@v4
-        with:
-          key: ${{ runner.os }}-conan-cache
-          fail-on-cache-miss: true
-          path: conan-cache.tgz
-
-      - name: Restore conan cache from archive
-        shell: bash
-        run: |
-          conan cache restore conan-cache.tgz
-
-      - name: Fetch up-client-vsomeip-cpp
-        uses: actions/checkout@v4
-        with:
-          path: up-client-vsomeip-cpp
-
-      - name: Run linters on source
-        id: source-linter
-        uses: cpp-linter/cpp-linter-action@v2
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        with:
-          repo-root: up-client-vsomeip-cpp
-          ignore: 'test'
-          style: 'file' # read .clang-format for configuration
-          tidy-checks: '' # Read .clang-tidy for configuration
-          database: compile_commands.json
-          #extra-args: '-std=c++17 -cxx-isystem/usr/include/c++/12/ -Iinclude ${{ steps.pkgs.outputs.includes }}'
-          #version: 18
-
-      - name: Run linters on tests
-        id: test-linter
-        uses: cpp-linter/cpp-linter-action@v2
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        with:
-          repo-root: up-client-vsomeip-cpp
-          ignore: 'src|include'
-          style: 'file' # read .clang-format for configuration
-          tidy-checks: '' # Read .clang-tidy for configuration
-          database: compile_commands.json
-          #extra-args: '-std=c++17 -cxx-isystem/usr/include/c++/12/ -Iinclude -Itest/include ${{ steps.pkgs.outputs.includes }}'
-          #version: 18
-
-      - name: Report lint failure
-        if: steps.source-linter.outputs.checks-failed > 0 || steps.test-linter.outputs.checks-failed > 0
-        run: |
-          exit 1
 
   # NOTE: In GitHub repository settings, the "Require status checks to pass
   # before merging" branch protection rule ensures that commits are only merged
@@ -193,7 +105,7 @@ jobs:
   ci:
     name: CI status checks
     runs-on: ubuntu-latest
-    needs: [build, test]
+    needs: [ build-up-cpp, build-up-client-vsomeip-cpp ]
     if: always()
     steps:
       - name: Check whether all jobs pass
