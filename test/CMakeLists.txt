@@ -25,6 +25,7 @@ add_executable(unit_tests
 
 set(VSOMEIP_LIB vsomeip3)
 find_package(GTest REQUIRED)
+find_package(Boost REQUIRED COMPONENTS system filesystem thread)
 
 #To include another cmake for dependencies:
 #    Include in other cmake: set(this_lib variablename). Ex: set(this_lib ustreamer)
