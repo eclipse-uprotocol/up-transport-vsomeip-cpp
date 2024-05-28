@@ -170,7 +170,7 @@ jobs:
           mkdir build
           cd build
           conan install ../ --build=missing
-          cmake -S .. -DCMAKE_TOOLCHAIN_FILE=conan_toolchain.cmake -DCMAKE_BUILD_TYPE=Release -DBUILD_TESTING=ON -DCMAKE_INSTALL_PREFIX=~/local -DVSOMEIP_INSTALL_PATH=$VSOMEIP_INSTALL_PATH
+          cmake -S .. -DCMAKE_TOOLCHAIN_FILE=conan_toolchain.cmake -DCMAKE_BUILD_TYPE=Release -DBUILD_TESTING=ON -DCMAKE_INSTALL_PREFIX=~/local -DLOCAL_VSOMEIP_PATH=$LOCAL_VSOMEIP_PATH -DCMAKE_INCLUDE_PATH=$LOCAL_VSOMEIP_PATH/include
           cmake --build .
 
   # NOTE: In GitHub repository settings, the "Require status checks to pass
