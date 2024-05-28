@@ -13,6 +13,7 @@ jobs:
     env:
       UP_CPP_Repo: https://github.com/eclipse-uprotocol/up-cpp.git
       UP_CPP_Cache_PFX: up-cpp-conan2
+      LOCAL_VSOMEIP_PATH: /home/runner/work/up-client-vsomeip-cpp/up-client-vsomeip-cpp/vsomeip
     outputs:
       UP_CPP_Cache: ${{ env.UP_CPP_Cache_PFX }}-${{ steps.up-cpp-head.outputs.UP_CPP_HEAD }}
 
