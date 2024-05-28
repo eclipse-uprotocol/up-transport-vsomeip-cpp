@@ -129,7 +129,7 @@ jobs:
         run: |
           cd vsomeip/build
           ninja install $LOCAL_VSOMEIP_PATH
-          echo "LOCAL_VSOMEIP_PATH=$(pwd)/vsomeip" >> $GITHUB_ENV
+          echo "::set-output name=path::$(pwd)/vsomeip"
           
       - name: Output vsomeip install path
         id: vsomeip-path
