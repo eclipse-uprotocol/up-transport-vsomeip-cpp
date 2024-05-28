@@ -146,7 +146,7 @@ jobs:
     steps:
       # Note: will never update here since it will always match from previous job
       - name: Set LOCAL_VSOMEIP_PATH
-        run: echo "VSOMEIP_INSTALL_PATH=/home/runner/work/up-client-vsomeip-cpp/up-client-vsomeip-cpp/vsomeip" >> $GITHUB_ENV
+        run: echo "LOCAL_VSOMEIP_PATH=/home/runner/work/up-client-vsomeip-cpp/up-client-vsomeip-cpp/vsomeip" >> $GITHUB_ENV
       
       - name: Get cached up-cpp conan artifacts
         uses: actions/cache@v4
