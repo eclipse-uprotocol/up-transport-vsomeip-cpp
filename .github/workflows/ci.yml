@@ -121,7 +121,7 @@ jobs:
           cd vsomeip
           mkdir build
           cd build
-          cmake -DCMAKE_INSTALL_PREFIX:PATH=~/vsomeip -G Ninja ..
+          cmake -DCMAKE_INSTALL_PREFIX:PATH=$(pwd)/vsomeip -G Ninja ..
           ninja
 
       - name: Install vsomeip
@@ -129,13 +129,13 @@ jobs:
         run: |
           cd vsomeip/build
           ninja install
-          echo "::set-output name=path::~/vsomeip"
+          echo "::set-output name=path::$(pwd)/vsomeip"
           
       - name: Output vsomeip install path
         id: vsomeip-path
         run: |
-          echo "~/vsomeip"
-          echo "::set-output name=path::~/vsomeip"
+          echo "$(pwd)/vsomeip"
+          echo "::set-output name=path::$(pwd)/vsomeip"
 
   build-up-client-vsomeip-cpp:
     name: Build up-client-vsomeip-cpp
