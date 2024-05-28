@@ -113,6 +113,32 @@ jobs:
           git clone "$vsomeip_Repo"
           cd vsomeip && git checkout ${{ env.vsomeip_Tag }}
           git submodule update --init --recursive
+          
+          # Create conanfile.py dynamically
+          echo 'from conans import ConanFile, CMake' > conanfile.py
+          echo 'class VsomeipConan(ConanFile):' >> conanfile.py
+          echo '    name = "vsomeip"' >> conanfile.py
+          echo '    version = "'${{ env.vsomeip_Tag }}'"' >> conanfile.py
+          echo '    settings = "os", "compiler", "build_type", "arch"' >> conanfile.py
+          echo '    options = {"shared": [True, False]}' >> conanfile.py
+          echo '    default_options = {"shared": True}' >> conanfile.py
+          echo '    generators = "cmake"' >> conanfile.py
+          echo '    def build(self):' >> conanfile.py
+          echo '        cmake = CMake(self)' >> conanfile.py
+          echo '        cmake.configure(source_folder=".")' >> conanfile.py
+          echo '        cmake.build()' >> conanfile.py
+          echo '    def package(self):' >> conanfile.py
+          echo '        self.copy("*.h", dst="include", src="include")' >> conanfile.py
+          echo '        self.copy("*vsomeip.so", dst="lib", keep_path=False)' >> conanfile.py
+          echo '    def package_info(self):' >> conanfile.py
+          echo '        self.cpp_info.libs = ["vsomeip"]' >> conanfile.py
+
+      - name: Create vsomeip Conan package
+        if: ${{ steps.cache-cmake.outputs.cache-hit != 'true' }}
+        shell: bash
+        run: |
+          cd vsomeip
+          conan create . --build=missing
 
       - name: Build vsomeip with Cmake
         if: ${{ steps.cache-cmake.outputs.cache-hit != 'true' }}
