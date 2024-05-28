@@ -135,7 +135,7 @@ jobs:
         id: vsomeip-path
         run: |
           echo "$(pwd)/vsomeip"
-          echo "VSOMEIP directory: $LOCAL_VSOMEIP_PATH"
+          echo "::set-output name=path::$(pwd)/vsomeip"
 
   build-up-client-vsomeip-cpp:
     name: Build up-client-vsomeip-cpp
