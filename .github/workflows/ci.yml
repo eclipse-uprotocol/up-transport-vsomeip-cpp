@@ -67,7 +67,8 @@ jobs:
     name: Build vsomeip
     runs-on: ubuntu-latest
     env:
-      vsomeip_Repo: https://github.com/COVESA/vsomeip/tree/3.4.10
+      vsomeip_Repo: https://github.com/COVESA/vsomeip.git
+      vsomeip_Tag: 3.4.10
       vsomeip_Cache_PFX: vsomeip-conan2
     outputs:
       vsomeip_Cache: ${{ env.vsomeip_Cache_PFX }}-${{ steps.vsomeip-head.outputs.vsomeip_HEAD }}
@@ -102,9 +103,10 @@ jobs:
         if: ${{ steps.cache-conan2.outputs.cache-hit != 'true' }}
         shell: bash
         env:
-          UP_CPP_HEAD: ${{ steps.vsomeip-head.outputs.vsomeip_HEAD }}
+          vsomeip_HEAD: ${{ steps.vsomeip-head.outputs.vsomeip_HEAD }}
         run: |
           git clone "$vsomeip_Repo"
+          cd vsomeip && git checkout ${{ env.vsomeip_Tag }}
           git submodule update --init --recursive
 
       - name: Create vsomeip Conan package
