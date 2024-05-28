@@ -128,7 +128,7 @@ jobs:
         if: ${{ steps.cache-cmake.outputs.cache-hit != 'true' }}
         run: |
           cd vsomeip/build
-          ninja install
+          ninja install $LOCAL_VSOMEIP_PATH
           echo "LOCAL_VSOMEIP_PATH=$(pwd)/vsomeip" >> $GITHUB_ENV
           
       - name: Output vsomeip install path
@@ -186,7 +186,7 @@ jobs:
   ci:
     name: CI status checks
     runs-on: ubuntu-latest
-    needs: [ build-up-cpp, build-up-client-vsomeip-cpp ]
+    needs: [ build-up-cpp, build-up-client-vsomeip-cpp, build-vsomeip ]
     if: always()
     steps:
       - name: Check whether all jobs pass
