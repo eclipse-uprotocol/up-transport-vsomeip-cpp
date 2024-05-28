@@ -160,6 +160,11 @@ jobs:
 
       - uses: actions/checkout@v2
       
+      - name: Modify CMakeLists.txt
+        run: |
+          echo 'find_package(vsomeip REQUIRED PATHS $ENV{LOCAL_VSOMEIP_PATH})' >> CMakeLists.txt
+          sed -i 's/target_link_libraries(${PROJECT_NAME} PUBLIC/target_link_libraries(${PROJECT_NAME} PUBLIC vsomeip::vsomeip/g' CMakeLists.txt
+      
       - name: Output vsomeip install path in up-client-vsomeip-cpp
         id: vsomeip-path
         run: |
