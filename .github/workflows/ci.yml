@@ -129,13 +129,13 @@ jobs:
         run: |
           cd vsomeip/build
           ninja install
-          echo "::set-output name=path::$(pwd)"
+          echo "::set-output name=path::~/vsomeip"
           
       - name: Output vsomeip install path
         id: vsomeip-path
         run: |
-          echo "$(pwd)"
-          echo "::set-output name=path::$(pwd)"
+          echo "~/vsomeip"
+          echo "::set-output name=path::~/vsomeip"
 
   build-up-client-vsomeip-cpp:
     name: Build up-client-vsomeip-cpp
