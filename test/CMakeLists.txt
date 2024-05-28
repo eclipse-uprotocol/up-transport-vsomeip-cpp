@@ -39,7 +39,7 @@ target_link_libraries(unit_tests PUBLIC
     protobuf::libprotobuf
     fmt::fmt
     spdlog::spdlog
-    ${VSOMEIP_LIB})
+    ${VSOMEIP_LIB}
     Boost::boost
     Boost::system
     Boost::thread
