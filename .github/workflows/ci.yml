@@ -146,7 +146,7 @@ jobs:
     steps:
       # Note: will never update here since it will always match from previous job
       - name: Set LOCAL_VSOMEIP_PATH
-        run: echo "LOCAL_VSOMEIP_PATH=${{ needs.build-vsomeip.outputs.vsomeip-path }}" >> $GITHUB_ENV
+        run: echo "VSOMEIP_INSTALL_PATH=/home/runner/work/up-client-vsomeip-cpp/up-client-vsomeip-cpp/vsomeip" >> $GITHUB_ENV
       
       - name: Get cached up-cpp conan artifacts
         uses: actions/cache@v4
@@ -170,7 +170,7 @@ jobs:
           mkdir build
           cd build
           conan install ../ --build=missing
-          cmake -S .. -DCMAKE_TOOLCHAIN_FILE=conan_toolchain.cmake -DCMAKE_BUILD_TYPE=Release -DBUILD_TESTING=ON -DCMAKE_INSTALL_PREFIX=~/local -DVSOMEIP_INSTALL_PATH=$LOCAL_VSOMEIP_PATH
+          cmake -S .. -DCMAKE_TOOLCHAIN_FILE=conan_toolchain.cmake -DCMAKE_BUILD_TYPE=Release -DBUILD_TESTING=ON -DCMAKE_INSTALL_PREFIX=~/local -DVSOMEIP_INSTALL_PATH=$VSOMEIP_INSTALL_PATH
           cmake --build .
 
   # NOTE: In GitHub repository settings, the "Require status checks to pass
