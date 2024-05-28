@@ -120,20 +120,14 @@ jobs:
           cd vsomeip
           mkdir build
           cd build
-          cmake -DCMAKE_INSTALL_PREFIX:PATH=/usr/local/ -G Ninja ..
+          cmake -DCMAKE_INSTALL_PREFIX:PATH=${{ github.workspace }}/vsomeip -G Ninja ..
           ninja
 
       - name: Install vsomeip
         if: ${{ steps.cache-cmake.outputs.cache-hit != 'true' }}
         run: |
           cd vsomeip/build
-          sudo ninja install
-          
-      - name: Copy vsomeip libraries and headers
-        run: |
-          mkdir -p ${{ github.workspace }}/vsomeip
-          cp /usr/local/lib/libvsomeip*.so* ${{ github.workspace }}/vsomeip
-          cp -r /usr/local/include/vsomeip ${{ github.workspace }}/vsomeip
+          ninja install
 
   build-up-client-vsomeip-cpp:
     name: Build up-client-vsomeip-cpp
@@ -156,9 +150,6 @@ jobs:
         uses: turtlebrowser/get-conan@main
 
       - uses: actions/checkout@v2
-      
-      - name: Set LOCAL_VSOMEIP_PATH
-        run: echo "LOCAL_VSOMEIP_PATH=${{ github.workspace }}/vsomeip" >> $GITHUB_ENV
 
       - name: Build and install up-client-vsomeip-cpp
         shell: bash
