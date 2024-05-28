@@ -23,6 +23,7 @@ add_executable(unit_tests
     mock/MockApplication.cpp
 )
 
+set(VSOMEIP_LIB vsomeip3)
 find_package(GTest REQUIRED)
 
 #To include another cmake for dependencies:
@@ -37,7 +38,7 @@ target_link_libraries(unit_tests PUBLIC
     protobuf::libprotobuf
     fmt::fmt
     spdlog::spdlog
-    vsomeip3::vsomeip3
+    ${VSOMEIP_LIB})
     Boost::boost
     Boost::system
     Boost::thread
