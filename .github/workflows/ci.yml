@@ -139,12 +139,12 @@ jobs:
     runs-on: ubuntu-latest
     env:
       UP_CPP_Cache: ${{ needs.build-up-cpp.outputs.UP_CPP_Cache }}
-      
-    - name: Set LOCAL_VSOMEIP_PATH
-      run: echo "LOCAL_VSOMEIP_PATH=${{ needs.build-vsomeip.outputs.vsomeip-path }}" >> $GITHUB_ENV
 
     steps:
       # Note: will never update here since it will always match from previous job
+      - name: Set LOCAL_VSOMEIP_PATH
+        run: echo "LOCAL_VSOMEIP_PATH=${{ needs.build-vsomeip.outputs.vsomeip-path }}" >> $GITHUB_ENV
+      
       - name: Get cached up-cpp conan artifacts
         uses: actions/cache@v4
         with:
