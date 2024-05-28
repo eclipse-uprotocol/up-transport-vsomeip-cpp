@@ -135,7 +135,7 @@ jobs:
         id: vsomeip-path
         run: |
           echo "$(pwd)/vsomeip"
-          echo "::set-output name=path::$(pwd)/vsomeip"
+          echo "::set-output name=path::~/vsomeip"
 
   build-up-client-vsomeip-cpp:
     name: Build up-client-vsomeip-cpp
@@ -163,7 +163,8 @@ jobs:
       - name: Modify CMakeLists.txt
         run: |
           echo 'find_package(vsomeip REQUIRED PATHS $ENV{LOCAL_VSOMEIP_PATH})' >> CMakeLists.txt
-          sed -i 's/target_link_libraries(${PROJECT_NAME} PUBLIC/target_link_libraries(${PROJECT_NAME} PUBLIC vsomeip::vsomeip/g' CMakeLists.txt
+          sed -i 's/find_package(vsomeip3 REQUIRED)/find_package(vsomeip REQUIRED PATHS $ENV{LOCAL_VSOMEIP_PATH})/g' CMakeLists.txt
+          sed -i 's/set(VSOMEIP_LIB vsomeip3::vsomeip3)/set(VSOMEIP_LIB vsomeip::vsomeip)/g' CMakeLists.txt
       
       - name: Output vsomeip install path in up-client-vsomeip-cpp
         id: vsomeip-path
