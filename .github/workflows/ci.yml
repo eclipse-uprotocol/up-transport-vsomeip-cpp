@@ -121,7 +121,7 @@ jobs:
           cd vsomeip
           mkdir build
           cd build
-          cmake -DCMAKE_INSTALL_PREFIX:PATH=${{ github.workspace }}/vsomeip -G Ninja ..
+          cmake -DCMAKE_INSTALL_PREFIX:PATH=~/vsomeip -G Ninja ..
           ninja
 
       - name: Install vsomeip
@@ -175,7 +175,7 @@ jobs:
           mkdir build
           cd build
           conan install ../ --build=missing
-          cmake -S .. -DCMAKE_TOOLCHAIN_FILE=conan_toolchain.cmake -DCMAKE_BUILD_TYPE=Release -DBUILD_TESTING=ON -DCMAKE_INSTALL_PREFIX=~/local -DLOCAL_VSOMEIP_PATH=$LOCAL_VSOMEIP_PATH -DCMAKE_INCLUDE_PATH=$LOCAL_VSOMEIP_PATH/include
+          cmake -S .. -DCMAKE_TOOLCHAIN_FILE=conan_toolchain.cmake -DCMAKE_BUILD_TYPE=Release -DBUILD_TESTING=ON -DCMAKE_INSTALL_PREFIX=~/local -DLOCAL_VSOMEIP_PATH=~/vsomeip -DCMAKE_INCLUDE_PATH=~/vsomeip/include
           cmake --build .
 
   # NOTE: In GitHub repository settings, the "Require status checks to pass
