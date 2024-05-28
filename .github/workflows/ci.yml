@@ -159,6 +159,12 @@ jobs:
         uses: turtlebrowser/get-conan@main
 
       - uses: actions/checkout@v2
+      
+      - name: Output vsomeip install path in up-client-vsomeip-cpp
+        id: vsomeip-path
+        run: |
+          echo "$(pwd)/up-client-vsomeip-cpp"
+          echo "VSOMEIP directory: $LOCAL_VSOMEIP_PATH"
 
       - name: Build and install up-client-vsomeip-cpp
         shell: bash

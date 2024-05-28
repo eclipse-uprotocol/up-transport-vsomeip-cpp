@@ -23,12 +23,6 @@ add_executable(unit_tests
     mock/MockApplication.cpp
 )
 
-if(DEFINED ENV{LOCAL_VSOMEIP_PATH})
-    set(VSOMEIP_INCLUDE_DIR $ENV{LOCAL_VSOMEIP_PATH}/include)
-else()
-    set(VSOMEIP_INCLUDE_DIR /usr/local/include)
-endif()
-
 set(VSOMEIP_LIB vsomeip3)
 find_package(GTest REQUIRED)
 find_package(Boost REQUIRED COMPONENTS system filesystem thread)
@@ -45,7 +39,6 @@ target_link_libraries(unit_tests PUBLIC
     protobuf::libprotobuf
     fmt::fmt
     spdlog::spdlog
-    ${VSOMEIP_LIB}
     Boost::boost
     Boost::system
     Boost::thread
@@ -62,7 +55,6 @@ target_include_directories(unit_tests PRIVATE
     ${CMAKE_CURRENT_SOURCE_DIR}/../include/up-client-vsomeip-cpp/translation
     ${CMAKE_CURRENT_SOURCE_DIR}/../include/up-client-vsomeip-cpp/transport
     ${CMAKE_CURRENT_SOURCE_DIR}/../include/up-client-vsomeip-cpp/utils
-    ${VSOMEIP_INCLUDE_DIR} 
 )
 
 add_custom_command(
