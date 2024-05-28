@@ -171,6 +171,7 @@ jobs:
         run: |
           export CMAKE_PREFIX_PATH="$HOME/local"
           export CMAKE_ZENOH_INCLUDE_PATH="$HOME/local/include"
+          export LD_LIBRARY_PATH="$LOCAL_VSOMEIP_PATH/lib:$LD_LIBRARY_PATH"
           
           mkdir build
           cd build
