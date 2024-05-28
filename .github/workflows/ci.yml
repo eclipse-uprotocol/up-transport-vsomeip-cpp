@@ -72,6 +72,7 @@ jobs:
       vsomeip_Cache_PFX: vsomeip-conan2
     outputs:
       vsomeip_Cache: ${{ env.vsomeip_Cache_PFX }}-${{ steps.vsomeip-head.outputs.vsomeip_HEAD }}
+      LOCAL_VSOMEIP_PATH: ${{ steps.vsomeip-path.outputs.path }}
 
     steps:
       - name: Check remote head hash
@@ -135,7 +136,6 @@ jobs:
         run: |
           echo "$(pwd)/vsomeip"
           echo "VSOMEIP directory: $LOCAL_VSOMEIP_PATH"
-          ls -R $LOCAL_VSOMEIP_PATH
 
   build-up-client-vsomeip-cpp:
     name: Build up-client-vsomeip-cpp
@@ -143,13 +143,10 @@ jobs:
     runs-on: ubuntu-latest
     env:
       UP_CPP_Cache: ${{ needs.build-up-cpp.outputs.UP_CPP_Cache }}
-      LOCAL_VSOMEIP_PATH: /home/runner/work/up-client-vsomeip-cpp/up-client-vsomeip-cpp/vsomeip
+      LOCAL_VSOMEIP_PATH: ${{ needs.build-vsomeip.outputs.LOCAL_VSOMEIP_PATH }}
 
     steps:
       # Note: will never update here since it will always match from previous job
-      - name: Set LOCAL_VSOMEIP_PATH
-        run: echo "LOCAL_VSOMEIP_PATH=/home/runner/work/up-client-vsomeip-cpp/up-client-vsomeip-cpp/vsomeip" >> $GITHUB_ENV
-      
       - name: Get cached up-cpp conan artifacts
         uses: actions/cache@v4
         with:
