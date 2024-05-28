@@ -62,10 +62,65 @@ jobs:
       - name: Clean up conan build files
         if: ${{ steps.cache-conan2.outputs.cache-hit != 'true' }}
         run: conan cache clean '*'
+        
+  build-vsomeip:
+    name: Build vsomeip
+    runs-on: ubuntu-latest
+    env:
+      vsomeip_Repo: https://github.com/COVESA/vsomeip/tree/3.4.10
+      vsomeip_Cache_PFX: vsomeip-conan2
+    outputs:
+      vsomeip_Cache: ${{ env.vsomeip_Cache_PFX }}-${{ steps.vsomeip-head.outputs.vsomeip_HEAD }}
+
+    steps:
+      - name: Check remote head hash
+        id: vsomeip-head
+        shell: bash
+        run: '{ echo -n "vsomeip_HEAD="; git ls-remote "$vsomeip_Repo" refs/tags/3.4.10 | cut -f1; } | tee -a "$GITHUB_OUTPUT"'
+
+      - name: Cache conan artifacts
+        id: cache-conan2
+        uses: actions/cache@v4
+        with:
+          key: ${{ env.vsomeip_Cache_PFX }}-${{ steps.vsomeip-head.outputs.vsomeip_HEAD }}
+          path: |
+            ~/.conan2
+
+      - name: Install Conan
+        if: ${{ steps.cache-conan2.outputs.cache-hit != 'true' }}
+        id: conan
+        uses: turtlebrowser/get-conan@main
+
+      - name: Create default Conan profile
+        if: ${{ steps.cache-conan2.outputs.cache-hit != 'true' }}
+        run: conan profile detect
+
+      # NOTE: Checks out the head revision we found using ls-remote above
+      #       to avoid race conditions resulting in mismatch between cache
+      #       and contents of repo.
+      - name: Clone vsomeip repo
+        if: ${{ steps.cache-conan2.outputs.cache-hit != 'true' }}
+        shell: bash
+        env:
+          UP_CPP_HEAD: ${{ steps.vsomeip-head.outputs.vsomeip_HEAD }}
+        run: |
+          git clone "$vsomeip_Repo"
+          git submodule update --init --recursive
+
+      - name: Create vsomeip Conan package
+        if: ${{ steps.cache-conan2.outputs.cache-hit != 'true' }}
+        shell: bash
+        run: |
+          cd vsomeip
+          conan create . --build=missing
+
+      - name: Clean up conan build files
+        if: ${{ steps.cache-conan2.outputs.cache-hit != 'true' }}
+        run: conan cache clean '*'
 
   build-up-client-vsomeip-cpp:
     name: Build up-client-vsomeip-cpp
-    needs: [ build-up-cpp ]
+    needs: [ build-up-cpp, build-vsomeip ]
     runs-on: ubuntu-latest
     env:
       UP_CPP_Cache: ${{ needs.build-up-cpp.outputs.UP_CPP_Cache }}
