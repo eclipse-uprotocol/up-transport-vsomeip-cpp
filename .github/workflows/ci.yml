@@ -79,28 +79,22 @@ jobs:
         shell: bash
         run: '{ echo -n "vsomeip_HEAD="; git ls-remote "$vsomeip_Repo" refs/tags/3.4.10 | cut -f1; } | tee -a "$GITHUB_OUTPUT"'
 
-      - name: Cache conan artifacts
-        id: cache-conan2
+      - name: Cache CMake build artifacts
+        id: cache-cmake
         uses: actions/cache@v4
         with:
           key: ${{ env.vsomeip_Cache_PFX }}-${{ steps.vsomeip-head.outputs.vsomeip_HEAD }}
           path: |
-            ~/.conan2
+            ~/.cmake
 
-      - name: Install Conan
-        if: ${{ steps.cache-conan2.outputs.cache-hit != 'true' }}
-        id: conan
-        uses: turtlebrowser/get-conan@main
+      - name: Install Cmake and Ninja
+        if: ${{ steps.cache-cmake.outputs.cache-hit != 'true' }}
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y cmake ninja-build
 
-      - name: Create default Conan profile
-        if: ${{ steps.cache-conan2.outputs.cache-hit != 'true' }}
-        run: conan profile detect
-
-      # NOTE: Checks out the head revision we found using ls-remote above
-      #       to avoid race conditions resulting in mismatch between cache
-      #       and contents of repo.
       - name: Clone vsomeip repo
-        if: ${{ steps.cache-conan2.outputs.cache-hit != 'true' }}
+        if: ${{ steps.cache-cmake.outputs.cache-hit != 'true' }}
         shell: bash
         env:
           vsomeip_HEAD: ${{ steps.vsomeip-head.outputs.vsomeip_HEAD }}
@@ -109,16 +103,21 @@ jobs:
           cd vsomeip && git checkout ${{ env.vsomeip_Tag }}
           git submodule update --init --recursive
 
-      - name: Create vsomeip Conan package
-        if: ${{ steps.cache-conan2.outputs.cache-hit != 'true' }}
+      - name: Build vsomeip with Cmake
+        if: ${{ steps.cache-cmake.outputs.cache-hit != 'true' }}
         shell: bash
         run: |
           cd vsomeip
-          conan create . --build=missing
+          mkdir build
+          cd build
+          cmake -DCMAKE_INSTALL_PREFIX:PATH=/usr/local/ -G Ninja ..
+          ninja
 
-      - name: Clean up conan build files
-        if: ${{ steps.cache-conan2.outputs.cache-hit != 'true' }}
-        run: conan cache clean '*'
+      - name: Install vsomeip
+        if: ${{ steps.cache-cmake.outputs.cache-hit != 'true' }}
+        run: |
+          cd vsomeip/build
+          sudo ninja install
 
   build-up-client-vsomeip-cpp:
     name: Build up-client-vsomeip-cpp
