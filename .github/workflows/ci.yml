@@ -70,120 +70,44 @@ jobs:
       vsomeip_Repo: https://github.com/COVESA/vsomeip.git
       vsomeip_Tag: 3.4.10
       vsomeip_Cache_PFX: vsomeip-conan2
-    outputs:
-      vsomeip_Cache: ${{ env.vsomeip_Cache_PFX }}-${{ steps.vsomeip-head.outputs.vsomeip_HEAD }}
-      LOCAL_VSOMEIP_PATH: ${{ steps.vsomeip-path.outputs.path }}
-
     steps:
-      - name: Check remote head hash
-        id: vsomeip-head
-        shell: bash
-        run: '{ echo -n "vsomeip_HEAD="; git ls-remote "$vsomeip_Repo" refs/tags/3.4.10 | cut -f1; } | tee -a "$GITHUB_OUTPUT"'
-
-      - name: Cache CMake build artifacts
-        id: cache-cmake
-        uses: actions/cache@v4
-        with:
-          key: ${{ env.vsomeip_Cache_PFX }}-${{ steps.vsomeip-head.outputs.vsomeip_HEAD }}
-          path: |
-            ~/.cmake
-
-      - name: Install Cmake and Ninja
-        if: ${{ steps.cache-cmake.outputs.cache-hit != 'true' }}
+      - name: Checkout vsomeip
         run: |
-          sudo apt-get update
-          sudo apt-get install -y cmake ninja-build
-          
-      - name: Install Boost 1.84.0
-        if: ${{ steps.cache-cmake.outputs.cache-hit != 'true' }}
-        run: |
-          wget https://boostorg.jfrog.io/artifactory/main/release/1.84.0/source/boost_1_84_0.tar.gz
-          tar xzf boost_1_84_0.tar.gz
-          cd boost_1_84_0
-          ./bootstrap.sh --prefix=/usr/local
-          ./b2
-          sudo ./b2 install
-
-      - name: Clone vsomeip repo
-        if: ${{ steps.cache-cmake.outputs.cache-hit != 'true' }}
-        shell: bash
-        env:
-          vsomeip_HEAD: ${{ steps.vsomeip-head.outputs.vsomeip_HEAD }}
-        run: |
-          git clone "$vsomeip_Repo"
-          cd vsomeip && git checkout ${{ env.vsomeip_Tag }}
-          git submodule update --init --recursive
-
-      - name: Build vsomeip with Cmake
-        if: ${{ steps.cache-cmake.outputs.cache-hit != 'true' }}
-        shell: bash
-        run: |
+          git clone ${{ env.vsomeip_Repo }}
           cd vsomeip
+          git checkout ${{ env.vsomeip_Tag }}
+      - name: Build vsomeip
+        run: |
           mkdir build
           cd build
-          cmake -DCMAKE_INSTALL_PREFIX:PATH=$(pwd) -G Ninja ..
-          ninja
-
-      - name: Install vsomeip
-        if: ${{ steps.cache-cmake.outputs.cache-hit != 'true' }}
-        run: |
-          cd vsomeip/build
-          ninja install
-          echo "::set-output name=path::$(pwd)/vsomeip"
-          
-      - name: Output vsomeip install path
-        id: vsomeip-path
-        run: |
-          ls
+          cmake ..
+          make
 
   build-up-client-vsomeip-cpp:
     name: Build up-client-vsomeip-cpp
     needs: [ build-up-cpp, build-vsomeip ]
     runs-on: ubuntu-latest
-    env:
-      UP_CPP_Cache: ${{ needs.build-up-cpp.outputs.UP_CPP_Cache }}
-      LOCAL_VSOMEIP_PATH: ${{ needs.build-vsomeip.outputs.LOCAL_VSOMEIP_PATH }}
-
     steps:
-      # Note: will never update here since it will always match from previous job
-      - name: Get cached up-cpp conan artifacts
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      - name: Cache conan artifacts
+        id: cache-conan2
         uses: actions/cache@v4
         with:
-          key: ${{ env.UP_CPP_Cache }}
+          key: ${{ env.UP_CPP_Cache_PFX }}-${{ needs.build-up-cpp.outputs.UP_CPP_Cache }}
           path: |
             ~/.conan2
 
-      - name: Install Conan
-        id: conan
-        uses: turtlebrowser/get-conan@main
-
-      - uses: actions/checkout@v2
-      
-      - name: Output vsomeip install path in up-client-vsomeip-cpp
-        id: vsomeip-path
+      - name: Build up-client-vsomeip-cpp
         run: |
-          echo "$(pwd)/up-client-vsomeip-cpp"
-          echo "VSOMEIP directory*************: $LOCAL_VSOMEIP_PATH"
-          ls
-
-      - name: Build and install up-client-vsomeip-cpp
-        shell: bash
-        run: |
-          export CMAKE_PREFIX_PATH="$HOME/local"
-          export CMAKE_ZENOH_INCLUDE_PATH="$HOME/local/include"
-          export LD_LIBRARY_PATH="$LOCAL_VSOMEIP_PATH/lib:$LD_LIBRARY_PATH"
-          
+          cd up-client-vsomeip-cpp
           mkdir build
           cd build
-          conan install ../ --build=missing
-          cmake -S .. -DCMAKE_TOOLCHAIN_FILE=conan_toolchain.cmake -DCMAKE_BUILD_TYPE=Release -DBUILD_TESTING=ON -DCMAKE_INSTALL_PREFIX=~/local -DLOCAL_VSOMEIP_PATH=$LOCAL_VSOMEIP_PATH -DCMAKE_INCLUDE_PATH=$LOCAL_VSOMEIP_PATH/include
+          conan install .. -of .
+          cmake -S .. -DCMAKE_TOOLCHAIN_FILE=conan_toolchain.cmake -DCMAKE_BUILD_TYPE=Release
           cmake --build .
 
-  # NOTE: In GitHub repository settings, the "Require status checks to pass
-  # before merging" branch protection rule ensures that commits are only merged
-  # from branches where specific status checks have passed. These checks are
-  # specified manually as a list of workflow job names. Thus we use this extra
-  # job to signal whether all CI checks have passed.
   ci:
     name: CI status checks
     runs-on: ubuntu-latest
