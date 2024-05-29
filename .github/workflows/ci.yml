@@ -136,7 +136,7 @@ jobs:
         run: |
           echo "$(pwd)/vsomeip"
           echo "::set-output name=path::$(pwd)/vsomeip"
-          ls
+          ls ../
 
   build-up-client-vsomeip-cpp:
     name: Build up-client-vsomeip-cpp
@@ -166,7 +166,7 @@ jobs:
         run: |
           echo "$(pwd)/up-client-vsomeip-cpp"
           echo "VSOMEIP directory*************: $LOCAL_VSOMEIP_PATH"
-          ls ../
+          ls
 
       - name: Build and install up-client-vsomeip-cpp
         shell: bash
