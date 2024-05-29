@@ -166,6 +166,7 @@ jobs:
 
       - name: Install vsomeip
         #if: ${{ steps.cache-cmake.outputs.cache-hit != 'true' }}
+        id: vsomeip-path
         run: |
           cd vsomeip/build
           sudo ninja install
