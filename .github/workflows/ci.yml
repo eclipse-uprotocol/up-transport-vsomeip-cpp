@@ -146,7 +146,7 @@ jobs:
         #if: ${{ steps.cache-cmake.outputs.cache-hit != 'true' }}
         run: |
           cd vsomeip/build
-          ninja install
+          sudo ninja install
           ls
           echo "::set-output name=path::$(pwd)"
 
