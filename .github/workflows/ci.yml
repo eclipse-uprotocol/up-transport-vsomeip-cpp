@@ -136,7 +136,7 @@ jobs:
         id: vsomeip-path
         run: |
           echo "vsomeip is installed in: $UP_CLIENT_VSOMEIP_CPP_PATH/vsomeip"
-          ls $UP_CLIENT_VSOMEIP_CPP_PATH/vsomeip
+          ls $UP_CLIENT_VSOMEIP_CPP_PATH
           #echo "vsomeip"
           #ls ../../../work/up-client-vsomeip-cpp
 
