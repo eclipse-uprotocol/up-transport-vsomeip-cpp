@@ -134,10 +134,10 @@ jobs:
       - name: Output vsomeip install path
         id: vsomeip-path
         run: |
-          echo "$(pwd)/vsomeip ../"
-          ls ../
-          echo "::set-output name=path::$(pwd)/vsomeip ../../"
+          echo "$(pwd)/vsomeip"
           ls ../../
+          echo "::set-output name=path::$(pwd) ../../"
+          ls ../../vsomeip
           echo "vsomeip"
           ls
 
