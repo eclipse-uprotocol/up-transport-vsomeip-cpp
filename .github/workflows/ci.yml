@@ -135,9 +135,9 @@ jobs:
         id: vsomeip-path
         run: |
           echo "$(pwd)/vsomeip"
-          ls ../../
-          echo "::set-output name=path::$(pwd) ../../"
-          ls ../../vsomeip
+          ls ../
+          echo "::set-output name=path::$(pwd)/vsomeip ../../"
+          ls ../../../
           echo "vsomeip"
           ls
 
