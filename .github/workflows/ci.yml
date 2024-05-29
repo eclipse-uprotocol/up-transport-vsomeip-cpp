@@ -71,15 +71,6 @@ jobs:
       vsomeip_Tag: 3.4.10
       vsomeip_Cache_PFX: vsomeip-conan2
     steps:
-      - name: Cache Boost
-        id: cache-boost
-        uses: actions/cache@v2
-        with:
-          path: /usr/local/share/boost
-          key: ${{ runner.os }}-boost-${{ hashFiles('**/CMakeLists.txt') }}
-          restore-keys: |
-            ${{ runner.os }}-boost-
-
       - name: Install Boost
         if: steps.cache-boost.outputs.cache-hit != 'true'
         run: |
