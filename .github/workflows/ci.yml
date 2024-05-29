@@ -106,7 +106,7 @@ jobs:
           sudo ./b2 install
 
       - name: Clone vsomeip repo
-        if: ${{ steps.cache-cmake.outputs.cache-hit != 'true' }}
+        #if: ${{ steps.cache-cmake.outputs.cache-hit != 'true' }}
         shell: bash
         env:
           vsomeip_HEAD: ${{ steps.vsomeip-head.outputs.vsomeip_HEAD }}
