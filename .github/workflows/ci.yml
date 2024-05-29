@@ -70,6 +70,7 @@ jobs:
       vsomeip_Repo: https://github.com/COVESA/vsomeip.git
       vsomeip_Tag: 3.4.10
       vsomeip_Cache_PFX: vsomeip-conan2
+      UP_CLIENT_VSOMEIP_CPP_PATH: /home/runner/work/up-client-vsomeip-cpp/up-client-vsomeip-cpp
     outputs:
       vsomeip_Cache: ${{ env.vsomeip_Cache_PFX }}-${{ steps.vsomeip-head.outputs.vsomeip_HEAD }}
       LOCAL_VSOMEIP_PATH: ${{ steps.vsomeip-path.outputs.path }}
@@ -121,7 +122,7 @@ jobs:
           cd vsomeip
           mkdir build
           cd build
-          cmake -DCMAKE_INSTALL_PREFIX:PATH=$(pwd) -G Ninja ..
+          cmake -DCMAKE_INSTALL_PREFIX:PATH=$UP_CLIENT_VSOMEIP_CPP_PATH -G Ninja ..
           ninja
 
       - name: Install vsomeip
@@ -129,7 +130,7 @@ jobs:
         run: |
           cd vsomeip/build
           ninja install
-          echo "::set-output name=path::$(pwd)/vsomeip"
+          echo "::set-output name=path::$UP_CLIENT_VSOMEIP_CPP_PATH/vsomeip"
           
       - name: Output vsomeip install path
         id: vsomeip-path
