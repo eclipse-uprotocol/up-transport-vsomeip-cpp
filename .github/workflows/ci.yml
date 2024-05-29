@@ -135,10 +135,10 @@ jobs:
       - name: Output vsomeip install path
         id: vsomeip-path
         run: |
-          echo "$(pwd)"
-          ls ../../../work/up-client-vsomeip-cpp/up-client-vsomeip-cpp
-          echo "vsomeip"
-          ls ../../../work/up-client-vsomeip-cpp
+          echo "vsomeip is installed in: $UP_CLIENT_VSOMEIP_CPP_PATH/vsomeip"
+          ls $UP_CLIENT_VSOMEIP_CPP_PATH/vsomeip
+          #echo "vsomeip"
+          #ls ../../../work/up-client-vsomeip-cpp
 
   build-up-client-vsomeip-cpp:
     name: Build up-client-vsomeip-cpp
