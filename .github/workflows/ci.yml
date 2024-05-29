@@ -92,6 +92,7 @@ jobs:
           vsomeip_HEAD: ${{ steps.vsomeip-head.outputs.vsomeip_HEAD }}
         run: |
           git clone "$vsomeip_Repo"
+          cd vsomeip && git checkout 3.4.10s
       - name: Build vsomeip with Cmake
         shell: bash
         run: |
