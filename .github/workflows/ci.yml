@@ -119,6 +119,10 @@ jobs:
             ~/.conan2
 
       - name: Build up-client-vsomeip-cpp
+          run: |
+            pwd
+
+      - name: Build up-client-vsomeip-cpp
         run: |
           cd up-client-vsomeip-cpp
           mkdir build
