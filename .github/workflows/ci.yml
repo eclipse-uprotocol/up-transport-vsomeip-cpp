@@ -100,7 +100,7 @@ jobs:
           mkdir build
           cd build
           cmake -DCMAKE_INSTALL_PREFIX:PATH=$UP_CLIENT_VSOMEIP_CPP_PATH ..
-          sudo  install 
+          sudo make install 
           ls
   build-up-client-vsomeip-cpp:
     name: Build up-client-vsomeip-cpp
