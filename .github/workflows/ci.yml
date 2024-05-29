@@ -71,18 +71,29 @@ jobs:
       vsomeip_Tag: 3.4.10
       vsomeip_Cache_PFX: vsomeip-conan2
     steps:
-      - name: Checkout vsomeip
+      - name: Install Boost 1.84.0
         run: |
-          git clone ${{ env.vsomeip_Repo }}
+          wget https://boostorg.jfrog.io/artifactory/main/release/1.84.0/source/boost_1_84_0.tar.gz
+          tar xzf boost_1_84_0.tar.gz
+          cd boost_1_84_0
+          ./bootstrap.sh --prefix=/usr/local
+          ./b2
+          sudo ./b2 install
+      - name: Clone vsomeip repo
+        shell: bash
+        env:
+          vsomeip_HEAD: ${{ steps.vsomeip-head.outputs.vsomeip_HEAD }}
+        run: |
+          git clone "$vsomeip_Repo"
+      - name: Build vsomeip with Cmake
+        shell: bash
+        run: |
           cd vsomeip
-          git checkout ${{ env.vsomeip_Tag }}
-      - name: Build vsomeip
-        run: |
           mkdir build
           cd build
-          cmake ..
-          make
-
+          cmake -DCMAKE_INSTALL_PREFIX:PATH=$UP_CLIENT_VSOMEIP_CPP_PATH -G Ninja ..
+          sudo ninja install 
+          ls
   build-up-client-vsomeip-cpp:
     name: Build up-client-vsomeip-cpp
     needs: [ build-up-cpp, build-vsomeip ]
