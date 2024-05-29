@@ -119,21 +119,18 @@ jobs:
             ~/.conan2
 
       - name: Print Working directory 
-          run: |
-            pwd
-
-      - name: List directory contents
-          run: |
-            ls -la
+        run: pwd
 
       - name: Build up-client-vsomeip-cpp
-          run: |
-            cd up-client-vsomeip-cpp
-            mkdir build
-            cd build
-            conan install .. -of .
-            cmake -S .. -DCMAKE_TOOLCHAIN_FILE=conan_toolchain.cmake -DCMAKE_BUILD_TYPE=Release
-            cmake --build .
+        run: |
+          cd up-client-vsomeip-cpp
+          mkdir build
+          cd build
+          conan install .. -of . --build=missing
+          cmake -S .. -DCMAKE_TOOLCHAIN_FILE=conan_toolchain.cmake -DCMAKE_BUILD_TYPE=Release
+          cmake --build .
+
+  ci:
     name: CI status checks
     runs-on: ubuntu-latest
     needs: [ build-up-cpp, build-up-client-vsomeip-cpp, build-vsomeip ]
