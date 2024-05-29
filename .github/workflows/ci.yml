@@ -137,8 +137,8 @@ jobs:
         run: |
           echo "$(pwd)"
           ls ../../../work/up-client-vsomeip-cpp/up-client-vsomeip-cpp
-          #echo "vsomeip"
-          #ls
+          echo "vsomeip"
+          ls ../../../work/up-client-vsomeip-cpp/up-client-vsomeip-cpp/vsomeip
 
   build-up-client-vsomeip-cpp:
     name: Build up-client-vsomeip-cpp
