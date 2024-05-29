@@ -78,12 +78,10 @@ jobs:
           fi
 
       - name: Install Conan
-        if: ${{ steps.cache-conan2.outputs.cache-hit != 'true' }}
         id: conan
         uses: turtlebrowser/get-conan@main
 
       - name: Create default Conan profile
-        if: ${{ steps.cache-conan2.outputs.cache-hit != 'true' }}
         run: conan profile detect
           
       - name: Install Boost 1.84.0
