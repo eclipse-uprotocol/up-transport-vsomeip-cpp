@@ -29,7 +29,6 @@ jobs:
           key: ${{ env.UP_CPP_Cache_PFX }}-${{ steps.up-cpp-head.outputs.UP_CPP_HEAD }}
           path: |
             ~/.conan2
-
       - name: Install Conan
         if: ${{ steps.cache-conan2.outputs.cache-hit != 'true' }}
         id: conan
@@ -51,14 +50,12 @@ jobs:
           git clone "$UP_CPP_Repo"
           cd up-cpp && git checkout v0.1.2-dev
           git submodule update --init --recursive
-
       - name: Create up-cpp Conan package
         if: ${{ steps.cache-conan2.outputs.cache-hit != 'true' }}
         shell: bash
         run: |
           cd up-cpp
           conan create . --build=missing
-
       - name: Clean up conan build files
         if: ${{ steps.cache-conan2.outputs.cache-hit != 'true' }}
         run: conan cache clean '*'
@@ -89,7 +86,6 @@ jobs:
           ./bootstrap.sh --prefix=/usr/local
           ./b2
           sudo ./b2 install
-
       - name: Clone vsomeip repo
         shell: bash
         env:
@@ -121,9 +117,10 @@ jobs:
           key: ${{ env.UP_CPP_Cache_PFX }}-${{ needs.build-up-cpp.outputs.UP_CPP_Cache }}
           path: |
             ~/.conan2
-
       - name: Print Working directory 
-        run: pwd
+        run: |
+          pwd
+          ls -a
 
       - name: Build up-client-vsomeip-cpp
         run: |
@@ -133,7 +130,6 @@ jobs:
           conan install .. -of . --build=missing
           cmake -S .. -DCMAKE_TOOLCHAIN_FILE=conan_toolchain.cmake -DCMAKE_BUILD_TYPE=Release
           cmake --build .
-
   ci:
     name: CI status checks
     runs-on: ubuntu-latest
