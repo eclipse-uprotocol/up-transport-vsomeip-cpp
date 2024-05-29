@@ -137,8 +137,8 @@ jobs:
           echo "$(pwd)/vsomeip"
           ls ../
           echo "::set-output name=path::$(pwd)/vsomeip ../../"
-          #ls ../../../
-          echo "vsomeip"
+          ls ../../../
+          #echo "vsomeip"
           #ls
 
   build-up-client-vsomeip-cpp:
