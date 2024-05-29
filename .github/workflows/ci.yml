@@ -1,0 +1,146 @@
+name: CI
+
+on:
+  push:
+    branches: [ UT_Changes ]
+  pull_request:
+    branches: ["UT_Changes"]
+  
+jobs:
+  build-up-cpp:
+    name: Build up-cpp
+    runs-on: ubuntu-latest
+    env:
+      UP_CPP_Repo: https://github.com/eclipse-uprotocol/up-cpp.git
+      UP_CPP_Cache_PFX: up-cpp-conan2
+    outputs:
+      UP_CPP_Cache: ${{ env.UP_CPP_Cache_PFX }}-${{ steps.up-cpp-head.outputs.UP_CPP_HEAD }}
+
+    steps:
+      - name: Check remote head hash
+        id: up-cpp-head
+        shell: bash
+        run: '{ echo -n "UP_CPP_HEAD="; git ls-remote "$UP_CPP_Repo" HEAD | cut -f1; } | tee -a "$GITHUB_OUTPUT"'
+
+      - name: Cache conan artifacts
+        id: cache-conan2
+        uses: actions/cache@v4
+        with:
+          key: ${{ env.UP_CPP_Cache_PFX }}-${{ steps.up-cpp-head.outputs.UP_CPP_HEAD }}
+          path: |
+            ~/.conan2
+      - name: Install Conan
+        if: ${{ steps.cache-conan2.outputs.cache-hit != 'true' }}
+        id: conan
+        uses: turtlebrowser/get-conan@main
+
+      - name: Create default Conan profile
+        if: ${{ steps.cache-conan2.outputs.cache-hit != 'true' }}
+        run: conan profile detect
+
+      # NOTE: Checks out the head revision we found using ls-remote above
+      #       to avoid race conditions resulting in mismatch between cache
+      #       and contents of repo.
+      - name: Clone up-cpp repo
+        if: ${{ steps.cache-conan2.outputs.cache-hit != 'true' }}
+        shell: bash
+        env:
+          UP_CPP_HEAD: ${{ steps.up-cpp-head.outputs.UP_CPP_HEAD }}
+        run: |
+          git clone "$UP_CPP_Repo"
+          cd up-cpp && git checkout v0.1.2-dev
+          git submodule update --init --recursive
+      - name: Create up-cpp Conan package
+        if: ${{ steps.cache-conan2.outputs.cache-hit != 'true' }}
+        shell: bash
+        run: |
+          cd up-cpp
+          conan create . --build=missing
+      - name: Clean up conan build files
+        if: ${{ steps.cache-conan2.outputs.cache-hit != 'true' }}
+        run: conan cache clean '*'
+        
+  build-vsomeip:
+    name: Build vsomeip
+    runs-on: ubuntu-latest
+    env:
+      vsomeip_Repo: https://github.com/COVESA/vsomeip.git
+      vsomeip_Tag: 3.4.10
+      vsomeip_Cache_PFX: vsomeip-conan2
+    steps:
+      - name: Check if Boost is installed
+        id: check-boost
+        run: |
+          if [[ -d "/usr/local/include/boost" ]]; then
+            echo "::set-output name=boost-installed::true"
+          else
+            echo "::set-output name=boost-installed::false"
+          fi
+
+      - name: Install Conan
+        id: conan
+        uses: turtlebrowser/get-conan@main
+
+      - name: Create default Conan profile
+        run: conan profile detect
+          
+      - name: Install Boost 1.84.0
+        if: ${{ steps.check-boost.outputs.boost-installed != 'true' }}
+        run: |
+          wget https://boostorg.jfrog.io/artifactory/main/release/1.84.0/source/boost_1_84_0.tar.gz
+          tar xzf boost_1_84_0.tar.gz
+          cd boost_1_84_0
+          ./bootstrap.sh --prefix=/usr/local
+          ./b2
+          sudo ./b2 install
+      - name: Clone vsomeip repo
+        shell: bash
+        env:
+          vsomeip_HEAD: ${{ steps.vsomeip-head.outputs.vsomeip_HEAD }}
+        run: |
+          git clone "$vsomeip_Repo"
+          cd vsomeip && git checkout 3.4.10
+      - name: Build vsomeip with Cmake
+        shell: bash
+        run: |
+          cd vsomeip
+          mkdir build
+          cd build
+          cmake ..
+          sudo make install 
+          ls
+  build-up-client-vsomeip-cpp:
+    name: Build up-client-vsomeip-cpp
+    needs: [ build-up-cpp, build-vsomeip ]
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      - name: Cache conan artifacts
+        id: cache-conan2
+        uses: actions/cache@v4
+        with:
+          key: ${{ env.UP_CPP_Cache_PFX }}-${{ needs.build-up-cpp.outputs.UP_CPP_Cache }}
+          path: |
+            ~/.conan2
+      - name: Print Working directory 
+        run: |
+          pwd
+          ls -a
+
+      - name: Build up-client-vsomeip-cpp
+        run: |
+          mkdir build
+          cd build
+          conan install .. -of . --build=missing
+          cmake -S .. -DCMAKE_TOOLCHAIN_FILE=conan_toolchain.cmake -DCMAKE_BUILD_TYPE=Release
+          cmake --build .
+  ci:
+    name: CI status checks
+    runs-on: ubuntu-latest
+    needs: [ build-up-cpp, build-up-client-vsomeip-cpp, build-vsomeip ]
+    if: always()
+    steps:
+      - name: Check whether all jobs pass
+        run: echo '${{ toJson(needs) }}' | jq -e 'all(.result == "success")'

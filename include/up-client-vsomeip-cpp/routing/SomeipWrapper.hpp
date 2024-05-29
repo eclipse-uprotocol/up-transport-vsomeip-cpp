@@ -416,6 +416,28 @@ public:
      */
     bool isMethod(const vsomeip_v3::method_t &methodId) const override;
 
+    /**
+     * @brief Getter for app_.
+     */
+    inline std::shared_ptr<vsomeip::application> getApp() const {
+        return app_;
+    }
+
+    /**
+     * @brief Set app_ which is the application object for SomeipWrapper.
+     *
+     * @param app - vsomeip application object to set app_ to.
+     */
+    inline void setApp(std::shared_ptr<vsomeip::application> app) {
+        app_ = app;
+    }
+
+    /**
+     * @brief Getter for someipEventLoopThread_.
+     */
+    inline std::thread const& getThread() const {
+        return someipEventLoopThread_;
+    }
 private:
     /**
      * @brief Application of SomeipWrapper.

@@ -186,7 +186,13 @@ struct subscriptionStatus {
  *    @brief Handler for SomeIp messages. Adds messages to queues,
  *           starts/stops threads, and handles message routing.
  */
+#ifdef BUILD_TESTING
+class SomeipHandler {
+    friend class SomeipHandlerServerTests;
+    friend class SomeipHandlerClientTests;
+#else
 class SomeipHandler final {
+#endif //BUILD_TESTING
 public:
     /**
      *  @brief     Constructor for SomeipHandler.

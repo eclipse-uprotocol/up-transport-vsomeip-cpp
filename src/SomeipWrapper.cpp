@@ -242,7 +242,13 @@ std::shared_ptr<message> SomeipWrapper::createRequest() {
  */
 std::shared_ptr<message> SomeipWrapper::createResponse(
         const std::shared_ptr<message> &request) {
-    return vsomeip::runtime::get()->create_response(request);
+    if (!request) {
+        SPDLOG_ERROR("request is null");
+        return nullptr;
+    } 
+    else {
+        return vsomeip::runtime::get()->create_response(request);
+    }
 }
 
 /**
@@ -313,7 +319,11 @@ bool SomeipWrapper::isAvailable(
  * @param message
  */
 void SomeipWrapper::send(std::shared_ptr<message> message) {
-    app_->send(message);
+    if (!message) {
+        SPDLOG_ERROR("message is empty");
+    } else {
+        app_->send(message);
+    }
 }
 
 /**
