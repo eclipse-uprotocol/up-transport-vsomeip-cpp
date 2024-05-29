@@ -124,13 +124,14 @@ jobs:
           cd build
           cmake -DCMAKE_INSTALL_PREFIX:PATH=$UP_CLIENT_VSOMEIP_CPP_PATH -G Ninja ..
           ninja
-          echo "after ninja: $UP_CLIENT_VSOMEIP_CPP_PATH"
+          ls
 
       - name: Install vsomeip
         if: ${{ steps.cache-cmake.outputs.cache-hit != 'true' }}
         run: |
           cd vsomeip/build
           ninja install
+          ls
           echo "::set-output name=path::$UP_CLIENT_VSOMEIP_CPP_PATH/vsomeip"
           
       - name: Output vsomeip install path
