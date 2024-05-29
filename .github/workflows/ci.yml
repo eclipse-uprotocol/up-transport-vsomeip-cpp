@@ -137,7 +137,7 @@ jobs:
           echo "$(pwd)/vsomeip"
           ls ../
           echo "::set-output name=path::$(pwd)/vsomeip ../../"
-          ls ../../../
+          ls ../../../work
           #echo "vsomeip"
           #ls
 
