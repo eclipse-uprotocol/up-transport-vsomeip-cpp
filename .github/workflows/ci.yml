@@ -136,7 +136,7 @@ jobs:
         id: vsomeip-path
         run: |
           echo "$(pwd)"
-          ls ../../../work
+          ls ../../../work/up-client-vsomeip-cpp/up-client-vsomeip-cpp
           #echo "vsomeip"
           #ls
 
