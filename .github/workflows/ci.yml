@@ -112,13 +112,12 @@ jobs:
         #if: ${{ steps.cache-cmake.outputs.cache-hit != 'true' }}
         shell: bash
         run: |
-          export BOOST_ROOT=${{ needs.build-boost.outputs.boost-path }}
           cd vsomeip
           mkdir build
           cd build
           cmake -G Ninja ..
           ninja
-          ls
+          ls ../../
 
       - name: Install vsomeip
         #if: ${{ steps.cache-cmake.outputs.cache-hit != 'true' }}
