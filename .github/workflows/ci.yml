@@ -10,6 +10,8 @@ jobs:
   build-up-cpp:
     name: Build up-cpp
     runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
     env:
       UP_CPP_Repo: https://github.com/eclipse-uprotocol/up-cpp.git
       UP_CPP_Cache_PFX: up-cpp-conan2
