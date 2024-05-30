@@ -127,7 +127,7 @@ jobs:
           cd vsomeip/build
           sudo ninja install
           ls lib
-          echo "::set-output name=path::$(pwd)"
+          echo "::set-output name=path::/usr/local"
 
       - name: Upload vsomeip installation
         uses: actions/upload-artifact@v2
