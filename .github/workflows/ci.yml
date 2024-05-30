@@ -41,12 +41,12 @@ jobs:
           sudo ./b2 install
           echo "::set-output name=path::/usr/local"
 
-      - name: Upload Boost installation
-        if: ${{ steps.cache-boost.outputs.cache-hit != 'true' }}
-        uses: actions/upload-artifact@v2
-        with:
-          name: boost-installation
-          path: /usr/local
+#      - name: Upload Boost installation
+#        if: ${{ steps.cache-boost.outputs.cache-hit != 'true' }}
+#        uses: actions/upload-artifact@v2
+ #       with:
+ #         name: boost-installation
+ #         path: /usr/local
 
   build-up-cpp:
     name: Build up-cpp
