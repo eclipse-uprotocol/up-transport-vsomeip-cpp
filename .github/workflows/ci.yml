@@ -42,6 +42,7 @@ jobs:
           echo "::set-output name=path::/usr/local"
 
       - name: Upload Boost installation
+        if: ${{ steps.cache-boost.outputs.cache-hit != 'true' }}
         uses: actions/upload-artifact@v2
         with:
           name: boost-installation
