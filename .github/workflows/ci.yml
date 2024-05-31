@@ -124,7 +124,7 @@ jobs:
         run: |
           cd vsomeip/build
           sudo ninja install
-          echo "::set-output name=path::$(pwd)/vsomeip-install/include/compat"
+          echo "::set-output name=path::$(pwd)/vsomeip-install"
           echo "vsomeip-install contents:"
           ls -R
           
