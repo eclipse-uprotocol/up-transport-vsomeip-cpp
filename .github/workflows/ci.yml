@@ -127,7 +127,8 @@ jobs:
           echo "::set-output name=path::$(pwd)/vsomeip-install"
           echo "vsomeip-install contents:"
           ls vsomeip-install/include
-          echo "LOCAL_VSOMEIP_PATH= ${{ steps.vsomeip-path.outputs.path }}"
+          echo "vsomeip-install/include/vsomeip contents:"
+          echo "vsomeip-install path: $(pwd)"
           
 
       - name: Upload vsomeip installation
