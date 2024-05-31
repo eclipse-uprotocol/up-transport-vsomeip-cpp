@@ -170,7 +170,9 @@ jobs:
         shell: bash
         run: |
           echo "LOCAL_VSOMEIP_PATH: $LOCAL_VSOMEIP_PATH"
+          ls $LOCAL_VSOMEIP_PATH
           echo "LOCAL_VSOMEIP_PATH/include: $LOCAL_VSOMEIP_PATH/include"
+          ls $LOCAL_VSOMEIP_PATH/include
           export CMAKE_INCLUDE_PATH="$LOCAL_VSOMEIP_PATH/include:$CMAKE_INCLUDE_PATH"
           export CMAKE_PREFIX_PATH="$HOME/local"
           export CMAKE_ZENOH_INCLUDE_PATH="$HOME/local/include"
