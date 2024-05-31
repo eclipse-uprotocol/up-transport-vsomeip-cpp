@@ -123,7 +123,7 @@ jobs:
         id: vsomeip-path
         run: |
           cd vsomeip/build
-          sudo ninja install
+          ninja install
           echo "::set-output name=path::$(pwd)"
           echo "vsomeip*******************:"
           ls ../
