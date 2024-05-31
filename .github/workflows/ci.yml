@@ -126,7 +126,7 @@ jobs:
           sudo ninja install
           echo "::set-output name=path::$(pwd)"
           echo "vsomeip location*******************:"
-          ls ../../
+          ls ../../../
           
 
       - name: Upload vsomeip installation
