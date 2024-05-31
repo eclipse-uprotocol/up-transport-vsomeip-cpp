@@ -117,7 +117,6 @@ jobs:
           cd build
           cmake -G Ninja -DCMAKE_INSTALL_PREFIX=vsomeip-install ..
           ninja
-          ls ../../
 
       - name: Install vsomeip
         #if: ${{ steps.cache-cmake.outputs.cache-hit != 'true' }}
@@ -125,8 +124,11 @@ jobs:
         run: |
           cd vsomeip/build
           sudo ninja install
-          ls lib
           echo "::set-output name=path::$(pwd)/vsomeip-install"
+          echo "vsomeip-install contents:"
+          ls vsomeip-install/include
+          echo "LOCAL_VSOMEIP_PATH= ${{ steps.vsomeip-path.outputs.path }}"
+          
 
       - name: Upload vsomeip installation
         uses: actions/upload-artifact@v2
@@ -163,13 +165,6 @@ jobs:
 
       - uses: actions/checkout@v2
       
-      - name: Output vsomeip install path in up-client-vsomeip-cpp
-        id: vsomeip-path
-        run: |
-          echo "$(pwd)/up-client-vsomeip-cpp"
-          echo "VSOMEIP directory*************: $LOCAL_VSOMEIP_PATH"
-          ls
-
       - name: Build and install up-client-vsomeip-cpp
         shell: bash
         run: |
