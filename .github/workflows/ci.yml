@@ -127,9 +127,9 @@ jobs:
           echo "::set-output name=path::$(pwd)"
           echo "vsomeip*******************:"
           ls ../
-          echo "include*******************:"
-          ls /include
-          echo "include/vsomeip*******************:"
+          echo "ls*******************:"
+          ls 
+          #echo "include/vsomeip*******************:"
           #ls /include/vsomeip
           
 
