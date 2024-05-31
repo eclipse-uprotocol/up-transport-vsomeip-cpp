@@ -130,7 +130,7 @@ jobs:
           echo "include*******************:"
           ls /include
           echo "include/vsomeip*******************:"
-          ls /include/vsomeip
+          #ls /include/vsomeip
           
 
       - name: Upload vsomeip installation
