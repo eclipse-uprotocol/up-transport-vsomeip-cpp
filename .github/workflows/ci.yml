@@ -171,6 +171,9 @@ jobs:
           export CMAKE_PREFIX_PATH="$HOME/local"
           export CMAKE_ZENOH_INCLUDE_PATH="$HOME/local/include"
           export LD_LIBRARY_PATH="$LOCAL_VSOMEIP_PATH/lib:$LD_LIBRARY_PATH"
+
+          echo "CMake is searching for header files in the following directories*******************:"
+          echo $CMAKE_INCLUDE_PATH
           
           mkdir build
           cd build
