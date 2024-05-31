@@ -126,9 +126,7 @@ jobs:
           sudo ninja install
           echo "::set-output name=path::$(pwd)/vsomeip-install"
           echo "vsomeip-install contents:"
-          ls vsomeip-install/include
-          echo "vsomeip-install/include/vsomeip contents:"
-          echo "vsomeip-install path: $(pwd)"
+          ls -R
           
 
       - name: Upload vsomeip installation
@@ -169,10 +167,6 @@ jobs:
       - name: Build and install up-client-vsomeip-cpp
         shell: bash
         run: |
-          echo "LOCAL_VSOMEIP_PATH: $LOCAL_VSOMEIP_PATH"
-          ls $LOCAL_VSOMEIP_PATH
-          echo "LOCAL_VSOMEIP_PATH/include: $LOCAL_VSOMEIP_PATH/include"
-          ls $LOCAL_VSOMEIP_PATH/include
           export CMAKE_INCLUDE_PATH="$LOCAL_VSOMEIP_PATH/include:$CMAKE_INCLUDE_PATH"
           export CMAKE_PREFIX_PATH="$HOME/local"
           export CMAKE_ZENOH_INCLUDE_PATH="$HOME/local/include"
