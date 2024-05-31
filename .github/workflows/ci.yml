@@ -167,7 +167,7 @@ jobs:
       - name: Build and install up-client-vsomeip-cpp
         shell: bash
         run: |
-          export CMAKE_INCLUDE_PATH="$LOCAL_VSOMEIP_PATH/include/compat/vsomeip:$CMAKE_INCLUDE_PATH"
+          export CMAKE_INCLUDE_PATH="$LOCAL_VSOMEIP_PATH/include:$CMAKE_INCLUDE_PATH"
           export CMAKE_PREFIX_PATH="$HOME/local"
           export CMAKE_ZENOH_INCLUDE_PATH="$HOME/local/include"
           export LD_LIBRARY_PATH="$LOCAL_VSOMEIP_PATH/lib:$LD_LIBRARY_PATH"
