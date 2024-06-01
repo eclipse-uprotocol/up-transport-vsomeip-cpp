@@ -144,6 +144,8 @@ jobs:
         run: |
           VSOMEIP_H_PATH=$(find . -name vsomeip.hpp 2>/dev/null)
           echo "::set-output name=path::$VSOMEIP_H_PATH"
+          echo "vsomeip ../../"
+          ls -R ../../
 
   build-up-client-vsomeip-cpp:
     name: Build up-client-vsomeip-cpp
