@@ -178,7 +178,9 @@ jobs:
 
           echo "CMake is searching for header files in the following directories*******************:"
           echo $CMAKE_PREFIX_PATH
-          ls -R ../../../
+          echo "Listing contents of LOCAL_VSOMEIP_PATH**********************:"
+          ls -R ${{ env.LOCAL_VSOMEIP_PATH }}
+          echo "Listing contents of ../LOCAL_VSOMEIP_PATH***************:"
           
           mkdir build
           cd build
