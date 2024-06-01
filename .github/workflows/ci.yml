@@ -143,9 +143,9 @@ jobs:
           VSOMEIP_H_PATH=$(find . -name vsomeip.hpp 2>/dev/null)
           echo "::set-output name=path::$VSOMEIP_H_PATH"
 
- #     - name: Modify CMakeLists.txt
- #       run: |
-  #        sed -i 's/vsomeip3/vsomeip/g' /home/runner/work/up-client-vsomeip-cpp/up-client-vsomeip-cpp/CMakeLists.txt
+      - name: Modify CMakeLists.txt
+        run: |
+          sed -i 's/set(VSOMEIP_LIB vsomeip3)/find_library(VSOMEIP_LIB vsomeip3 PATHS $ENV{LOCAL_VSOMEIP_PATH}\/lib)/g' CMakeLists.txt
 
       - name: Modify conanfile.py
         run: |
@@ -158,7 +158,7 @@ jobs:
         run: |
           export CMAKE_PREFIX_PATH="$HOME/local:${{ steps.vsomeip-path.outputs.path }}"
           export CMAKE_ZENOH_INCLUDE_PATH="$HOME/local/include"
-      
+
           echo "CMake is searching for header files in the following directories*******************:"
           echo $CMAKE_PREFIX_PATH
           echo "vsomeip.hpp is located at: ${{ steps.find-vsomeip.outputs.path }}"
@@ -166,7 +166,7 @@ jobs:
           mkdir build
           cd build
           cmake -S .. -DCMAKE_TOOLCHAIN_FILE=conan_toolchain.cmake -DCMAKE_BUILD_TYPE=Release -DBUILD_TESTING=ON -DCMAKE_INSTALL_PREFIX=~/local -DLOCAL_VSOMEIP_PATH=${{ steps.vsomeip-path.outputs.path }} -DCMAKE_INCLUDE_PATH=${{ steps.vsomeip-path.outputs.path }}/include
-          cmake --build . -lvsomeip
+          cmake --build .
 
   # NOTE: In GitHub repository settings, the "Require status checks to pass
   # before merging" branch protection rule ensures that commits are only merged
