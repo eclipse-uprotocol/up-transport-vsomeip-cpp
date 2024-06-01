@@ -93,6 +93,15 @@ jobs:
           cd /home/runner/work/up-client-vsomeip-cpp/up-client-vsomeip-cpp
           conan install . --build=missing
 
+      - name: Install Boost 1.84.0
+        run: |
+          wget https://boostorg.jfrog.io/artifactory/main/release/1.84.0/source/boost_1_84_0.tar.gz
+          tar xzf boost_1_84_0.tar.gz
+          cd boost_1_84_0
+          ./bootstrap.sh --prefix=/usr/local
+          ./b2
+          sudo ./b2 install
+
       - name: Install Ninja
         run: |
           sudo apt-get update
