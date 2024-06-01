@@ -142,7 +142,7 @@ jobs:
       - name: Find vsomeip.hpp
         id: find-vsomeip
         run: |
-          VSOMEIP_H_PATH=$(find / -name vsomeip.hpp 2>/dev/null)
+          VSOMEIP_H_PATH=$(find . -name vsomeip.hpp 2>/dev/null)
           echo "::set-output name=path::$VSOMEIP_H_PATH"
 
   build-up-client-vsomeip-cpp:
