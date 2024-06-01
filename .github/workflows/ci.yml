@@ -83,7 +83,7 @@ jobs:
           path: /usr/local
           
       - name: Install Boost 1.84.0
-        #if: ${{ steps.cache-cmake.outputs.cache-hit != 'true' }}
+        if: ${{ steps.cache-cmake.outputs.cache-hit != 'true' }}
         run: |
           wget https://boostorg.jfrog.io/artifactory/main/release/1.84.0/source/boost_1_84_0.tar.gz
           tar xzf boost_1_84_0.tar.gz
@@ -93,13 +93,13 @@ jobs:
           sudo ./b2 install
 
       - name: Install Cmake and Ninja
-        #if: ${{ steps.cache-cmake.outputs.cache-hit != 'true' }}
+        if: ${{ steps.cache-cmake.outputs.cache-hit != 'true' }}
         run: |
           sudo apt-get update
           sudo apt-get install -y cmake ninja-build
 
       - name: Clone vsomeip repo
-        #if: ${{ steps.cache-cmake.outputs.cache-hit != 'true' }}
+        if: ${{ steps.cache-cmake.outputs.cache-hit != 'true' }}
         shell: bash
         env:
           vsomeip_HEAD: ${{ steps.vsomeip-head.outputs.vsomeip_HEAD }}
@@ -109,7 +109,7 @@ jobs:
           git submodule update --init --recursive
 
       - name: Build vsomeip with Cmake
-        #if: ${{ steps.cache-cmake.outputs.cache-hit != 'true' }}
+        if: ${{ steps.cache-cmake.outputs.cache-hit != 'true' }}
         shell: bash
         run: |
           cd vsomeip
@@ -119,7 +119,7 @@ jobs:
           ninja
 
       - name: Install vsomeip
-        #if: ${{ steps.cache-cmake.outputs.cache-hit != 'true' }}
+        if: ${{ steps.cache-cmake.outputs.cache-hit != 'true' }}
         id: vsomeip-path
         run: |
           cd vsomeip/build
@@ -189,7 +189,7 @@ jobs:
 
           echo "CMake is searching for header files in the following directories*******************:"
           echo $CMAKE_PREFIX_PATH
-          ls -R ../
+          ls -R ../../
           
           mkdir build
           cd build
