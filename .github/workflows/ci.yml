@@ -68,9 +68,6 @@ jobs:
     needs: [ build-up-cpp ]
     runs-on: ubuntu-latest
     env:
-      vsomeip_Repo: https://github.com/COVESA/vsomeip.git
-      vsomeip_Tag: 3.4.10
-      vsomeip_Cache_PFX: vsomeip-conan2
       UP_CPP_Cache: ${{ needs.build-up-cpp.outputs.UP_CPP_Cache }}
 
     steps:
@@ -93,80 +90,16 @@ jobs:
           cd /home/runner/work/up-client-vsomeip-cpp/up-client-vsomeip-cpp
           conan install . --build=missing
 
-      - name: Install Boost 1.84.0
-        run: |
-          wget https://boostorg.jfrog.io/artifactory/main/release/1.84.0/source/boost_1_84_0.tar.gz
-          tar xzf boost_1_84_0.tar.gz
-          cd boost_1_84_0
-          ./bootstrap.sh --prefix=/usr/local
-          ./b2
-          sudo ./b2 install
-
-      - name: Install Ninja
-        run: |
-          sudo apt-get update
-          sudo apt-get install -y ninja-build
-
-      - name: Check remote head hash
-        id: vsomeip-head
-        shell: bash
-        run: '{ echo -n "vsomeip_HEAD="; git ls-remote "$vsomeip_Repo" refs/tags/3.4.10 | cut -f1; } | tee -a "$GITHUB_OUTPUT"'
-
-      - name: Clone vsomeip repo
-        shell: bash
-        env:
-          vsomeip_HEAD: ${{ steps.vsomeip-head.outputs.vsomeip_HEAD }}
-        run: |
-          git clone "$vsomeip_Repo"
-          cd vsomeip && git checkout ${{ env.vsomeip_Tag }}
-          git submodule update --init --recursive
-
-      - name: Build vsomeip with Cmake
-        shell: bash
-        run: |
-          cd vsomeip
-          mkdir build
-          cd build
-          cmake -G Ninja -DCMAKE_INSTALL_PREFIX=. ..
-          ninja
-
-      - name: Install vsomeip
-        id: vsomeip-path
-        run: |
-          cd vsomeip/build
-          sudo -E ninja install
-          echo "::set-output name=path::$(pwd)"
-
-      - name: Find vsomeip.hpp
-        id: find-vsomeip
-        run: |
-          VSOMEIP_H_PATH=$(find . -name vsomeip.hpp 2>/dev/null)
-          echo "::set-output name=path::$VSOMEIP_H_PATH"
-
-      - name: Modify CMakeLists.txt
-        run: |
-          sed -i 's/set(VSOMEIP_LIB vsomeip3)/find_library(VSOMEIP_LIB vsomeip3 PATHS $ENV{LOCAL_VSOMEIP_PATH}\/lib)/g' CMakeLists.txt
-
       - name: Modify conanfile.py
         run: |
           sed -i '/self.requires("rapidjson\/cci.20230929")/a \        self.requires("vsomeip/3.4.10")' /home/runner/work/up-client-vsomeip-cpp/up-client-vsomeip-cpp/conanfile.py
 
       - name: Build and install up-client-vsomeip-cpp
         shell: bash
-        env:
-          LOCAL_VSOMEIP_PATH: ${{ steps.vsomeip-path.outputs.path }}
         run: |
-          export CMAKE_PREFIX_PATH="$HOME/local:${{ steps.vsomeip-path.outputs.path }}"
-          export CMAKE_ZENOH_INCLUDE_PATH="$HOME/local/include"
-          export LD_LIBRARY_PATH="$LD_LIBRARY_PATH:${{ steps.vsomeip-path.outputs.path }}/lib"
-      
-          echo "CMake is searching for header files in the following directories*******************:"
-          echo $CMAKE_PREFIX_PATH
-          echo "vsomeip.hpp is located at: ${{ steps.find-vsomeip.outputs.path }}"
-          
           mkdir build
           cd build
-          cmake -S .. -DCMAKE_TOOLCHAIN_FILE=conan_toolchain.cmake -DCMAKE_BUILD_TYPE=Release -DBUILD_TESTING=ON -DCMAKE_INSTALL_PREFIX=~/local -DLOCAL_VSOMEIP_PATH=${{ steps.vsomeip-path.outputs.path }} -DCMAKE_INCLUDE_PATH=${{ steps.vsomeip-path.outputs.path }}/interface
+          cmake -S .. -DCMAKE_TOOLCHAIN_FILE=conan_toolchain.cmake -DCMAKE_BUILD_TYPE=Release -DBUILD_TESTING=ON
           cmake --build .
 
   # NOTE: In GitHub repository settings, the "Require status checks to pass
