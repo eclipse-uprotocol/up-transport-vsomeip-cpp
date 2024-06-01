@@ -125,12 +125,14 @@ jobs:
           ninja
 
       - name: Install vsomeip
-        if: ${{ steps.cache-cmake.outputs.cache-hit != 'true' }}
+        #if: ${{ steps.cache-cmake.outputs.cache-hit != 'true' }}
         id: vsomeip-path
         run: |
           cd vsomeip/build
           sudo ninja install
+          VSOMEIP_H_PATH=$(sudo find / -name vsomeip.hpp 2>/dev/null)
           echo "::set-output name=path::$(pwd)"
+          echo "::set-output name=vsomeip_h_path::$VSOMEIP_H_PATH"
 
       - name: Upload vsomeip installation
         if: ${{ steps.cache-cmake.outputs.cache-hit != 'true' }}
@@ -178,7 +180,7 @@ jobs:
 
           echo "CMake is searching for header files in the following directories*******************:"
           echo $CMAKE_PREFIX_PATH
-          ls -R ../../../../
+          echo "vsomeip.hpp is located at: ${{ needs.build-vsomeip.outputs.vsomeip_h_path }}"
           
           mkdir build
           cd build
