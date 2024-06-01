@@ -142,7 +142,11 @@ jobs:
         run: |
           VSOMEIP_H_PATH=$(find . -name vsomeip.hpp 2>/dev/null)
           echo "::set-output name=path::$VSOMEIP_H_PATH"
-          
+
+      - name: Modify CMakeLists.txt
+        run: |
+          sed -i 's/vsomeip3/vsomeip/g' /home/runner/work/up-client-vsomeip-cpp/up-client-vsomeip-cpp/CMakeLists.txt
+        
       - name: Build and install up-client-vsomeip-cpp
         shell: bash
         env:
