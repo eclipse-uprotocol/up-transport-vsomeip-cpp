@@ -75,12 +75,24 @@ jobs:
       LOCAL_VSOMEIP_PATH: ${{ steps.vsomeip-path.outputs.path }}
 
     steps:
-      - name: Cache Boost installation
-        id: cache-boost
-        uses: actions/cache@v2
+      - name: Check remote head hash
+        id: vsomeip-head
+        shell: bash
+        run: '{ echo -n "vsomeip_HEAD="; git ls-remote "$vsomeip_Repo" refs/tags/3.4.10 | cut -f1; } | tee -a "$GITHUB_OUTPUT"'
+
+      - name: Cache CMake build artifacts
+        id: cache-cmake
+        uses: actions/cache@v4
         with:
-          key: boost-1.84.0
-          path: /usr/local
+          key: ${{ env.vsomeip_Cache_PFX }}-${{ steps.vsomeip-head.outputs.vsomeip_HEAD }}
+          path: |
+            ~/.cmake
+
+      - name: Install Cmake and Ninja
+        if: ${{ steps.cache-cmake.outputs.cache-hit != 'true' }}
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y cmake ninja-build
           
       - name: Install Boost 1.84.0
         if: ${{ steps.cache-cmake.outputs.cache-hit != 'true' }}
@@ -91,12 +103,6 @@ jobs:
           ./bootstrap.sh --prefix=/usr/local
           ./b2
           sudo ./b2 install
-
-      - name: Install Cmake and Ninja
-        if: ${{ steps.cache-cmake.outputs.cache-hit != 'true' }}
-        run: |
-          sudo apt-get update
-          sudo apt-get install -y cmake ninja-build
 
       - name: Clone vsomeip repo
         if: ${{ steps.cache-cmake.outputs.cache-hit != 'true' }}
@@ -125,26 +131,9 @@ jobs:
           cd vsomeip/build
           sudo ninja install
           echo "::set-output name=path::$(pwd)"
-          echo "vsomeip*******************:"
-          ls ../
-          echo "ls*******************:"
-          ls 
-          #echo "usr/include/vsomeip*******************:"
-          echo "vsomeip headers in build directory*******************:"
-          if [ -d "./include/vsomeip" ]; then
-            ls ./include/vsomeip
-          else
-            echo "The ./include/vsomeip directory does not exist."
-          fi
-          echo "vsomeip headers in system directory*******************:"
-          if [ -d "/usr/include/vsomeip" ]; then
-            ls /usr/include/vsomeip
-          else
-            echo "The /usr/include/vsomeip directory does not exist."
-          fi
-          
 
       - name: Upload vsomeip installation
+        if: ${{ steps.cache-cmake.outputs.cache-hit != 'true' }}
         uses: actions/upload-artifact@v2
         with:
           name: vsomeip
