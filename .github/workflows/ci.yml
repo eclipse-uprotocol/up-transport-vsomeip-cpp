@@ -89,13 +89,13 @@ jobs:
             ~/.cmake
 
       - name: Install Cmake and Ninja
-        if: ${{ steps.cache-cmake.outputs.cache-hit != 'true' }}
+        #if: ${{ steps.cache-cmake.outputs.cache-hit != 'true' }}
         run: |
           sudo apt-get update
           sudo apt-get install -y cmake ninja-build
           
       - name: Install Boost 1.84.0
-        if: ${{ steps.cache-cmake.outputs.cache-hit != 'true' }}
+        #if: ${{ steps.cache-cmake.outputs.cache-hit != 'true' }}
         run: |
           wget https://boostorg.jfrog.io/artifactory/main/release/1.84.0/source/boost_1_84_0.tar.gz
           tar xzf boost_1_84_0.tar.gz
@@ -105,7 +105,7 @@ jobs:
           sudo ./b2 install
 
       - name: Clone vsomeip repo
-        if: ${{ steps.cache-cmake.outputs.cache-hit != 'true' }}
+        #if: ${{ steps.cache-cmake.outputs.cache-hit != 'true' }}
         shell: bash
         env:
           vsomeip_HEAD: ${{ steps.vsomeip-head.outputs.vsomeip_HEAD }}
