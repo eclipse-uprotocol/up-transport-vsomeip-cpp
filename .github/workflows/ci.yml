@@ -158,7 +158,7 @@ jobs:
         run: |
           export CMAKE_PREFIX_PATH="$HOME/local:${{ steps.vsomeip-path.outputs.path }}"
           export CMAKE_ZENOH_INCLUDE_PATH="$HOME/local/include"
-
+      
           echo "CMake is searching for header files in the following directories*******************:"
           echo $CMAKE_PREFIX_PATH
           echo "vsomeip.hpp is located at: ${{ steps.find-vsomeip.outputs.path }}"
@@ -166,7 +166,7 @@ jobs:
           mkdir build
           cd build
           cmake -S .. -DCMAKE_TOOLCHAIN_FILE=conan_toolchain.cmake -DCMAKE_BUILD_TYPE=Release -DBUILD_TESTING=ON -DCMAKE_INSTALL_PREFIX=~/local -DLOCAL_VSOMEIP_PATH=${{ steps.vsomeip-path.outputs.path }} -DCMAKE_INCLUDE_PATH=${{ steps.vsomeip-path.outputs.path }}/include
-          cmake --build .
+          cmake --build . -lvsomeip
 
   # NOTE: In GitHub repository settings, the "Require status checks to pass
   # before merging" branch protection rule ensures that commits are only merged
