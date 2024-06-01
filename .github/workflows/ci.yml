@@ -115,7 +115,7 @@ jobs:
           git submodule update --init --recursive
 
       - name: Build vsomeip with Cmake
-        if: ${{ steps.cache-cmake.outputs.cache-hit != 'true' }}
+        #if: ${{ steps.cache-cmake.outputs.cache-hit != 'true' }}
         shell: bash
         run: |
           cd vsomeip
