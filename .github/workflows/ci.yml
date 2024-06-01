@@ -156,7 +156,7 @@ jobs:
         env:
           LOCAL_VSOMEIP_PATH: ${{ steps.vsomeip-path.outputs.path }}
         run: |
-          export CMAKE_PREFIX_PATH="$HOME/local"
+          export CMAKE_PREFIX_PATH="$HOME/local:${{ steps.vsomeip-path.outputs.path }}"
           export CMAKE_ZENOH_INCLUDE_PATH="$HOME/local/include"
 
           echo "CMake is searching for header files in the following directories*******************:"
