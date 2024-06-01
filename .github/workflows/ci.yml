@@ -165,7 +165,7 @@ jobs:
           
           mkdir build
           cd build
-          cmake -S .. -DCMAKE_TOOLCHAIN_FILE=conan_toolchain.cmake -DCMAKE_BUILD_TYPE=Release -DBUILD_TESTING=ON -DCMAKE_INSTALL_PREFIX=~/local -DLOCAL_VSOMEIP_PATH=${{ steps.vsomeip-path.outputs.path }} -DCMAKE_INCLUDE_PATH=${{ steps.vsomeip-path.outputs.path }}/include
+          cmake -S .. -DCMAKE_TOOLCHAIN_FILE=conan_toolchain.cmake -DCMAKE_BUILD_TYPE=Release -DBUILD_TESTING=ON -DCMAKE_INSTALL_PREFIX=~/local -DLOCAL_VSOMEIP_PATH=${{ steps.vsomeip-path.outputs.path }} -DCMAKE_INCLUDE_PATH=${{ steps.vsomeip-path.outputs.path }}/interface
           cmake --build .
 
   # NOTE: In GitHub repository settings, the "Require status checks to pass
