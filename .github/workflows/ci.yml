@@ -82,11 +82,11 @@ jobs:
           path: |
             ~/.conan2
 
+      - uses: actions/checkout@v2
+
       - name: Install Conan
         id: conan
         uses: turtlebrowser/get-conan@main
-
-      - uses: actions/checkout@v2
 
       - name: Install up-client-vsomeip-cpp dependencies
         run: |
@@ -97,8 +97,6 @@ jobs:
         run: |
           sudo apt-get update
           sudo apt-get install -y ninja-build
-
-      - uses: actions/checkout@v2
 
       - name: Check remote head hash
         id: vsomeip-head
