@@ -133,7 +133,7 @@ jobs:
           echo "::set-output name=path::$(pwd)"
 
       - name: Upload vsomeip installation
-        #if: ${{ steps.cache-cmake.outputs.cache-hit != 'true' }}
+        if: ${{ steps.cache-cmake.outputs.cache-hit != 'true' }}
         uses: actions/upload-artifact@v2
         with:
           name: vsomeip
@@ -156,11 +156,11 @@ jobs:
           path: |
             ~/.conan2
 
-      - name: Download vsomeip installation
-        uses: actions/download-artifact@v2
-        with:
-          name: vsomeip
-          path: .
+#      - name: Download vsomeip installation
+#        uses: actions/download-artifact@v2
+#        with:
+#          name: vsomeip
+#          path: .
 
       - name: Install Conan
         id: conan
