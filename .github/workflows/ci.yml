@@ -158,7 +158,8 @@ jobs:
         run: |
           export CMAKE_PREFIX_PATH="$HOME/local:${{ steps.vsomeip-path.outputs.path }}"
           export CMAKE_ZENOH_INCLUDE_PATH="$HOME/local/include"
-
+          export LD_LIBRARY_PATH="$LD_LIBRARY_PATH:${{ steps.vsomeip-path.outputs.path }}/lib"
+      
           echo "CMake is searching for header files in the following directories*******************:"
           echo $CMAKE_PREFIX_PATH
           echo "vsomeip.hpp is located at: ${{ steps.find-vsomeip.outputs.path }}"
