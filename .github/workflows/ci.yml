@@ -146,7 +146,11 @@ jobs:
       - name: Modify CMakeLists.txt
         run: |
           sed -i 's/vsomeip3/vsomeip/g' /home/runner/work/up-client-vsomeip-cpp/up-client-vsomeip-cpp/CMakeLists.txt
-        
+
+      - name: Modify conanfile.py
+        run: |
+          sed -i '/self.requires("rapidjson\/cci.20230929")/a \        self.requires("vsomeip/3.4.10")' /home/runner/work/up-client-vsomeip-cpp/up-client-vsomeip-cpp/conanfile.py
+
       - name: Build and install up-client-vsomeip-cpp
         shell: bash
         env:
