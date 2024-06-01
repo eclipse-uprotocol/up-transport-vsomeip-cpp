@@ -180,7 +180,7 @@ jobs:
           echo $CMAKE_PREFIX_PATH
           echo "Listing contents of LOCAL_VSOMEIP_PATH**********************:"
           ls -R ${{ env.LOCAL_VSOMEIP_PATH }}
-          echo "Listing contents of ../LOCAL_VSOMEIP_PATH***************:"
+          echo "Listing contents of everything -R./***************:"
           
           mkdir build
           cd build
