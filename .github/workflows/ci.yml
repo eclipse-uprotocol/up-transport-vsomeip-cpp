@@ -153,7 +153,7 @@ jobs:
 
           echo "CMake is searching for header files in the following directories*******************:"
           echo $CMAKE_PREFIX_PATH
-          echo "vsomeip.hpp is located at: ${{ needs.build-vsomeip.outputs.vsomeip_h_path }}"
+          echo "vsomeip.hpp is located at: ${{ steps.find-vsomeip.outputs.path }}"
           
           mkdir build
           cd build
