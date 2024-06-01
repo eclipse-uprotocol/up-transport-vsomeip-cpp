@@ -162,11 +162,11 @@ jobs:
           path: |
             ~/.conan2
 
-#      - name: Download vsomeip installation
-#        uses: actions/download-artifact@v2
-#        with:
-#          name: vsomeip
-#          path: .
+      - name: Cache vsomeip installation
+        uses: actions/cache@v4
+        with:
+          key: vsomeip-${{ needs.build-vsomeip.outputs.vsomeip_Cache }}
+          path: ${{ needs.build-vsomeip.outputs.LOCAL_VSOMEIP_PATH }}
 
       - name: Install Conan
         id: conan
