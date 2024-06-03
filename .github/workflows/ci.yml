@@ -140,8 +140,8 @@ jobs:
       - name: Find vsomeip.hpp
         id: find-vsomeip
         run: |
-          VSOMEIP_H_PATH=$(find . -name vsomeip.hpp 2>/dev/null)
-          echo "::set-output name=path::$VSOMEIP_H_PATH"
+          echo "::set-output name=path::./vsomeip/build/include/vsomeip/vsomeip.hpp"
+          #echo "::set-output name=path::$VSOMEIP_H_PATH"
           echo "LOCAL_VSOMEIP_PATH=$(pwd)" >> $GITHUB_ENV
           ls -l ${{ steps.vsomeip-path.outputs.path }}
 
