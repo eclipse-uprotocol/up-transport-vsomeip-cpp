@@ -127,7 +127,7 @@ jobs:
           cd vsomeip
           mkdir build
           cd build
-          cmake -G Ninja -DCMAKE_INSTALL_PREFIX=. ..
+          cmake -G Ninja
           ninja
 
       - name: Install vsomeip
