@@ -137,20 +137,9 @@ jobs:
           sudo -E ninja install
           echo "::set-output name=path::$(pwd)"
 
-      - name: Find vsomeip.hpp
-        id: find-vsomeip
-        run: |
-          echo "::set-output name=path::./vsomeip/build/include/vsomeip/vsomeip.hpp"
-          #echo "::set-output name=path::$VSOMEIP_H_PATH"
-          echo "LOCAL_VSOMEIP_PATH=$(pwd)" >> $GITHUB_ENV
-          ls -l ${{ steps.vsomeip-path.outputs.path }}
-
       - name: Modify CMakeLists.txt
         run: |
-          sed -i 's/set(VSOMEIP_LIB vsomeip3)/find_library(VSOMEIP_LIB vsomeip3 PATHS $ENV{LOCAL_VSOMEIP_PATH}\/lib)/g' CMakeLists.txt
-          sed -i '/include_directories(${up-cpp_INCLUDE_DIR})/a find_library(VSOMEIP_LIBRARY vsomeip3 PATHS ./vsomeip/build)' CMakeLists.txt
-          sed -i '/include_directories(${up-cpp_INCLUDE_DIR})/a if(NOT VSOMEIP_LIBRARY)\n    message(FATAL_ERROR "vsomeip3 library not found")\nendif()' CMakeLists.txt
-          sed -i '/add_library(\n    ${PROJECT_NAME} SHARED/a target_link_libraries(${PROJECT_NAME} PRIVATE ${VSOMEIP_LIBRARY})' CMakeLists.txt
+          sed -i '/find_package(RapidJSON CONFIG REQUIRED)/a find_package(vsomeip3 REQUIRED)' CMakeLists.txt
 
       - name: Print LOCAL_VSOMEIP_PATH
         run: echo "LOCAL_VSOMEIP_PATH=${{ env.LOCAL_VSOMEIP_PATH }}"
@@ -169,11 +158,10 @@ jobs:
       
           echo "CMake is searching for header files in the following directories*******************:"
           echo $CMAKE_PREFIX_PATH
-          echo "vsomeip.hpp is located at: ${{ steps.find-vsomeip.outputs.path }}"
           
           mkdir build
           cd build
-          cmake -S .. -DCMAKE_TOOLCHAIN_FILE=conan_toolchain.cmake -DCMAKE_BUILD_TYPE=Release -DBUILD_TESTING=ON -DCMAKE_INSTALL_PREFIX=~/local -DLOCAL_VSOMEIP_PATH=${{ steps.vsomeip-path.outputs.path }} -DCMAKE_INCLUDE_PATH=${{ steps.vsomeip-path.outputs.path }}/interface
+          cmake -S .. -DCMAKE_TOOLCHAIN_FILE=conan_toolchain.cmake -DCMAKE_BUILD_TYPE=Release -DBUILD_TESTING=ON -DCMAKE_INSTALL_PREFIX=~/local -DCMAKE_INCLUDE_PATH=${{ steps.vsomeip-path.outputs.path }}/interface
           cmake --build .
 
   # NOTE: In GitHub repository settings, the "Require status checks to pass
