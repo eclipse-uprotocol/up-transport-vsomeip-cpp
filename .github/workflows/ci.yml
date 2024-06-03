@@ -112,8 +112,6 @@ jobs:
 
       - name: Build and install up-client-vsomeip-cpp
         shell: bash
-        env:
-
         run: |  
           mkdir build
           cd build
