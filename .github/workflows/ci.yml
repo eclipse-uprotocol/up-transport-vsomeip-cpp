@@ -134,7 +134,7 @@ jobs:
         id: vsomeip-path
         run: |
           cd vsomeip/build
-          sudo -E ninja install
+          ninja install
           echo "::set-output name=path::$(pwd)"
 
       - name: Find vsomeip.hpp
