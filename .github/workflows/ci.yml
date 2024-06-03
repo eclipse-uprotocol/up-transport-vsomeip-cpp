@@ -143,11 +143,12 @@ jobs:
           VSOMEIP_H_PATH=$(find . -name vsomeip.hpp 2>/dev/null)
           echo "::set-output name=path::$VSOMEIP_H_PATH"
           echo "LOCAL_VSOMEIP_PATH=$(pwd)" >> $GITHUB_ENV
+          ls -R
 
       - name: Modify CMakeLists.txt
         run: |
           sed -i 's/set(VSOMEIP_LIB vsomeip3)/find_library(VSOMEIP_LIB vsomeip3 PATHS $ENV{LOCAL_VSOMEIP_PATH}\/lib)/g' CMakeLists.txt
-          sed -i '/include_directories(${up-cpp_INCLUDE_DIR})/a find_library(VSOMEIP_LIBRARY vsomeip3 PATHS ${LOCAL_VSOMEIP_PATH}/lib)' CMakeLists.txt
+          sed -i '/include_directories(${up-cpp_INCLUDE_DIR})/a find_library(VSOMEIP_LIBRARY vsomeip3 PATHS /home/runner/work/up-client-vsomeip-cpp/up-client-vsomeip-cpp/vsomeip/build/lib)' CMakeLists.txt
           sed -i '/include_directories(${up-cpp_INCLUDE_DIR})/a if(NOT VSOMEIP_LIBRARY)\n    message(FATAL_ERROR "vsomeip3 library not found")\nendif()' CMakeLists.txt
           sed -i '/add_library(\n    ${PROJECT_NAME} SHARED/a target_link_libraries(up-client-vsomeip-cpp PRIVATE ${VSOMEIP_LIBRARY})' CMakeLists.txt
       - name: Modify conanfile.py
