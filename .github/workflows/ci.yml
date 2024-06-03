@@ -137,20 +137,16 @@ jobs:
           sudo -E ninja install
           echo "::set-output name=path::$(pwd)"
 
+      - name: Find vsomeip3Config.cmake
+        run: |
+          find ${{ steps.vsomeip-path.outputs.path }} -name vsomeip3Config.cmake
+
       - name: Modify CMakeLists.txt
         run: |
           sed -i '/find_package(RapidJSON CONFIG REQUIRED)/a find_package(vsomeip3 REQUIRED)' CMakeLists.txt
 
-      - name: Print LOCAL_VSOMEIP_PATH
-        run: echo "LOCAL_VSOMEIP_PATH=${{ env.LOCAL_VSOMEIP_PATH }}"
-
-      - name: List vsomeip3 library directory
-        run: ls -l ${{ env.LOCAL_VSOMEIP_PATH }}/lib
-
       - name: Build and install up-client-vsomeip-cpp
         shell: bash
-        env:
-          LOCAL_VSOMEIP_PATH: ${{ steps.vsomeip-path.outputs.path }}
         run: |
           export CMAKE_PREFIX_PATH="$HOME/local:${{ steps.vsomeip-path.outputs.path }}:${{ steps.vsomeip-path.outputs.path }}/lib"
           export CMAKE_ZENOH_INCLUDE_PATH="$HOME/local/include"
