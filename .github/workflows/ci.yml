@@ -134,7 +134,7 @@ jobs:
         id: vsomeip-path
         run: |
           cd vsomeip/build
-          ninja install
+          sudo -E ninja install
           echo "::set-output name=path::$(pwd)"
 
       - name: Find vsomeip.hpp
@@ -146,6 +146,8 @@ jobs:
       - name: Modify CMakeLists.txt
         run: |
           sed -i 's/set(VSOMEIP_LIB vsomeip3)/find_library(VSOMEIP_LIB vsomeip3 PATHS $ENV{LOCAL_VSOMEIP_PATH}\/lib)/g' CMakeLists.txt
+          sed -i '/add_definitions(-DSPDLOG_FMT_EXTERNAL)/a target_include_directories(${PROJECT_NAME} PRIVATE ${VSOMEIP_INCLUDE_DIR} include ${up-cpp_INCLUDE_DIR})' CMakeLists.txt
+          sed -i '/add_definitions(-DSPDLOG_FMT_EXTERNAL)/a target_link_directories(${PROJECT_NAME} PRIVATE ${VSOMEIP_LIBRARY_DIR})' CMakeLists.txt
 
       - name: Modify conanfile.py
         run: |
