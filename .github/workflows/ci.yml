@@ -152,9 +152,11 @@ jobs:
           sed -i '/include_directories(${up-cpp_INCLUDE_DIR})/a if(NOT VSOMEIP_LIBRARY)\n    message(FATAL_ERROR "vsomeip3 library not found")\nendif()' CMakeLists.txt
           sed -i '/add_library(\n    ${PROJECT_NAME} SHARED/a target_link_libraries(${PROJECT_NAME} PRIVATE ${VSOMEIP_LIBRARY})' CMakeLists.txt
 
-      - name: Modify conanfile.py
-        run: |
-          sed -i '/self.requires("rapidjson\/cci.20230929")/a \        self.requires("vsomeip/3.4.10")' /home/runner/work/up-client-vsomeip-cpp/up-client-vsomeip-cpp/conanfile.py
+      - name: Print LOCAL_VSOMEIP_PATH
+        run: echo "LOCAL_VSOMEIP_PATH=${{ env.LOCAL_VSOMEIP_PATH }}"
+
+      - name: List vsomeip3 library directory
+        run: ls -l ${{ env.LOCAL_VSOMEIP_PATH }}/lib
 
       - name: Build and install up-client-vsomeip-cpp
         shell: bash
