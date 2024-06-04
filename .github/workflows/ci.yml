@@ -29,7 +29,6 @@ jobs:
           key: ${{ env.UP_CPP_Cache_PFX }}-${{ steps.up-cpp-head.outputs.UP_CPP_HEAD }}
           path: |
             ~/.conan2
-
       - name: Install Conan
         if: ${{ steps.cache-conan2.outputs.cache-hit != 'true' }}
         id: conan
@@ -51,14 +50,12 @@ jobs:
           git clone "$UP_CPP_Repo"
           cd up-cpp && git checkout v0.1.2-dev
           git submodule update --init --recursive
-
       - name: Create up-cpp Conan package
         if: ${{ steps.cache-conan2.outputs.cache-hit != 'true' }}
         shell: bash
         run: |
           cd up-cpp
           conan create . --build=missing
-
       - name: Clean up conan build files
         if: ${{ steps.cache-conan2.outputs.cache-hit != 'true' }}
         run: conan cache clean '*'
@@ -81,7 +78,6 @@ jobs:
           key: ${{ env.UP_CPP_Cache }}
           path: |
             ~/.conan2
-
       - uses: actions/checkout@v2
 
       - name: Install Conan
@@ -92,7 +88,6 @@ jobs:
         run: |
           cd /home/runner/work/up-client-vsomeip-cpp/up-client-vsomeip-cpp
           conan install . --build=missing
-
       - name: Install Boost 1.84.0
         run: |
           wget https://boostorg.jfrog.io/artifactory/main/release/1.84.0/source/boost_1_84_0.tar.gz
@@ -101,12 +96,10 @@ jobs:
           ./bootstrap.sh --prefix=/usr/local
           ./b2
           sudo ./b2 install
-
       - name: Install Ninja
         run: |
           sudo apt-get update
           sudo apt-get install -y ninja-build
-
       - name: Check remote head hash
         id: vsomeip-head
         shell: bash
@@ -120,7 +113,6 @@ jobs:
           git clone "$vsomeip_Repo"
           cd vsomeip && git checkout ${{ env.vsomeip_Tag }}
           git submodule update --init --recursive
-
       - name: Build vsomeip with Cmake
         shell: bash
         run: |
@@ -129,23 +121,20 @@ jobs:
           cd build
           cmake -G Ninja ..
           ninja
-
       - name: Install vsomeip
         id: vsomeip-path
         run: |
           cd vsomeip/build
           sudo -E ninja install
           echo "::set-output name=path::$(pwd)"
-
       - name: Find vsomeip3Config.cmake
         run: |
           find ${{ steps.vsomeip-path.outputs.path }} -name vsomeip3Config.cmake
-
       - name: Modify CMakeLists.txt
         run: |
           sed -i '/find_package(RapidJSON CONFIG REQUIRED)/a find_package(vsomeip3 REQUIRED)' CMakeLists.txt
           sed -i '/find_package(vsomeip3 REQUIRED)/a message(STATUS "VSOMEIP_LIB: ${VSOMEIP_LIB}")' CMakeLists.txt
-
+          sed -i '/if(DEFINED ENV{LOCAL_VSOMEIP_PATH})/a \ \ \ \ find_package(vsomeip3 REQUIRED)' CMakeLists.txt
       - name: Build and install up-client-vsomeip-cpp
         shell: bash
         run: |
