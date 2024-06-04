@@ -145,7 +145,7 @@ jobs:
           export CMAKE_PREFIX_PATH="$HOME/local:${{ steps.vsomeip-path.outputs.path }}/lib/cmake:${{ steps.vsomeip-path.outputs.path }}/lib"
           export CMAKE_ZENOH_INCLUDE_PATH="$HOME/local/include"
           export LD_LIBRARY_PATH="$LD_LIBRARY_PATH:${{ steps.vsomeip-path.outputs.path }}/lib"
-          export vsomeip_DIR="${{ steps.vsomeip-path.outputs.path }}/lib/cmake/vsomeip3"
+          export vsomeip_DIR="/home/runner/work/up-client-vsomeip-cpp/up-client-vsomeip-cpp/vsomeip/build"
       
           mkdir build
           cd build
