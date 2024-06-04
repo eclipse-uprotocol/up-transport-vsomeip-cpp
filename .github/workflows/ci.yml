@@ -137,6 +137,7 @@ jobs:
           sed -i '/if(DEFINED ENV{LOCAL_VSOMEIP_PATH})/a \ \ \ \ find_package(vsomeip3 REQUIRED)' CMakeLists.txt
           sed -i '/if(DEFINED ENV{LOCAL_VSOMEIP_PATH})/a \ \ \ \ message("Entered if statement")' CMakeLists.txt
           sed -i '/else()/a \ \ \ \ message("Entered else statement")' CMakeLists.txt
+          sed -i 's/set(VSOMEIP_LIB vsomeip3::vsomeip3)/set(VSOMEIP_LIB vsomeip3)/g' CMakeLists.txt
       - name: Build and install up-client-vsomeip-cpp
         shell: bash
         run: |
