@@ -134,6 +134,7 @@ jobs:
         run: |
           sed -i '/find_package(RapidJSON CONFIG REQUIRED)/a find_package(vsomeip3 REQUIRED)' CMakeLists.txt
           sed -i '/find_package(vsomeip3 REQUIRED)/a message(STATUS "VSOMEIP_LIB: ${VSOMEIP_LIB}")' CMakeLists.txt
+          sed -i '/find_package(vsomeip3 REQUIRED)/a message(STATUS "vsomeip_DIR: ${vsomeip_DIR}")' CMakeLists.txt
           sed -i '/if(DEFINED ENV{LOCAL_VSOMEIP_PATH})/a \ \ \ \ find_package(vsomeip3 REQUIRED)' CMakeLists.txt
           sed -i '/if(DEFINED ENV{LOCAL_VSOMEIP_PATH})/a \ \ \ \ message("Entered if statement")' CMakeLists.txt
           sed -i '/else()/a \ \ \ \ message("Entered else statement")' CMakeLists.txt
