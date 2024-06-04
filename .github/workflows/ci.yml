@@ -139,12 +139,19 @@ jobs:
           sed -i '/if(DEFINED ENV{LOCAL_VSOMEIP_PATH})/a \ \ \ \ message("Entered if statement")' CMakeLists.txt
           sed -i '/else()/a \ \ \ \ message("Entered else statement")' CMakeLists.txt
           sed -i 's/set(VSOMEIP_LIB vsomeip3::vsomeip3)/set(VSOMEIP_LIB vsomeip3)/g' CMakeLists.txt
+
+      - name: Find vsomeip3 library
+        id: vsomeip3-lib
+        run: |
+          vsomeip3_location=$(find /usr/local/lib -name libvsomeip3.so)
+          echo "::set-output name=location::$vsomeip3_location"
+
       - name: Build and install up-client-vsomeip-cpp
         shell: bash
         run: |
           export CMAKE_PREFIX_PATH="$HOME/local:${{ steps.vsomeip-path.outputs.path }}/lib/cmake:${{ steps.vsomeip-path.outputs.path }}/lib"
           export CMAKE_ZENOH_INCLUDE_PATH="$HOME/local/include"
-          export LD_LIBRARY_PATH="$LD_LIBRARY_PATH:${{ steps.vsomeip-path.outputs.path }}/lib"
+          export LD_LIBRARY_PATH="$LD_LIBRARY_PATH:${{ steps.vsomeip-path.outputs.path }}/lib:${{ steps.vsomeip3-lib.outputs.location }}"
           export vsomeip_DIR="/home/runner/work/up-client-vsomeip-cpp/up-client-vsomeip-cpp/vsomeip/build"
       
           mkdir build
