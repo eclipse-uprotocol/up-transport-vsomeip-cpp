@@ -204,6 +204,14 @@ jobs:
           vsomeip3_location=$(find /usr/local/lib -name libvsomeip3.so)
           echo "::set-output name=location::$vsomeip3_location"
 
+      - name: Find vsomeip/interface and vsomeip3Config.cmake
+        run: |
+          echo "Searching for vsomeip/interface..."
+          find / -name "interface" 2>/dev/null
+      
+          echo "Searching for vsomeip3Config.cmake..."
+          find / -name "vsomeip3Config.cmake" 2>/dev/null
+
       - name: Build and install up-client-vsomeip-cpp
         shell: bash
         run: |
