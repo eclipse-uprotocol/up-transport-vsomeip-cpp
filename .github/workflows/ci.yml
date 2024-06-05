@@ -129,7 +129,7 @@ jobs:
           sed -i '/find_package(vsomeip3 REQUIRED)/a message(STATUS "VSOMEIP_LIB: ${VSOMEIP_LIB}")' CMakeLists.txt
           sed -i '/if(DEFINED ENV{LOCAL_VSOMEIP_PATH})/a \ \ \ \ find_package(vsomeip3 REQUIRED)' CMakeLists.txt
           sed -i 's/set(VSOMEIP_LIB vsomeip3::vsomeip3)/set(VSOMEIP_LIB vsomeip3)/g' CMakeLists.txt
-          sed -i '/target_link_libraries(unit_tests PUBLIC/a \    ${VSOMEIP_LIB}' test/CMakeLists.txt
+          sed -i '/Boost::filesystem/a \    ${VSOMEIP_LIB}' test/CMakeLists.txt
       - name: Find vsomeip3 library
         id: vsomeip3-lib
         run: |
@@ -144,7 +144,7 @@ jobs:
       
           mkdir build
           cd build
-          cmake -S .. -DCMAKE_TOOLCHAIN_FILE=conan_toolchain.cmake -DCMAKE_BUILD_TYPE=Release -DCMAKE_INSTALL_PREFIX=~/local -DCMAKE_INCLUDE_PATH=${{ steps.vsomeip-path.outputs.path }}/interface -Dvsomeip_DIR="${{ steps.vsomeip-path.outputs.path }}"
+          cmake -S .. -DCMAKE_TOOLCHAIN_FILE=conan_toolchain.cmake -DCMAKE_BUILD_TYPE=Release -DBUILD_TESTING=ON -DCMAKE_INSTALL_PREFIX=~/local -DCMAKE_INCLUDE_PATH=${{ steps.vsomeip-path.outputs.path }}/interface -Dvsomeip_DIR="${{ steps.vsomeip-path.outputs.path }}"
           cmake --build .
 
   # NOTE: In GitHub repository settings, the "Require status checks to pass
