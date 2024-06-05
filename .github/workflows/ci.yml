@@ -140,7 +140,7 @@ jobs:
         run: |
           export CMAKE_PREFIX_PATH="$HOME/local:${{ steps.vsomeip-path.outputs.path }}/lib/cmake:${{ steps.vsomeip-path.outputs.path }}/lib"
           export CMAKE_ZENOH_INCLUDE_PATH="$HOME/local/include"
-          export LD_LIBRARY_PATH="$LD_LIBRARY_PATH:${{ steps.vsomeip-path.outputs.path }}/lib:${{ steps.vsomeip3-lib.outputs.location }}"
+          export LD_LIBRARY_PATH="/usr/local/lib:$LD_LIBRARY_PATH:${{ steps.vsomeip-path.outputs.path }}/lib:${{ steps.vsomeip3-lib.outputs.location }}"
       
           mkdir build
           cd build
