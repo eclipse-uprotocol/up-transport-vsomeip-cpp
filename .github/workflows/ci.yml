@@ -210,7 +210,7 @@ jobs:
           export CMAKE_PREFIX_PATH="$HOME/local:./lib/cmake:./lib"
           export CMAKE_ZENOH_INCLUDE_PATH="$HOME/local/include"
           export LD_LIBRARY_PATH="/usr/local/lib:$LD_LIBRARY_PATH:${{ steps.vsomeip-path.outputs.path }}/lib:${{ steps.vsomeip3-lib.outputs.location }}"
-      
+
           mkdir build
           cd build
           cmake -S .. -DCMAKE_TOOLCHAIN_FILE=conan_toolchain.cmake -DCMAKE_BUILD_TYPE=Release -DBUILD_TESTING=ON -DCMAKE_INSTALL_PREFIX=~/local -DCMAKE_INCLUDE_PATH=./interface -Dvsomeip_DIR="${{ steps.vsomeip-path.outputs.path }}"
