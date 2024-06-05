@@ -120,6 +120,12 @@ jobs:
           cd vsomeip/build
           sudo -E ninja install
           echo "::set-output name=path::$(pwd)"
+
+      - name: Install gcovr
+        run: |
+          sudo apt-get install -y python3-pip
+          pip3 install gcovr
+
       - name: Find vsomeip3Config.cmake
         run: |
           find ${{ steps.vsomeip-path.outputs.path }} -name vsomeip3Config.cmake
