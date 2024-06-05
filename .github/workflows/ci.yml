@@ -88,7 +88,6 @@ jobs:
         run: |
           cd /home/runner/work/up-client-vsomeip-cpp/up-client-vsomeip-cpp
           conan install . --build=missing
-
       - name: Install Boost 1.84.0
         run: |
           wget https://boostorg.jfrog.io/artifactory/main/release/1.84.0/source/boost_1_84_0.tar.gz
@@ -97,19 +96,23 @@ jobs:
           ./bootstrap.sh --prefix=/usr/local
           ./b2
           sudo ./b2 install
-
       - name: Install Ninja
         run: |
           sudo apt-get update
           sudo apt-get install -y ninja-build
+      - name: Check remote head hash
+        id: vsomeip-head
+        shell: bash
+        run: '{ echo -n "vsomeip_HEAD="; git ls-remote "$vsomeip_Repo" refs/tags/3.4.10 | cut -f1; } | tee -a "$GITHUB_OUTPUT"'
 
       - name: Clone vsomeip repo
         shell: bash
+        env:
+          vsomeip_HEAD: ${{ steps.vsomeip-head.outputs.vsomeip_HEAD }}
         run: |
           git clone "$vsomeip_Repo"
           cd vsomeip && git checkout ${{ env.vsomeip_Tag }}
           git submodule update --init --recursive
-
       - name: Build vsomeip with Cmake
         shell: bash
         run: |
@@ -118,14 +121,12 @@ jobs:
           cd build
           cmake -G Ninja ..
           ninja
-
       - name: Install vsomeip
         id: vsomeip-path
         run: |
           cd vsomeip/build
           sudo -E ninja install
           echo "::set-output name=path::$(pwd)"
-
       - name: Find vsomeip3Config.cmake
         run: |
           find ${{ steps.vsomeip-path.outputs.path }} -name vsomeip3Config.cmake
@@ -133,25 +134,27 @@ jobs:
         run: |
           sed -i '/find_package(RapidJSON CONFIG REQUIRED)/a find_package(vsomeip3 REQUIRED)' CMakeLists.txt
           sed -i '/find_package(vsomeip3 REQUIRED)/a message(STATUS "VSOMEIP_LIB: ${VSOMEIP_LIB}")' CMakeLists.txt
+          sed -i '/find_package(vsomeip3 REQUIRED)/a message(STATUS "vsomeip_DIR: ${vsomeip_DIR}")' CMakeLists.txt
           sed -i '/if(DEFINED ENV{LOCAL_VSOMEIP_PATH})/a \ \ \ \ find_package(vsomeip3 REQUIRED)' CMakeLists.txt
+          sed -i '/if(DEFINED ENV{LOCAL_VSOMEIP_PATH})/a \ \ \ \ message("Entered if statement")' CMakeLists.txt
+          sed -i '/else()/a \ \ \ \ message("Entered else statement")' CMakeLists.txt
           sed -i 's/set(VSOMEIP_LIB vsomeip3::vsomeip3)/set(VSOMEIP_LIB vsomeip3)/g' CMakeLists.txt
-
       - name: Find vsomeip3 library
         id: vsomeip3-lib
         run: |
           vsomeip3_location=$(find /usr/local/lib -name libvsomeip3.so)
           echo "::set-output name=location::$vsomeip3_location"
-
       - name: Build and install up-client-vsomeip-cpp
         shell: bash
         run: |
           export CMAKE_PREFIX_PATH="$HOME/local:${{ steps.vsomeip-path.outputs.path }}/lib/cmake:${{ steps.vsomeip-path.outputs.path }}/lib"
           export CMAKE_ZENOH_INCLUDE_PATH="$HOME/local/include"
           export LD_LIBRARY_PATH="$LD_LIBRARY_PATH:${{ steps.vsomeip-path.outputs.path }}/lib:${{ steps.vsomeip3-lib.outputs.location }}"
+          export vsomeip_DIR="/home/runner/work/up-client-vsomeip-cpp/up-client-vsomeip-cpp/vsomeip/build"
       
           mkdir build
           cd build
-          cmake -S .. -DCMAKE_TOOLCHAIN_FILE=conan_toolchain.cmake -DCMAKE_BUILD_TYPE=Release -DCMAKE_INSTALL_PREFIX=~/local -DCMAKE_INCLUDE_PATH=${{ steps.vsomeip-path.outputs.path }}/interface -Dvsomeip_DIR="${{ steps.vsomeip-path.outputs.path }}"
+          cmake -S .. -DCMAKE_TOOLCHAIN_FILE=conan_toolchain.cmake -DCMAKE_BUILD_TYPE=Release -DBUILD_TESTING=ON -DCMAKE_INSTALL_PREFIX=~/local -DCMAKE_INCLUDE_PATH=${{ steps.vsomeip-path.outputs.path }}/interface -Dvsomeip_DIR="${{ steps.vsomeip-path.outputs.path }}"
           cmake --build .
 
   # NOTE: In GitHub repository settings, the "Require status checks to pass
