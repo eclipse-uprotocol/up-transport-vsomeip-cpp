@@ -63,6 +63,7 @@ jobs:
         if: ${{ steps.cache-conan2.outputs.cache-hit != 'true' }}
         run: conan cache clean '*'
 
+  #It is possible to move the vsomeip, boost, and ninja installations to a separate job to cache them and save time.
   build-up-client-vsomeip-cpp:
     name: Build up-client-vsomeip-cpp
     needs: [ build-up-cpp ]
@@ -134,23 +135,23 @@ jobs:
           sudo apt-get install -y python3-pip
           pip3 install gcovr
 
-      - name: Find vsomeip3Config.cmake
-        run: |
-          find ${{ steps.vsomeip-path.outputs.path }} -name vsomeip3Config.cmake
-
+        # Add vsomeip3 to CMakeLists.txt
       - name: Modify CMakeLists.txt
         run: |
           sed -i '/find_package(RapidJSON CONFIG REQUIRED)/a find_package(vsomeip3 REQUIRED)' CMakeLists.txt
-          sed -i '/find_package(vsomeip3 REQUIRED)/a message(STATUS "VSOMEIP_LIB: ${VSOMEIP_LIB}")' CMakeLists.txt
-          sed -i '/if(DEFINED ENV{LOCAL_VSOMEIP_PATH})/a \ \ \ \ find_package(vsomeip3 REQUIRED)' CMakeLists.txt
+          sed -i '/if(DEFINED ENV{LOCAL_VSOMEIP_PATH})/a find_package(vsomeip3 REQUIRED)' CMakeLists.txt
+
+        # Add vsomeip3 and boost to test/CMakeLists.txt
+      - name: Modify test/CMakeLists.txt
+        run: |
           sed -i 's/set(VSOMEIP_LIB vsomeip3::vsomeip3)/set(VSOMEIP_LIB vsomeip3)/g' CMakeLists.txt
           sed -i '/Boost::filesystem/a \    ${VSOMEIP_LIB}' test/CMakeLists.txt
+
       - name: Find vsomeip3 library
         id: vsomeip3-lib
         run: |
           vsomeip3_location=$(find /usr/local/lib -name libvsomeip3.so)
           echo "::set-output name=location::$vsomeip3_location"
-
       - name: Build and install up-client-vsomeip-cpp
         shell: bash
         run: |
