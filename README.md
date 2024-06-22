@@ -1,4 +1,4 @@
-# uProtocol C++ VSOMEIP Transport (up-client-vsomeip-cpp)
+# uProtocol C++ VSOMEIP Transport (up-transport-vsomeip-cpp)
 
 ## Welcome!
 
@@ -63,12 +63,12 @@ sudo ninja install
 
 ## How to Use the Library
 
-To add up-client-vsomeip-cpp to your conan build dependencies, place following
+To add up-transport-vsomeip-cpp to your conan build dependencies, place following
 in your conanfile.txt:
 
 ```
 [requires]
-up-client-vsomeip-cpp/[>=1.0.0 <2.0.0]
+up-transport-vsomeip-cpp/[>=1.0.0 <2.0.0]
 
 [generators]
 CMakeDeps
@@ -85,14 +85,14 @@ configured to use ABI 11 (libstdc++11: New ABI) standards according to
 ## Building locally
 
 The following steps are only required for developers to locally build and test
-up-client-vsomeip-cpp, If you are making a project that uses
-up-client-vsomeip-cpp, follow the steps in the
+up-transport-vsomeip-cpp, If you are making a project that uses
+up-transport-vsomeip-cpp, follow the steps in the
 [How to Use the Library](#how-to-use-the-library) section above.
 
 ### With Conan for dependencies
 
 ```
-cd up-client-vsomeip-cpp
+cd up-transport-vsomeip-cpp
 conan install .
 cd build
 cmake ../ -DCMAKE_TOOLCHAIN_FILE=Release/generators/conan_toolchain.cmake -DCMAKE_BUILD_TYPE=Release
@@ -113,7 +113,7 @@ See: [up-conan-recipes][conan-recipe-repo]
 
 Give a ⭐️ if this project helped you!
 
-[conan-recipe-repo]: https://github.com/gregmedd/up-conan-recipes
+[conan-recipe-repo]: https://github.com/eclipse-uprotocol/up-conan-recipes
 [spec-repo]: https://github.com/eclipse-uprotocol/up-spec
 [cpp-api-repo]: https://github.com/eclipse-uprotocol/up-cpp
 [zenoh-repo]: https://github.com/eclipse-zenoh/zenoh-cpp
