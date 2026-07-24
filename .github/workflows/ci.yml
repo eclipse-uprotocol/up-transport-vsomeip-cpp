@@ -34,7 +34,7 @@ jobs:
           rm conan-cache.tgz
 
       - name: Fetch up-core-api conan recipe
-        uses: actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5 # v4.3.1
+        uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4.4.0
         with:
           path: up-conan-recipes
           repository: gregmedd/up-conan-recipes
@@ -50,7 +50,7 @@ jobs:
           conan create --version 0.2.0 --build=missing up-conan-recipes/up-cpp/developer
 
       - name: Fetch up-client-vsomeip-cpp
-        uses: actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5 # v4.3.1
+        uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4.4.0
         with:
           path: up-client-vsomeip-cpp
 
@@ -138,13 +138,13 @@ jobs:
           conan cache restore conan-cache.tgz
 
       - name: Fetch up-client-vsomeip-cpp
-        uses: actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5 # v4.3.1
+        uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4.4.0
         with:
           path: up-client-vsomeip-cpp
 
       - name: Run linters on source
         id: source-linter
-        uses: cpp-linter/cpp-linter-action@77c390c5ba9c947ebc185a3e49cc754f1558abb5 # v2.18.0
+        uses: cpp-linter/cpp-linter-action@8e85cd02c8c3fe3ae527c94b5683fe2366b144ed # v2.20.0
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
@@ -156,7 +156,7 @@ jobs:
 
       - name: Run linters on tests
         id: test-linter
-        uses: cpp-linter/cpp-linter-action@77c390c5ba9c947ebc185a3e49cc754f1558abb5 # v2.18.0
+        uses: cpp-linter/cpp-linter-action@8e85cd02c8c3fe3ae527c94b5683fe2366b144ed # v2.20.0
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
